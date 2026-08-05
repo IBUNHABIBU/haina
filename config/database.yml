@@ -22,7 +22,7 @@ default: &default
 
 development:
   <<: *default
-  database: impec_development
+  database: haina_development
   username: postgres
   password: voda
   host: localhost
@@ -31,7 +31,7 @@ development:
   # To create additional roles in PostgreSQL see `$ createuser --help`.
   # When left blank, PostgreSQL will use the default role. This is
   # the same name as the operating system user running Rails.
-  #username: impec
+  #username: haina
 
   # The password associated with the PostgreSQL role (username).
   #password:
@@ -59,7 +59,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: impec_test
+  database: haina_test
   username: postgres
   password: voda
   host: localhost
@@ -87,20 +87,20 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: impec_production
+    database: haina_production
     username:  <%= ENV["POSTGRES_USER"] %>
     password: <%= ENV["POSTGRES_PASSWORD"] %>
-    host:  impec-db
+    host:  haina-db
 
   cache:
     <<: *primary_production
-    database: impec_production_cache
+    database: haina_production_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: impec_production_queue
+    database: haina_production_queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: impec_production_cable
+    database: haina_production_cable
     migrations_paths: db/cable_migrate
