@@ -15,7 +15,6 @@ Rails.application.routes.draw do
 
   # App resources
   resources :bookings
-  resources :destinations
 
   resource :hero, only: [:show, :new, :create, :edit, :update, :destroy] do
     get 'gallery', on: :member
