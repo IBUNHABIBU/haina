@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  resources :videos
-  resources :gears
-  resources :team_members
   get '/dashboard', to: 'dashboard#index', as: 'dashboard'
   # Devise authentication
   devise_for :users, path: '', path_names: {
@@ -14,7 +11,6 @@ Rails.application.routes.draw do
   resources :users, only: [:index, :update, :destroy]
 
   # App resources
-  resources :bookings
 
   resource :hero, only: [:show, :new, :create, :edit, :update, :destroy] do
     get 'gallery', on: :member
