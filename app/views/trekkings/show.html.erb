@@ -1,0 +1,78 @@
+
+<% provide(:title, "Trekking show page") %>
+<div class="max-w-5xl mx-auto px-4 py-8">
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <!-- Image Header -->
+    <div class="relative h-96">
+      <% if @trekking.main_image.attached? %>
+        <%= image_tag @trekking.main_image.variant(resize_to_limit: [1200, 800]),
+              loading: "lazy", class: "w-full h-96 object-cover", alt: @trekking.title %>
+      <% else %>
+        <div class="w-full h-96 bg-earth-brown flex items-center justify-center">
+          <svg class="w-20 h-20 text-golden-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+          </svg>
+        </div>
+      <% end %>
+      
+      <!-- Overlay Content -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+        <div class="p-8 text-white w-full">
+          <div class="flex flex-wrap items-center gap-4 mb-4">
+            <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-deep-green/90 backdrop-blur-sm">
+              <%= pluralize(@trekking.duration, 'day') %> Trek
+            </span>
+            <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium <%= difficulty_color(@trekking.difficulty) %> backdrop-blur-sm">
+              <%= @trekking.difficulty.capitalize %>
+            </span>
+          </div>
+          
+          <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2">
+            <%= @trekking.title %>
+          </h1>
+          <p class="text-base sm:text-lg md:text-xl opacity-90"><%= @trekking.overview_title %></p>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Section -->
+    <div class="p-6 border-b">
+      <h2 class="text-xl font-semibold text-deep-green mb-4">Overview</h2>
+      <p class="text-gray-700"><%= @trekking.overview_description %></p>
+    </div>
+
+    <!-- Action Text Content -->
+    <div class="p-6 border-b">
+      <div class="prose max-w-none">
+        <%= @trekking.content %>
+      </div>
+    </div>
+
+    <!-- Gallery Images -->
+    <% if @trekking.gallery_images.attached? %>
+      <div class="p-6 border-b">
+        <h2 class="text-2xl font-bold text-deep-green mb-6">Photo Gallery</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <% @trekking.gallery_images.each do |image| %>
+            <div class="aspect-square overflow-hidden rounded-lg">
+              <%= image_tag image.variant(resize_to_limit: [500, 500]),
+              loading: "lazy", class: "w-full h-full object-cover hover:scale-105 transition-transform duration-300", alt: "Trekking photo" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Admin Links -->
+    <div class="bg-gray-50 px-6 py-4 flex justify-between items-center">
+      <% if user_signed_in? %>
+      <%= link_to 'Edit', edit_trekking_path(@trekking), class: "text-golden-yellow hover:text-yellow-600" %>
+      <%= button_to "Delete", @trekking, method: :delete, form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2", class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+
+     
+      <% end %>
+      <%= link_to 'Back', trekkings_path, class: "text-charcoal hover:text-gray-600" %>
+    </div>
+  </div>
+</div>

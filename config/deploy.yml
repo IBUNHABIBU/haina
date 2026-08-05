@@ -1,0 +1,115 @@
+# Name of your application. Used to uniquely configure containers.
+service: impec
+
+# Name of the container image.
+image: ibunhabibu/impec
+
+# Deploy to these servers.
+servers:
+  web:
+    - 45.92.9.7
+  # job:
+  #   hosts:
+  #     - 192.168.0.1
+  #   cmd: bin/jobs
+
+retain_containers: 2
+
+# Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
+# Remove this section when using multiple web servers and ensure you terminate SSL at your load balancer.
+#
+# Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
+proxy:
+  ssl: true
+  host: impeccableafricatour.ecohygiene.site
+  app_port: 3000
+
+# Credentials for your image host.
+registry:
+  # Specify the registry server, if you're not using Docker Hub
+  # server: registry.digitalocean.com / ghcr.io / ...
+  username: ibunhabibu
+  
+  # Always use an access token rather than real password when possible.
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+   
+
+# Inject ENV variables into containers (secrets come from .kamal/secrets).
+env:
+  clear:
+    DB_HOST: impec-db
+    SOLID_QUEUE_IN_PUMA: true
+
+  secret:
+    # - RAILS_MASTER_KEY
+    - POSTGRES_PASSWORD
+    - POSTGRES_USER
+    - GOOGLE_API
+    - PIXABAY
+    - OPEN_WEATHER
+    - SMTP_USERNAME
+    - SMTP_PASSWORD
+    - SECRET_KEY_BASE
+
+# Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
+# "bin/kamal logs -r job" will tail logs from the first server in the job section.
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole"
+
+
+# Use a persistent storage volume for sqlite database files and local Active Storage files.
+# Recommended to change this to a mounted volume path that is backed up off server.
+volumes:
+  - "impec_storage:/rails/storage"
+
+
+# Bridge fingerprinted assets, like JS and CSS, between versions to avoid
+# hitting 404 on in-flight requests. Combines all files from new and old
+# version inside the asset_path.
+asset_path: /rails/public/assets
+
+# Configure the image builder.
+builder:
+  arch: amd64
+
+  # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
+  # remote: ssh://docker@docker-builder-server
+  #
+  # # Pass arguments and secrets to the Docker build process
+  # args:
+  #   RUBY_VERSION: 3.3.3
+  # secrets:
+  #   - GITHUB_TOKEN
+  #   - RAILS_MASTER_KEY
+
+# Use a different ssh user than root
+ssh:
+  user: deployer
+
+accessories:
+  db:
+    image: postgres:16
+    host: 45.92.9.7
+    # port: "127.0.0.1"  # Ensure this is the correct port or change it to 5432 if needed
+    # port: "127.0.0.1:3306:3306"
+    port: "127.0.0.1:5439:5432"
+    env:
+      clear:
+        POSTGRES_USER: "postgres"
+        POSTGRES_DB: "impec_production"
+
+      secret:
+        - POSTGRES_PASSWORD
+        - POSTGRES_USER
+
+    files:
+      - config/init.sql:/docker-entrypoint-initdb.d/setup.sql
+      
+    directories: 
+      - data:/var/lib/postgresql/data
+
+  

@@ -1,0 +1,95 @@
+<nav data-controller="mobile-menu" class="bg-white sticky top-0 z-50 shadow-md">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center py-3">
+      <!-- Logo -->
+      <div class="flex items-center gap-8">
+        <div class="flex-shrink-0">
+          <%= link_to root_path, class: "block" do %>
+            <%= image_tag "impeclogo.jpeg", alt: "Impeccable Africa Tour", class: "h-12 w-auto object-contain" %>
+          <% end %>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden lg:flex items-center space-x-1">
+          <% (nav_items + admin_nav_items).each do |name, path| %>
+            <%= nav_link_to name, path,
+              class: "px-3 py-2 text-sm font-medium text-gray-700 hover:text-[#A53F2B] transition-colors duration-300 rounded-md hover:bg-[#FFF8E7]" %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- User auth links (desktop) -->
+      <div class="hidden lg:flex items-center gap-4">
+        <% if user_signed_in? %>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-gray-600 bg-[#FFF8E7] px-3 py-1.5 rounded-full">
+              Welcome, <span class="font-medium text-[#A53F2B]"><%= current_user.first_name %></span>
+            </span>
+
+            <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete },
+              class: "text-sm font-medium text-gray-600 hover:text-[#A53F2B] transition-colors duration-300" %>
+          </div>
+        <% end %>
+
+        <% if admin_user? %>
+          <%= link_to "Bookings", bookings_path,
+            class: "ml-2 text-sm font-medium text-green-700 hover:text-[#A53F2B] transition-colors duration-300" %>
+        <% end %>
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="lg:hidden">
+        <button type="button"
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-[#A53F2B] hover:bg-[#FFF8E7] focus:outline-none focus:ring-2 focus:ring-[#FFB347]"
+                aria-controls="mobile-menu"
+                aria-expanded="false"
+                data-action="click->mobile-menu#toggle">
+          <span class="sr-only">Open main menu</span>
+
+          <!-- Hamburger icon -->
+          <svg data-mobile-menu-target="openIcon" class="block w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+
+          <!-- Close icon -->
+          <svg data-mobile-menu-target="closeIcon" class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu - Slide out panel -->
+  <div data-mobile-menu-target="menu" 
+       class="hidden fixed inset-0 z-40 transform transition-transform duration-300 ease-in-out translate-x-full lg:hidden"
+       id="mobile-menu">
+    <div class="absolute right-0 top-0 h-full w-64 bg-white shadow-xl overflow-y-auto">
+      <div class="px-4 pt-16 pb-6 space-y-1">
+        <% (nav_items + mobile_only_items + admin_nav_items).each do |name, path| %>
+          <%= mobile_nav_link_to name, path,
+            class: "block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#A53F2B] hover:bg-[#FFF8E7] rounded-md transition-colors duration-300" %>
+        <% end %>
+
+        <!-- Mobile auth links -->
+        <div class="border-t border-gray-100 mt-4 pt-4">
+          <% if user_signed_in? %>
+            <div class="px-3 py-2 text-sm text-gray-600">
+              Welcome, <span class="font-medium text-[#A53F2B]"><%= current_user.first_name %></span>
+            </div>
+
+            <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete },
+              class: "block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#A53F2B] hover:bg-[#FFF8E7] rounded-md transition-colors duration-300" %>
+                  class: "block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#A53F2B] hover:bg-[#FFF8E7] rounded-md transition-colors duration-300" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay for mobile menu -->
+  <div data-mobile-menu-target="overlay" 
+       data-action="click->mobile-menu#close" 
+       class="hidden fixed inset-0 bg-black/50 z-30 transition-opacity duration-300 opacity-0">
+  </div>
+</nav>

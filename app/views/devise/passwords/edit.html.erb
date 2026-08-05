@@ -1,0 +1,121 @@
+<div class="min-h-screen bg-warm-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <!-- Logo -->
+    <div class="flex justify-center">
+      <%= link_to root_path, class: "flex items-center space-x-2" do %>
+        <%= image_tag "impeclogo.jpeg", alt: "Marvellous Safaris Limited", class: "h-16 w-auto" %>
+        <div class="hidden md:block">
+          <span class="text-deep-green font-bold text-xl">MARVELLOUS SAFARIS</span>
+          <span class="block text-golden-yellow text-sm">LIMITED</span>
+        </div>
+      <% end %>
+    </div>
+
+    <h2 class="mt-6 text-center text-2xl font-bold text-deep-green">Change your password</h2>
+    <p class="mt-2 text-center text-sm text-charcoal">
+      Create a new secure password for your account
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
+        
+        <%= f.hidden_field :reset_password_token %>
+        
+        <% if resource.errors.any? %>
+          <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">
+                  <%= pluralize(resource.errors.count, "error") %> prohibited password change:
+                </h3>
+                <div class="mt-2 text-sm text-red-700">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <% resource.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- New Password Field -->
+        <div>
+          <%= f.label :password, "New password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="mt-1">
+            <%= f.password_field :password, 
+                autofocus: true,
+                autocomplete: "new-password",
+                class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-deep-green focus:border-deep-green sm:text-sm",
+                placeholder: "Enter your new password" %>
+          </div>
+          <% if @minimum_password_length %>
+            <p class="mt-1 text-sm text-gray-500">
+              Minimum <%= @minimum_password_length %> characters
+            </p>
+          <% end %>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div>
+          <%= f.label :password_confirmation, "Confirm new password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="mt-1">
+            <%= f.password_field :password_confirmation, 
+                autocomplete: "new-password",
+                class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-deep-green focus:border-deep-green sm:text-sm",
+                placeholder: "Confirm your new password" %>
+          </div>
+        </div>
+
+        <!-- Password Strength Tips -->
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md">
+          <h4 class="text-sm font-medium text-blue-800 mb-2">Password Tips:</h4>
+          <ul class="text-sm text-blue-700 space-y-1">
+            <li>• Use at least <%= @minimum_password_length %> characters</li>
+            <li>• Include uppercase and lowercase letters</li>
+            <li>• Add numbers and special characters</li>
+            <li>• Avoid common words or phrases</li>
+          </ul>
+        </div>
+
+        <div>
+          <%= f.submit "Change my password", 
+              class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-800 hover:bg-orange-5000 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-golden-yellow transition-colors duration-200 cursor-pointer" %>
+        </div>
+      <% end %>
+
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Need help?</span>
+          </div>
+        </div>
+
+        <div class="mt-6 text-center">
+          <%= link_to "Sign in", new_session_path(resource_name), 
+              class: "font-medium text-golden-yellow hover:text-yellow-600 text-sm" %>
+        </div>
+        
+        <% if devise_mapping.registerable? && controller_name != 'registrations' %>
+          <div class="mt-2 text-center">
+            <span class="text-sm text-gray-500">Don't have an account? </span>
+            <%= link_to "Sign up", new_registration_path(resource_name), 
+                class: "font-medium text-deep-green hover:text-green-700 text-sm" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+

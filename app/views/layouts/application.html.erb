@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= full_title(yield(:title)) %></title>
+    <meta name="description" content="Impeccable Africa Tours provides accessible African safaris, cultural tours, and travel experiences for Deaf and Hard of Hearing travelers worldwide.
+">
+    <meta name="robots" content="index, follow">
+
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <meta property="og:title" content="<%= yield(:title) || 'IMPECCABLE AFRICA TOUR' %>">
+    <meta property="og:description" content="<%= yield(:description) || 'Best Tanzania Safari Company...' %>">
+    <meta property="og:image" content="<%= image_url('impeclogo.jpeg') %>">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:type" content="website">
+
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= favicon_link_tag "impeclogo.jpeg" %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+
+  <body class="min-h-screen bg-neutral-light">
+    <%= render "shared/socialbars" %>
+    <%= render "shared/navigation" %>
+    <%= render "shared/flash_messages" %>
+    
+    <main class="container mx-auto px-4 py-8">
+      <%= yield %>
+    </main>
+    
+    <%= render "shared/footer" %>
+  </body>
+</html>

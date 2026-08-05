@@ -1,0 +1,49 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  duration: 1
+  difficulty: MyString
+  overview_title: MyString
+  overview_description: MyText
+  main_attractions: MyText
+  best_season: MyString
+  price_per_person: 9.99
+  min_people: 1
+  max_people: 1
+  departure_location: MyString
+  return_location: MyString
+  accommodation_type: MyString
+  transport_type: MyString
+  included_services: MyText
+  excluded_services: MyText
+  what_to_bring: MyText
+  daily_activities: MyText
+  wildlife_highlight: MyText
+  is_featured: false
+  status: MyString
+  main_image_alt: MyText
+
+two:
+  title: MyString
+  duration: 1
+  difficulty: MyString
+  overview_title: MyString
+  overview_description: MyText
+  main_attractions: MyText
+  best_season: MyString
+  price_per_person: 9.99
+  min_people: 1
+  max_people: 1
+  departure_location: MyString
+  return_location: MyString
+  accommodation_type: MyString
+  transport_type: MyString
+  included_services: MyText
+  excluded_services: MyText
+  what_to_bring: MyText
+  daily_activities: MyText
+  wildlife_highlight: MyText
+  is_featured: false
+  status: MyString
+  main_image_alt: MyText

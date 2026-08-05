@@ -1,0 +1,68 @@
+<% content_for :title, "Testimonials" %>
+
+<div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+ 
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+    <div>
+      <h1 class="font-bold text-3xl md:text-4xl text-green-800 mb-2">Customer Testimonials</h1>
+      <p class="text-gray-600">What our customers are saying about us</p>
+    </div>
+    <% if admin_user? %>
+      <%= link_to new_testimonial_path, class: "rounded-lg px-6 py-3 bg-orange-800 hover:bg-orange-500 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        New Testimonial
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- Testimonials Grid -->
+  <div id="testimonials" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% if @testimonials.any? %>
+      <% @testimonials.each do |testimonial| %>
+        <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 border border-gray-100">
+          <!-- Testimonial Content -->
+          <div class="mb-4">
+            <%= render testimonial %>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-2 pt-4 border-t border-gray-100">
+            <%= link_to "View", testimonial, 
+                class: "flex-1 text-center bg-orange-800 hover:bg-orange-500 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm" %>
+            <% if admin_user? %>
+              
+              <%= link_to "Edit", edit_testimonial_path(testimonial),
+                  class: "flex-1 text-center border border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm" %>
+              
+              <%= button_to "Delete", testimonial, method: :delete,
+                  class: "flex-1 text-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm cursor-pointer",
+                  data: { turbo_confirm: "Are you sure you want to delete this testimonial?" } %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Empty State -->
+      <div class="col-span-full text-center py-16 bg-white rounded-xl shadow-md border border-gray-100">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905a3.61 3.61 0 01-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">No testimonials yet</h3>
+        <p class="text-gray-600 mb-6">Share what your customers are saying about your services</p>
+       
+        <%= link_to new_testimonial_path, class: "rounded-lg px-6 py-3 bg-orange-800 hover:bg-orange-500 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 inline-flex items-center" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Add First Testimonial
+        <% end %>
+
+      </div>
+    <% end %>
+  </div>
+</div>

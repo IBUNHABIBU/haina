@@ -1,0 +1,21 @@
+<%= form_with(model: gear, class: "contents") do |form| %>
+  <% if gear.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(gear.errors.count, "error") %> prohibited this gear from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% gear.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="inline">
+   <div>
+        <%= form.label :trek_name, "Subject *", class: "block text-sm font-medium text-gray-700" %>
+        <%= form.rich_text_area :content, placeholder: "e.g., Kilimanjaro Summit, Safari Tour", class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-deep-green focus:ring-deep-green" %>
+      </div>
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

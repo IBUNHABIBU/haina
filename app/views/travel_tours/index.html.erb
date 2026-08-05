@@ -1,0 +1,70 @@
+<% content_for :title, "Travel Tours" %>
+
+<div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <% if notice.present? %>
+    <div class="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded-lg shadow-sm">
+      <p class="font-medium" id="notice"><%= notice %></p>
+    </div>
+  <% end %>
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+    <h1 class="font-bold text-3xl md:text-4xl text-green-800 mb-4 sm:mb-0">Travel & Tours</h1>
+    <% if user_signed_in? %>
+    <%= link_to new_travel_tour_path, class: "rounded-lg px-6 py-3 bg-orange-800 hover:bg-orange-500 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center" do %>
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+      </svg>
+       New travel tour
+   <% end %>
+   <% end %>
+
+  </div>
+
+  <!-- Tours List -->
+  <div id="travel_tours" class="space-y-6">
+    <% if @travel_tours.any? %>
+      <% @travel_tours.each do |travel_tour| %>
+        <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 border border-gray-100">
+          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <!-- Tour Content -->
+            <div class="flex-1">
+              <%= render travel_tour %>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+              <%= link_to "Learn more", travel_tour, 
+                  class: "px-5 py-2.5 bg-orange-800 hover:bg-orange-500 text-white rounded-lg font-medium text-center transition-colors duration-200 shadow-sm hover:shadow-md" %>
+            <% if user_signed_in? %>
+              <%= link_to "Edit", edit_travel_tour_path(travel_tour),
+                  class: "px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-center transition-colors duration-200 shadow-sm hover:shadow-md" %>
+              
+              <%= button_to "Delete", travel_tour, method: :delete, 
+                  class: "px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium text-center transition-colors duration-200 shadow-sm hover:shadow-md cursor-pointer", 
+                  data: { turbo_confirm: "Are you sure?" } %>
+            <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-16 bg-white rounded-xl shadow-md border border-gray-100">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">No travel tours found</h3>
+        <p class="text-gray-600 mb-6">Get started by creating your first travel tour experience</p>
+        <%= link_to new_travel_tour_path, class: "rounded-lg px-6 py-3 bg-orange-800 hover:bg-orange-500 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 inline-flex items-center" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          New Tour
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

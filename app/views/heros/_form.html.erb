@@ -1,0 +1,61 @@
+<%= form_with(model: hero, local: true) do |form| %>
+  <% if hero.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mb-6">
+      <h2><%= pluralize(hero.errors.count, "error") %> prohibited this hero from being saved:</h2>
+
+      <ul>
+        <% hero.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="space-y-6">
+    <div>
+      <%= form.label :title, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :title, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-800 focus:ring-green-800 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :subtitle, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :subtitle, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-800 focus:ring-green-800 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_area :description, rows: 4, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-800 focus:ring-green-800 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :images, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.file_field :images, multiple: true, class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-orange-800 file:text-white hover:file:bg-green-700" %>
+      
+      <% if hero.images.attached? %>
+        <div class="mt-2">
+          <p class="text-sm font-medium text-gray-700">Current Gallery Images</p>
+          <div class="mt-1 grid grid-cols-3 gap-2">
+            <% hero.images.each do |image| %>
+              <div class="relative">
+                <% if hero.persisted? && hero.images.attached? %>
+                  <% hero.images.each do |image| %>
+                    <div class="relative">
+                      <%= image_tag image, class: "w-24" %>
+                    <%= link_to 'Remove', rails_direct_uploads_path(image.id), method: :delete, data: { confirm: 'Are you sure?' }, class: "absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" %>    </div>
+                  <% end %>
+                <% else %>
+                  <p class="text-gray-400 text-sm">No gallery images uploaded yet</p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex items-center justify-end space-x-3">
+      <%= link_to "Cancel", hero.persisted? ? hero_path(hero) : heros_path, class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800" %>
+      <%= form.submit class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-800 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-800" %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,168 @@
+<% content_for :title, "User Management" %>
+
+<div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+    <div>
+      <h1 class="font-bold text-3xl md:text-4xl text-green-800 mb-2">User Management</h1>
+      <p class="text-gray-600">Manage user roles and permissions</p>
+    </div>
+  </div>
+
+  <% if notice.present? %>
+    <div class="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded-lg shadow-sm">
+      <p class="font-medium" id="notice"><%= notice %></p>
+    </div>
+  <% end %>
+
+  <% if alert.present? %>
+    <div class="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg shadow-sm">
+      <p class="font-medium" id="alert"><%= alert %></p>
+    </div>
+  <% end %>
+
+  <!-- Users Table -->
+  <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+        
+          <% @users.each do |user| %>
+            <tr class="hover:bg-gray-50 transition-colors duration-200">
+              <!-- User Info -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-orange-800 rounded-full flex items-center justify-center">
+                    <span class="text-white font-medium text-sm">
+                      <%= user.first_name[0].upcase %><%= user.last_name[0].upcase %>
+                    </span>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900"><%= user.display_name %></div>
+                    <div class="text-sm text-gray-500">ID: <%= user.id %></div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Email -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900"><%= user.email %></div>
+              </td>
+
+              <!-- Role -->
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= role_badge_color(user.role) %>">
+                  <%= user.role.titleize %>
+                </span>
+              </td>
+
+              <!-- Joined Date -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= user.created_at.strftime("%b %d, %Y") %>
+              </td>
+
+              <!-- Actions -->
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <!-- Grant Admin Button -->
+                  <% if user.user? && can_grant_admin?(user)  %>
+                    <%= form_with model: user, url: user_path(user), method: :patch, class: "inline" do |f| %>
+                      <%= f.hidden_field :role, value: "admin" %>
+                      <%= f.button type: "submit", class: "text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100 px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200", 
+                          data: { turbo_confirm: "Grant admin privileges to #{user.display_name}?" } do %>
+                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        Make Admin
+                      <% end %>
+                    <% end %>
+                  <% end %>
+
+                  <!-- Revoke Admin Button (only for super_admin to revoke from admin) -->
+                  <% if (user.admin? || user.super_admin?) && can_grant_admin?(user) %>
+                    <%= form_with model: user, url: user_path(user), method: :patch, class: "inline" do |f| %>
+                      <%= f.hidden_field :role, value: "user" %>
+                      <%= f.button type: "submit", class: "text-amber-600 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200", 
+                          data: { turbo_confirm: "Revoke admin privileges from #{user.display_name}?" } do %>
+                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        Revoke Admin
+                      <% end %>
+                    <% end %>
+                  <% end %>
+
+                  <!-- Delete Button -->
+                  <% if user.can_be_deleted_by?(current_user) %>
+                    <%= button_to user_path(user), method: :delete, 
+                        class: "text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200", 
+                        data: { turbo_confirm: "Are you sure you want to delete #{user.display_name}? This action cannot be undone." } do %>
+                      <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                      Delete
+                    <% end %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-green-50 rounded-lg p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </div>
+        <div class="ml-5">
+          <p class="text-sm font-medium text-gray-600">Total Users</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @users.count %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-blue-50 rounded-lg p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+        </div>
+        <div class="ml-5">
+          <p class="text-sm font-medium text-gray-600">Admins</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @users.where(role: ['admin', 'super_admin']).count %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-amber-50 rounded-lg p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+        </div>
+        <div class="ml-5">
+          <p class="text-sm font-medium text-gray-600">Regular Users</p>
+          <p class="text-2xl font-bold text-gray-900"><%= @users.where(role: 'user').count %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

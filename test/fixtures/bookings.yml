@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  full_name: MyString
+  email: MyString
+  phone: MyString
+  trek_name: MyString
+  start_date: 2025-08-21
+  end_date: 2025-08-21
+  number_of_people: 1
+  special_requests: MyText
+  status: MyString
+
+two:
+  full_name: MyString
+  email: MyString
+  phone: MyString
+  trek_name: MyString
+  start_date: 2025-08-21
+  end_date: 2025-08-21
+  number_of_people: 1
+  special_requests: MyText
+  status: MyString

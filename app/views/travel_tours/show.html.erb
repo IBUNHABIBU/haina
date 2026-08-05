@@ -1,0 +1,107 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-green-800"><%= @travel_tour.name %></h1>
+    <div class="space-x-3">
+    <% if admin_user? %>
+      <%= link_to 'Edit', edit_travel_tour_path(@travel_tour), class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700" %>
+     <% end %>
+      <%= link_to 'Back', travel_tours_path, class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Tour Information</h3>
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div class="lg:col-span-2">
+          <% if @travel_tour.image.attached? %>
+            <div class="rounded-lg overflow-hidden mb-6">
+              <%= image_tag @travel_tour.image.variant(resize_to_limit: [1200, 800]),
+              loading: "lazy", class: "w-full h-auto" %>
+            </div>
+          <% end %>
+
+          <div class="prose max-w-none">
+            <h3 class="text-xl font-bold text-gray-900">Description</h3>
+            <p class="text-gray-700"><%= @travel_tour.description %></p>
+          </div>
+
+          <div class="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+            <div>
+              <h3 class="text-xl font-bold text-gray-900 mb-4">Highlights</h3>
+              <ul class="list-disc pl-5 space-y-2">
+                <% @travel_tour.highlights.split("\n").each do |highlight| %>
+                  <li class="text-gray-700"><%= highlight %></li>
+                <% end %>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-gray-900 mb-4">What's Included</h3>
+              <ul class="list-disc pl-5 space-y-2">
+                <% @travel_tour.includes.split("\n").each do |included| %>
+                  <li class="text-gray-700"><%= included %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Tour Details</h3>
+            <dl class="space-y-4">
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Category</dt>
+                <dd class="mt-1 text-sm text-gray-900">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    <%= @travel_tour.category %>
+                  </span>
+                </dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Duration</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @travel_tour.duration %> days</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">From</dt>
+                <dd class="mt-1 text-sm text-gray-900">$<%= @travel_tour.price %> per person</dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Featured</dt>
+                <dd class="mt-1 text-sm text-gray-900">
+                  <% if @travel_tour.featured? %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800">
+                      Featured Tour
+                    </span>
+                  <% else %>
+                    No
+                  <% end %>
+                </dd>
+              </div>
+            </dl>
+
+            <div class="mt-6">
+              <%= link_to "Book This Tour", new_booking_path, class: "w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-800 hover:bg-orange-500" %>
+            </div>
+          </div>
+
+          <% if @travel_tour.gallery_images.attached? %>
+            <div class="mt-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Gallery</h3>
+              <div class="grid grid-cols-2 gap-2">
+                <% @travel_tour.gallery_images.each do |image| %>
+                  <div class="rounded-md overflow-hidden">
+                    <%= image_tag image.variant(resize_to_limit: [500, 500]),
+              loading: "lazy", class: "w-full h-24 object-cover" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

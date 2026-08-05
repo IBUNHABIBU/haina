@@ -1,0 +1,2 @@
+json.extract! safari, :id, :title, :duration, :difficulty, :overview_title, :overview_description, :main_attractions, :best_season, :price_per_person, :min_people, :max_people, :departure_location, :return_location, :accommodation_type, :transport_type, :included_services, :excluded_services, :what_to_bring, :daily_activities, :wildlife_highlight, :is_featured, :status, :main_image_alt, :created_at, :updated_at
+json.url safari_url(safari, format: :json)

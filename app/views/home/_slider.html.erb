@@ -1,0 +1,73 @@
+<div data-controller="slider" class="relative overflow-hidden w-full h-full group">
+  <!-- Slides Container -->
+  <div class="slides flex transition-transform duration-1000 ease-out w-full h-full" 
+       data-slider-target="slides"
+       style="will-change: transform;">
+    <% obj.images.each_with_index do |image, index| %>
+      <div class="w-full flex-shrink-0 h-full relative" 
+           data-slider-target="slide"
+           data-index="<%= index %>">
+        <%= render 'home/heroimages', obj: image %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Gradient Overlays - Make sure they don't block clicks -->
+  <div class="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-black/30 to-transparent pointer-events-none z-10"></div>
+  <div class="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-black/30 to-transparent pointer-events-none z-10"></div>
+
+  <!-- Navigation Arrows - Fixed z-index and pointer-events -->
+  <div class="absolute inset-0 flex items-center justify-between px-2 md:px-4 z-30 pointer-events-none">
+    <!-- Previous Arrow -->
+    <button data-action="click->slider#previous"
+            class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-[#FFB347] hover:scale-110 transition-all duration-300 border border-white/30 hover:border-[#FFB347] focus:outline-none focus:ring-2 focus:ring-[#FFB347] shadow-lg pointer-events-auto cursor-pointer"
+            aria-label="Previous slide">
+      <svg class="w-5 h-5 md:w-6 md:h-6 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+
+    <!-- Next Arrow -->
+    <button data-action="click->slider#next"
+            class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-[#FFB347] hover:scale-110 transition-all duration-300 border border-white/30 hover:border-[#FFB347] focus:outline-none focus:ring-2 focus:ring-[#FFB347] shadow-lg pointer-events-auto cursor-pointer"
+            aria-label="Next slide">
+      <svg class="w-5 h-5 md:w-6 md:h-6 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Slide Indicators/Dots - Also make them clickable -->
+  <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 z-30 pointer-events-none">
+    <% obj.images.each_with_index do |_, index| %>
+      <button data-action="click->slider#goToSlide"
+              data-index="<%= index %>"
+              class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-white/70 hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FFB347] pointer-events-auto cursor-pointer"
+              aria-label="Go to slide <%= index + 1 %>">
+        <span class="sr-only">Slide <%= index + 1 %></span>
+      </button>
+    <% end %>
+  </div>
+
+  <!-- Slide Counter - Information only, not clickable -->
+  <div class="absolute top-4 right-4 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/30 z-30 pointer-events-none">
+    <span class="text-white text-sm font-medium" data-slider-target="currentSlide">1</span>
+    <span class="text-white/50 mx-1">/</span>
+    <span class="text-white text-sm font-medium"><%= obj.images.count %></span>
+  </div>
+
+  <!-- Autoplay Controls -->
+  <div class="absolute top-4 left-4 flex items-center gap-2 z-30 pointer-events-none">
+    <button data-action="click->slider#toggleAutoplay"
+            class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm text-white hover:text-white hover:bg-[#FFB347] transition-all duration-300 flex items-center justify-center border border-white/30 hover:border-[#FFB347] pointer-events-auto cursor-pointer"
+            aria-label="Toggle autoplay">
+      <svg data-slider-target="playIcon" class="w-4 h-4 hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <svg data-slider-target="pauseIcon" class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+    </button>
+  </div>
+</div>

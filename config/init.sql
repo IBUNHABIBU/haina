@@ -1,0 +1,4 @@
+CREATE DATABASE impec_production;
+CREATE DATABASE impec_production_queue;
+CREATE DATABASE impec_production_cache;
+CREATE DATABASE impec_production_cable;
