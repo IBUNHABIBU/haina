@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :confirmable # Add this line
+         :recoverable, :rememberable, :validatable
+        #  :confirmable # Add this line
 
   validates :first_name, :last_name, presence: true
   validates :role, presence: true, inclusion: { in: %w[super_admin admin user] }
@@ -10,6 +10,19 @@ class User < ApplicationRecord
   
   # Set default role
   before_validation :set_default_role, on: :create
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+
+    if login = conditions.delete(:login)
+      where(conditions)
+        .where(
+          "LOWER(email) = :value OR phone_number = :value",
+          value: login.downcase
+        )
+        .first
+    end
+  end
   
   def super_admin?
     role == 'super_admin'

@@ -26,9 +26,9 @@
         <div class="space-y-6">
           <!-- Email Field -->
           <div>
-            <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
+            <%= f.label :login, "Email or phone", class: "block text-sm font-medium text-gray-700" %>
             <div class="mt-1">
-              <%= f.email_field :email, autofocus: true, autocomplete: "email", 
+              <%= f.email_field :login, autofocus: true, autocomplete: "email", 
                   class: "appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-deep-green focus:border-deep-green sm:text-sm" %>
             </div>
           </div>
