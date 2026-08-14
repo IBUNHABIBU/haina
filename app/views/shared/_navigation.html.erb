@@ -29,6 +29,12 @@
             <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete },
               class: "text-sm font-medium text-gray-600 hover:text-[#A53F2B] transition-colors duration-300" %>
           </div>
+
+           <% else %>
+
+            <%= link_to "Sign In", new_user_session_path,
+              class: "text-sm font-medium text-gray-600 hover:text-[#A53F2B] transition-colors duration-300" %>
+    
         <% end %>
 
         <% if admin_user? %>
@@ -81,7 +87,13 @@
             <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete },
               class: "block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#A53F2B] hover:bg-[#FFF8E7] rounded-md transition-colors duration-300" %>
                   class: "block px-3 py-2 text-base font-medium text-gray-700 hover:text-[#A53F2B] hover:bg-[#FFF8E7] rounded-md transition-colors duration-300" %>
-          <% end %>
+          
+            <% else %>
+
+            <%= link_to "Sign In", new_user_session_path,
+              class: "text-sm font-medium text-gray-600 hover:text-[#A53F2B] transition-colors duration-300" %>
+    
+            <% end %>
         </div>
       </div>
     </div>
