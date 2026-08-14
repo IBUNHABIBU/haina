@@ -27,8 +27,8 @@ module NavigationHelper
 
   def nav_items
     [
-      ["Home", root_path],
-      ["Sign in", new_user_session_path]
+      ["Home", root_path]
+      
     ]
   end
 
