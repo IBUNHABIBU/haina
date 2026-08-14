@@ -33,7 +33,7 @@ module NavigationHelper
 
   def mobile_only_items
     [
-      ["Tours", travel_tours_path]
+      ["Tours", root_path]
     ]
   end
 
