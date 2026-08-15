@@ -1,0 +1,319 @@
+<div class="space-y-1" data-column-toggle-target="list">
+  <!-- Customer -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="customer">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="customer"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Customer</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Phone -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="phone">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="phone"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Phone</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- TV Brand -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="tv_brand">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="tv_brand"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">TV Brand</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- TV Size -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="tv_size">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="tv_size"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">TV Size</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Model No -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="model_no">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="model_no"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Model No</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Date In -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="date_in">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="date_in"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Date In</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Date Out -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="date_out">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="date_out"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Date Out</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Starting Price -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="starting_price">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="starting_price"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Starting Price</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Final Price -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="final_price">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="final_price"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Final Price</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Status -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="status">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="status"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Status</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Spare Used -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="spare_used">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="spare_used"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Spare Used</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Cost Each -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="cost_each">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="cost_each"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Cost Each</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Total Cost -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="total_cost">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="total_cost"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Total Cost</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Labour Cost -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="labour_cost">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="labour_cost"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Labour Cost</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Profit -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="profit">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="profit"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Profit</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- User ID -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="user_id">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="user_id"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">User ID</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Remarks -->
+  <label class="column-item flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer group" data-column="remarks">
+    <div class="flex items-center gap-2 min-w-0 flex-1">
+      <svg class="w-4 h-4 text-gray-400 cursor-move flex-shrink-0 drag-handle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+      </svg>
+      <input type="checkbox" 
+             class="column-toggle rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+             data-column="remarks"
+             data-action="change->column-toggle#toggleColumn"
+             checked>
+      <span class="text-sm text-gray-700 truncate">Remarks</span>
+    </div>
+    <span class="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+      <span class="hidden sm:inline">Toggle</span>
+    </span>
+  </label>
+  
+  <!-- Actions - Always Visible -->
+  <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg opacity-60 cursor-not-allowed">
+    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+    </svg>
+    <input type="checkbox" 
+           class="rounded border-gray-300 text-blue-600"
+           checked
+           disabled>
+    <span class="text-sm text-gray-500">Actions (Always Visible)</span>
+  </div>
+</div>
