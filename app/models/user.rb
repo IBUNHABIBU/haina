@@ -12,6 +12,7 @@ class User < ApplicationRecord
   
   # Set default role
   before_validation :set_default_role, on: :create
+ 
   
   def super_admin?
     role == 'super_admin'
