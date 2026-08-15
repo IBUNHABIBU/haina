@@ -5,8 +5,10 @@ class User < ApplicationRecord
 
   validates :first_name, :last_name, presence: true
   validates :role, presence: true, inclusion: { in: %w[super_admin admin user] }
+  has_many :
   
   scope :visible_users, -> { where(role: ['user', 'admin']) }
+
   
   # Set default role
   before_validation :set_default_role, on: :create
