@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :activities
   get '/dashboard', to: 'dashboard#index', as: 'dashboard'
   # Devise authentication
   devise_for :users, path: '', path_names: {
