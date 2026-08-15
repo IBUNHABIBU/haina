@@ -1,70 +1,148 @@
-<div id="<%= dom_id activity %>" class="w-full sm:w-auto my-5 space-y-5">
-  <div>
-    <strong class="block font-medium mb-1">Customer:</strong>
-    <%= activity.customer %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Phone:</strong>
-    <%= activity.phone %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Tv brand:</strong>
-    <%= activity.TV_brand %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Tv size:</strong>
-    <%= activity.TV_size %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Model no:</strong>
-    <%= activity.model_no %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Date in:</strong>
-    <%= activity.date_in %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Date out:</strong>
-    <%= activity.date_out %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Starting price:</strong>
-    <%= activity.starting_price %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Final price:</strong>
-    <%= activity.final_price %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Status:</strong>
-    <%= activity.status %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Spare used:</strong>
-    <%= activity.spare_used %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Cost each:</strong>
-    <%= activity.cost_each %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Total cost:</strong>
-    <%= activity.total_cost %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Profit:</strong>
-    <%= activity.profit %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Remarks:</strong>
-    <%= activity.remarks %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">Labour cost:</strong>
-    <%= activity.labour_cost %>
-  </div>
-  <div>
-    <strong class="block font-medium mb-1">User:</strong>
-    <%= activity.user_id %>
-  </div>
-</div>
+<!-- Desktop Table Row -->
+<tr id="<%= dom_id activity %>" class="hidden md:table-row hover:bg-gray-50 transition-colors duration-150">
+  <!-- Customer -->
+  <td class="px-3 py-3 whitespace-nowrap customer" data-column="customer">
+    <div class="text-sm font-medium text-gray-900">
+      <%= activity.customer.presence || "—" %>
+    </div>
+  </td>
+  
+  <!-- Phone -->
+  <td class="px-3 py-3 whitespace-nowrap phone" data-column="phone">
+    <div class="text-sm text-gray-600">
+      <%= activity.phone.presence || "—" %>
+    </div>
+  </td>
+  
+  <!-- TV Brand -->
+  <td class="px-3 py-3 whitespace-nowrap tv_brand" data-column="tv_brand">
+    <div class="text-sm text-gray-600">
+      <%= activity.TV_brand.presence || "—" %>
+    </div>
+  </td>
+  
+  <!-- TV Size -->
+  <td class="px-3 py-3 whitespace-nowrap tv_size" data-column="tv_size">
+    <div class="text-sm text-gray-600">
+      <%= activity.TV_size.presence || "—" %>
+    </div>
+  </td>
+  
+  <!-- Model No -->
+  <td class="px-3 py-3 whitespace-nowrap model_no" data-column="model_no">
+    <div class="text-sm text-gray-600">
+      <%= activity.model_no.presence || "—" %>
+    </div>
+  </td>
+  
+  <!-- Date In -->
+  <td class="px-3 py-3 whitespace-nowrap date_in" data-column="date_in">
+    <div class="text-sm text-gray-600">
+      <%= activity.date_in.strftime("%b %d, %Y %I:%M %p") if activity.date_in %>
+    </div>
+  </td>
+  
+  <!-- Date Out -->
+  <td class="px-3 py-3 whitespace-nowrap date_out" data-column="date_out">
+    <div class="text-sm text-gray-600">
+      <%= activity.date_out.strftime("%b %d, %Y %I:%M %p") if activity.date_out %>
+    </div>
+  </td>
+  
+  <!-- Starting Price -->
+  <td class="px-3 py-3 whitespace-nowrap starting_price" data-column="starting_price">
+    <div class="text-sm text-gray-600">
+      $<%= activity.starting_price %>
+    </div>
+  </td>
+  
+  <!-- Final Price -->
+  <td class="px-3 py-3 whitespace-nowrap final_price" data-column="final_price">
+    <div class="text-sm text-gray-600">
+      $<%= activity.final_price %>
+    </div>
+  </td>
+  
+  <!-- Status -->
+  <td class="px-3 py-3 whitespace-nowrap status" data-column="status">
+    <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full <%= status_badge_color(activity.status) %>">
+      <%= activity.status.humanize %>
+    </span>
+  </td>
+  
+  <!-- Spare Used -->
+  <td class="px-3 py-3 whitespace-nowrap spare_used" data-column="spare_used">
+    <div class="text-sm text-gray-600">
+      <%= activity.spare_used.presence || "0" %>
+    </div>
+  </td>
+  
+  <!-- Cost Each -->
+  <td class="px-3 py-3 whitespace-nowrap cost_each" data-column="cost_each">
+    <div class="text-sm text-gray-600">
+      $<%= activity.cost_each %>
+    </div>
+  </td>
+  
+  <!-- Total Cost -->
+  <td class="px-3 py-3 whitespace-nowrap total_cost" data-column="total_cost">
+    <div class="text-sm text-gray-600">
+      $<%= activity.total_cost %>
+    </div>
+  </td>
+  
+  <!-- Labour Cost -->
+  <td class="px-3 py-3 whitespace-nowrap labour_cost" data-column="labour_cost">
+    <div class="text-sm text-gray-600">
+      $<%= activity.labour_cost %>
+    </div>
+  </td>
+  
+  <!-- Profit -->
+  <td class="px-3 py-3 whitespace-nowrap profit" data-column="profit">
+    <div class="text-sm font-medium <%= activity.profit.to_f > 0 ? 'text-green-600' : activity.profit.to_f < 0 ? 'text-red-600' : 'text-gray-600' %>">
+      $<%= activity.profit %>
+    </div>
+  </td>
+  
+  <!-- User ID -->
+  <td class="px-3 py-3 whitespace-nowrap user_id" data-column="user_id">
+    <div class="text-sm text-gray-600">
+      <%= activity.user_id.presence || "—" %>
+    </div>
+  </td>
+  
+  <!-- Remarks -->
+  <td class="px-3 py-3 max-w-xs remarks" data-column="remarks">
+    <div class="text-sm text-gray-600 truncate" title="<%= activity.remarks %>">
+      <%= activity.remarks.presence || "—" %>
+    </div>
+  </td>
+  
+  <!-- Actions -->
+  <td class="px-3 py-3 whitespace-nowrap text-right actions" data-column="actions">
+    <div class="flex items-center justify-end gap-1">
+      <%= link_to activity, class: "p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition duration-150" do %>
+        <span class="sr-only">View</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        </svg>
+      <% end %>
+      
+      <%= link_to edit_activity_path(activity), class: "p-1.5 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition duration-150" do %>
+        <span class="sr-only">Edit</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+        </svg>
+      <% end %>
+      
+      <%= button_to activity, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition duration-150" do %>
+        <span class="sr-only">Delete</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      <% end %>
+    </div>
+  </td>
+</tr>

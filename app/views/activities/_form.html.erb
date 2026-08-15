@@ -1,9 +1,10 @@
 <%= form_with(model: activity, class: "contents") do |form| %>
   <% if activity.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
-      <h2><%= pluralize(activity.errors.count, "error") %> prohibited this activity from being saved:</h2>
-
-      <ul class="list-disc ml-6">
+    <div id="error_explanation" class="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-md mt-3 mb-6">
+      <h2 class="font-bold text-sm">
+        <%= pluralize(activity.errors.count, "error") %> prohibited this activity from being saved:
+      </h2>
+      <ul class="list-disc ml-6 mt-1 text-sm">
         <% activity.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,92 +12,123 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :customer %>
-    <%= form.text_field :customer, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:customer].none?, "border-red-400 focus:outline-red-600": activity.errors[:customer].any?}] %>
-  </div>
+  <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+    <!-- Two-column grid for better layout -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= form.label :customer, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :customer, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:customer].none?, "border-red-300 focus:ring-red-500": activity.errors[:customer].any?}] %>
+        <% if activity.errors[:customer].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:customer].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :phone %>
-    <%= form.text_field :phone, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:phone].none?, "border-red-400 focus:outline-red-600": activity.errors[:phone].any?}] %>
-  </div>
+      <div>
+        <%= form.label :phone, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :phone, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:phone].none?, "border-red-300 focus:ring-red-500": activity.errors[:phone].any?}] %>
+        <% if activity.errors[:phone].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:phone].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :TV_brand %>
-    <%= form.text_field :TV_brand, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:TV_brand].none?, "border-red-400 focus:outline-red-600": activity.errors[:TV_brand].any?}] %>
-  </div>
+      <div>
+        <%= form.label :TV_brand, "TV Brand", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :TV_brand, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:TV_brand].none?, "border-red-300 focus:ring-red-500": activity.errors[:TV_brand].any?}] %>
+        <% if activity.errors[:TV_brand].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:TV_brand].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :TV_size %>
-    <%= form.number_field :TV_size, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:TV_size].none?, "border-red-400 focus:outline-red-600": activity.errors[:TV_size].any?}] %>
-  </div>
+      <div>
+        <%= form.label :TV_size, "TV Size (inches)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.number_field :TV_size, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:TV_size].none?, "border-red-300 focus:ring-red-500": activity.errors[:TV_size].any?}] %>
+        <% if activity.errors[:TV_size].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:TV_size].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :model_no %>
-    <%= form.text_field :model_no, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:model_no].none?, "border-red-400 focus:outline-red-600": activity.errors[:model_no].any?}] %>
-  </div>
+      <div>
+        <%= form.label :model_no, "Model No.", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :model_no, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:model_no].none?, "border-red-300 focus:ring-red-500": activity.errors[:model_no].any?}] %>
+        <% if activity.errors[:model_no].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:model_no].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :date_in %>
-    <%= form.datetime_field :date_in, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:date_in].none?, "border-red-400 focus:outline-red-600": activity.errors[:date_in].any?}] %>
-  </div>
+      <div>
+        <%= form.label :date_in, "Date In", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.datetime_field :date_in, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:date_in].none?, "border-red-300 focus:ring-red-500": activity.errors[:date_in].any?}] %>
+        <% if activity.errors[:date_in].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:date_in].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :date_out %>
-    <%= form.datetime_field :date_out, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:date_out].none?, "border-red-400 focus:outline-red-600": activity.errors[:date_out].any?}] %>
-  </div>
+      <div>
+        <%= form.label :date_out, "Date Out", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.datetime_field :date_out, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:date_out].none?, "border-red-300 focus:ring-red-500": activity.errors[:date_out].any?}] %>
+        <% if activity.errors[:date_out].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:date_out].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :starting_price %>
-    <%= form.text_field :starting_price, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:starting_price].none?, "border-red-400 focus:outline-red-600": activity.errors[:starting_price].any?}] %>
-  </div>
+      <div>
+        <%= form.label :starting_price, "Starting Price", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :starting_price, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:starting_price].none?, "border-red-300 focus:ring-red-500": activity.errors[:starting_price].any?}] %>
+        <% if activity.errors[:starting_price].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:starting_price].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :final_price %>
-    <%= form.text_field :final_price, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:final_price].none?, "border-red-400 focus:outline-red-600": activity.errors[:final_price].any?}] %>
-  </div>
+      <div>
+        <%= form.label :final_price, "Final Price", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :final_price, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:final_price].none?, "border-red-300 focus:ring-red-500": activity.errors[:final_price].any?}] %>
+        <% if activity.errors[:final_price].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:final_price].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :status %>
-    <%= form.number_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:status].none?, "border-red-400 focus:outline-red-600": activity.errors[:status].any?}] %>
-  </div>
+      <div class="my-5">
+          <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.select :status, 
+              Activity.statuses.keys.map { |status| [status.humanize, status] },
+              { include_blank: "Select status..." },
+              class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:status].none?, "border-red-300 focus:ring-red-500": activity.errors[:status].any?}] %>
+          <% if activity.errors[:status].any? %>
+            <p class="mt-1 text-sm text-red-600"><%= activity.errors[:status].first %></p>
+          <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :spare_used %>
-    <%= form.number_field :spare_used, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:spare_used].none?, "border-red-400 focus:outline-red-600": activity.errors[:spare_used].any?}] %>
-  </div>
+      <div>
+        <%= form.label :spare_used, "Spare Used", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.number_field :spare_used, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:spare_used].none?, "border-red-300 focus:ring-red-500": activity.errors[:spare_used].any?}] %>
+        <% if activity.errors[:spare_used].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:spare_used].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :cost_each %>
-    <%= form.text_field :cost_each, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:cost_each].none?, "border-red-400 focus:outline-red-600": activity.errors[:cost_each].any?}] %>
-  </div>
+      <div>
+        <%= form.label :cost_each, "Cost Each", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :cost_each, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:cost_each].none?, "border-red-300 focus:ring-red-500": activity.errors[:cost_each].any?}] %>
+        <% if activity.errors[:cost_each].any? %>
+          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:cost_each].first %></p>
+        <% end %>
+      </div>
 
-  <div class="my-5">
-    <%= form.label :total_cost %>
-    <%= form.text_field :total_cost, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:total_cost].none?, "border-red-400 focus:outline-red-600": activity.errors[:total_cost].any?}] %>
-  </div>
+    </div>
 
-  <div class="my-5">
-    <%= form.label :profit %>
-    <%= form.text_field :profit, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:profit].none?, "border-red-400 focus:outline-red-600": activity.errors[:profit].any?}] %>
-  </div>
+    <!-- Full width fields -->
+    <div>
+      <%= form.label :remarks, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.textarea :remarks, rows: 4, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:remarks].none?, "border-red-300 focus:ring-red-500": activity.errors[:remarks].any?}] %>
+      <% if activity.errors[:remarks].any? %>
+        <p class="mt-1 text-sm text-red-600"><%= activity.errors[:remarks].first %></p>
+      <% end %>
+    </div>
 
-  <div class="my-5">
-    <%= form.label :remarks %>
-    <%= form.textarea :remarks, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:remarks].none?, "border-red-400 focus:outline-red-600": activity.errors[:remarks].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :labour_cost %>
-    <%= form.text_field :labour_cost, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:labour_cost].none?, "border-red-400 focus:outline-red-600": activity.errors[:labour_cost].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": activity.errors[:user_id].none?, "border-red-400 focus:outline-red-600": activity.errors[:user_id].any?}] %>
-  </div>
-
-  <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+    <!-- Submit Button -->
+    <div class="flex flex-col sm:flex-row gap-3 pt-2 border-t border-gray-200">
+      <%= form.submit class: "flex-1 sm:flex-none px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition duration-150 ease-in-out hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer" %>
+      <%= link_to "Cancel", activities_path, class: "flex-1 sm:flex-none px-6 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg text-center transition duration-150 ease-in-out" %>
+    </div>
   </div>
 <% end %>
