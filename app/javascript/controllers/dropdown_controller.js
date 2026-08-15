@@ -1,7 +1,46 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="dropdown"
 export default class extends Controller {
+  static targets = ["menu"]
+
   connect() {
+    document.addEventListener('click', this.closeOnClickOutside.bind(this))
+  }
+
+  disconnect() {
+    document.removeEventListener('click', this.closeOnClickOutside.bind(this))
+  }
+
+  toggle(event) {
+    event.stopPropagation()
+    this.menuTarget.classList.toggle('hidden')
+  }
+
+  close() {
+    this.menuTarget.classList.add('hidden')
+  }
+
+  closeOnClickOutside(event) {
+    if (!this.element.contains(event.target)) {
+      this.close()
+    }
+  }
+
+  showAll() {
+    const event = new CustomEvent('show-all-columns')
+    document.dispatchEvent(event)
+    this.close()
+  }
+
+  hideAll() {
+    const event = new CustomEvent('hide-all-columns')
+    document.dispatchEvent(event)
+    this.close()
+  }
+
+  resetDefaults() {
+    const event = new CustomEvent('reset-columns')
+    document.dispatchEvent(event)
+    this.close()
   }
 }
