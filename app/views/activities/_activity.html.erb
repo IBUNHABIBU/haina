@@ -66,7 +66,7 @@
   <!-- Status -->
   <td class="px-3 py-3 whitespace-nowrap status" data-column="status">
     <span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full <%= status_badge_color(activity.status) %>">
-      <%= activity.status.humanize %>
+      <%= activity.status&.humanize %>
     </span>
   </td>
   

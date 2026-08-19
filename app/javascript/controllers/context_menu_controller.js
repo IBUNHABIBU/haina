@@ -5,6 +5,8 @@ export default class extends Controller {
 
   connect() {
     // Add context menu listeners to all headers
+    
+    console.log("Context menu is working")
     this.headers = this.headerTargets
     this.headers.forEach(header => {
       header.addEventListener('contextmenu', this.showMenu.bind(this))

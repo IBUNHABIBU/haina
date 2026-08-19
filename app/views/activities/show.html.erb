@@ -19,7 +19,7 @@
       </div>
     </div>
     <span class="px-3 py-1 text-sm font-medium rounded-full <%= status_badge_color(@activity.status) %> whitespace-nowrap">
-      <%= @activity.status.humanize %>
+      <%= @activity.status&.humanize %>
     </span>
   </div>
 
@@ -63,6 +63,141 @@
         <div class="bg-gray-50 rounded-lg p-3">
           <span class="text-xs font-medium text-gray-500 block">Model No.</span>
           <span class="text-sm font-medium text-gray-900"><%= @activity.model_no.presence || "—" %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Images Section -->
+    <div class="p-6 border-b border-gray-100">
+      <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-4">Images</h3>
+      
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Model Image -->
+        <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+          <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+            <% if @activity.model_image.attached? %>
+              <%= image_tag @activity.model_image, class: "w-full h-32 object-cover", alt: "Model Image" %>
+            <% else %>
+              <div class="w-full h-32 flex items-center justify-center bg-gray-100">
+                <span class="text-xs text-gray-400">No image</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="p-2 text-center">
+            <span class="text-xs font-medium text-gray-600">Model Image</span>
+          </div>
+        </div>
+
+        <!-- Board Number -->
+        <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+          <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+            <% if @activity.board_number.attached? %>
+              <%= image_tag @activity.board_number, class: "w-full h-32 object-cover", alt: "Board Number" %>
+            <% else %>
+              <div class="w-full h-32 flex items-center justify-center bg-gray-100">
+                <span class="text-xs text-gray-400">No image</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="p-2 text-center">
+            <span class="text-xs font-medium text-gray-600">Board Number</span>
+          </div>
+        </div>
+
+        <!-- TCON Number -->
+        <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+          <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+            <% if @activity.tcon_number.attached? %>
+              <%= image_tag @activity.tcon_number, class: "w-full h-32 object-cover", alt: "TCON Number" %>
+            <% else %>
+              <div class="w-full h-32 flex items-center justify-center bg-gray-100">
+                <span class="text-xs text-gray-400">No image</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="p-2 text-center">
+            <span class="text-xs font-medium text-gray-600">TCON Number</span>
+          </div>
+        </div>
+
+        <!-- COF Number -->
+        <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+          <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+            <% if @activity.cof_number.attached? %>
+              <%= image_tag @activity.cof_number, class: "w-full h-32 object-cover", alt: "COF Number" %>
+            <% else %>
+              <div class="w-full h-32 flex items-center justify-center bg-gray-100">
+                <span class="text-xs text-gray-400">No image</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="p-2 text-center">
+            <span class="text-xs font-medium text-gray-600">COF Number</span>
+          </div>
+        </div>
+
+        <!-- Panel Number -->
+        <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+          <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+            <% if @activity.panel_number.attached? %>
+              <%= image_tag @activity.panel_number, class: "w-full h-32 object-cover", alt: "Panel Number" %>
+            <% else %>
+              <div class="w-full h-32 flex items-center justify-center bg-gray-100">
+                <span class="text-xs text-gray-400">No image</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="p-2 text-center">
+            <span class="text-xs font-medium text-gray-600">Panel Number</span>
+          </div>
+        </div>
+
+        <!-- Image Before -->
+        <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+          <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+            <% if @activity.image_before.attached? %>
+              <%= image_tag @activity.image_before, class: "w-full h-32 object-cover", alt: "Before Image" %>
+            <% else %>
+              <div class="w-full h-32 flex items-center justify-center bg-gray-100">
+                <span class="text-xs text-gray-400">No image</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="p-2 text-center">
+            <span class="text-xs font-medium text-gray-600">Before</span>
+          </div>
+        </div>
+
+         <!-- COF pattern Image -->
+        <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+          <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+            <% if @activity.pattern_image.attached? %>
+              <%= image_tag @activity.pattern_image, class: "w-full h-32 object-cover", alt: "COF pattern Image" %>
+            <% else %>
+              <div class="w-full h-32 flex items-center justify-center bg-gray-100">
+                <span class="text-xs text-gray-400">No image</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="p-2 text-center">
+            <span class="text-xs font-medium text-gray-600">COF Pattern Image</span>
+          </div>
+        </div>
+
+        <!-- Image After -->
+        <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+          <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+            <% if @activity.image_after.attached? %>
+              <%= image_tag @activity.image_after, class: "w-full h-32 object-cover", alt: "After Image" %>
+            <% else %>
+              <div class="w-full h-32 flex items-center justify-center bg-gray-100">
+                <span class="text-xs text-gray-400">No image</span>
+              </div>
+            <% end %>
+          </div>
+          <div class="p-2 text-center">
+            <span class="text-xs font-medium text-gray-600">After</span>
+          </div>
         </div>
       </div>
     </div>

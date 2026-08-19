@@ -143,4 +143,49 @@ end
     "<ul class='list-disc list-inside space-y-1'>#{items.join}</ul>".html_safe
   end
 
+  
+  IMAGE_FIELDS = [
+    [:book_image, "Page picture"],
+    [:model_image, "Model number"],
+    [:board_number, "Board number"],
+    [:tcon_number, "T-CON number"],
+    [:cof_number, "COF number"],
+    [:panel_number, "panel number"],
+    [:image_before, "Image Before"],
+    [:image_after, "Image After"]
+  ].freeze
+
+   def image_upload_fields(form)
+  content_tag(:div, class: "grid grid-cols-1 md:grid-cols-2 gap-6") do
+    safe_join(
+      IMAGE_FIELDS.map do |attribute, label|
+        content_tag(:div, class: "upload-card p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors") do
+          safe_join([
+            form.label(attribute, class: "block text-sm font-medium text-gray-700 mb-2") do
+              safe_join([
+                content_tag(:span, label),
+                content_tag(:span, " (optional)", class: "text-gray-400 text-xs font-normal")
+              ])
+            end,
+            form.file_field(
+              attribute,
+              accept: "image/*",
+              capture: "environment",
+              class: "w-full text-sm text-gray-500
+                file:mr-4 file:py-2.5 file:px-6
+                file:rounded-lg file:border-0
+                file:text-sm file:font-medium
+                file:bg-blue-600 file:text-white
+                hover:file:bg-blue-700
+                file:cursor-pointer"
+            ),
+            content_tag(:p, "PNG, JPG, GIF up to 10MB", class: "mt-1 text-xs text-gray-400")
+          ])
+        end
+      end
+    )
+  end
 end
+
+end
+

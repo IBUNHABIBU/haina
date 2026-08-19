@@ -7,6 +7,7 @@ export default class extends Controller {
     this.loadPreferences()
     this.updateCount()
     this.setupKeyboardShortcuts()
+    console.log("Column toggle is working")
     
     // Listen for custom events
     document.addEventListener('show-all-columns', this.showAll.bind(this))

@@ -5,6 +5,8 @@ export default class extends Controller {
 
   connect() {
     document.addEventListener('click', this.closeOnClickOutside.bind(this))
+
+    console.log("dropdown is working")
   }
 
   disconnect() {
@@ -14,10 +16,13 @@ export default class extends Controller {
   toggle(event) {
     event.stopPropagation()
     this.menuTarget.classList.toggle('hidden')
+    console.log(this.menuTarget.classList.toggle('hidden'))
   }
 
   close() {
     this.menuTarget.classList.add('hidden')
+    
+    console.log("close", this.menuTarget.classList.toggle('hidden'))
   }
 
   closeOnClickOutside(event) {
