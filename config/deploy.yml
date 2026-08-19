@@ -96,7 +96,7 @@ accessories:
     host: 45.92.9.7
     # port: "127.0.0.1"  # Ensure this is the correct port or change it to 5432 if needed
     # port: "127.0.0.1:3306:3306"
-    port: "127.0.0.1:5439:5432"
+    port: "127.0.0.1:5437:5432"
     env:
       clear:
         POSTGRES_USER: "postgres"
