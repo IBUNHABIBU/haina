@@ -83,7 +83,7 @@ class ActivitiesController < ApplicationController
         :remarks,
         :labour_cost,
         :user_id,
-        :book_image,
+        :pattern_image,
         :model_image,
         :board_number,
         :tcon_number,
