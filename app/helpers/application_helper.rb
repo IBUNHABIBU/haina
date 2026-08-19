@@ -145,7 +145,7 @@ end
 
   
   IMAGE_FIELDS = [
-    [:book_image, "Page picture"],
+    [:pattern_image, "pattern picture"],
     [:model_image, "Model number"],
     [:board_number, "Board number"],
     [:tcon_number, "T-CON number"],
