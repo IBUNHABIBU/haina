@@ -1,0 +1,2 @@
+class TvSize < ApplicationRecord
+end

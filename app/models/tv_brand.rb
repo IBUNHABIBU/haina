@@ -1,0 +1,2 @@
+class TvBrand < ApplicationRecord
+end
