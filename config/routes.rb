@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :tv_brands
   resources :customers
   resources :activities
   get '/dashboard', to: 'dashboard#index', as: 'dashboard'
