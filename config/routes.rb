@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :repair_jobs
+  resources :tatizos
   resources :tv_sizes
   resources :tv_brands
   resources :customers
