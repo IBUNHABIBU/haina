@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :customers
   resources :activities
   get '/dashboard', to: 'dashboard#index', as: 'dashboard'
   # Devise authentication
