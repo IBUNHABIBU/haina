@@ -1,0 +1,2 @@
+class Tatizo < ApplicationRecord
+end

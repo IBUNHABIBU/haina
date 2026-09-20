@@ -1,0 +1,77 @@
+<%= form_with(model: repair_job, class: "contents") do |form| %>
+  <% if repair_job.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(repair_job.errors.count, "error") %> prohibited this repair_job from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% repair_job.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :customer_id %>
+    <%= form.text_field :customer_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:customer_id].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:customer_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :tv_brand_id %>
+    <%= form.text_field :tv_brand_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:tv_brand_id].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:tv_brand_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :tv_size_id %>
+    <%= form.text_field :tv_size_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:tv_size_id].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:tv_size_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :labour_price %>
+    <%= form.text_field :labour_price, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:labour_price].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:labour_price].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :total_sale %>
+    <%= form.text_field :total_sale, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:total_sale].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:total_sale].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :status %>
+    <%= form.number_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:status].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:status].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :tatizo %>
+    <%= form.text_field :tatizo, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:tatizo].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:tatizo].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :reference %>
+    <%= form.text_field :reference, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:reference].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:reference].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :motherboard_number %>
+    <%= form.text_field :motherboard_number, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:motherboard_number].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:motherboard_number].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :tcon_number %>
+    <%= form.text_field :tcon_number, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:tcon_number].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:tcon_number].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :panel_number %>
+    <%= form.text_field :panel_number, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:panel_number].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:panel_number].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :cof_number %>
+    <%= form.text_field :cof_number, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": repair_job.errors[:cof_number].none?, "border-red-400 focus:outline-red-600": repair_job.errors[:cof_number].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>
