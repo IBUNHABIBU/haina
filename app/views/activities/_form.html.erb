@@ -1,136 +1,71 @@
-<%= form_with(model: activity, class: "contents") do |form| %>
+<%= form_with(model: activity, class: "space-y-8", data: { controller: "spares-form" }) do |form| %>
   <% if activity.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-md mt-3 mb-6">
-      <h2 class="font-bold text-sm">
-        <%= pluralize(activity.errors.count, "error") %> prohibited this activity from being saved:
-      </h2>
-      <ul class="list-disc ml-6 mt-1 text-sm">
-        <% activity.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+      <h2 class="font-semibold"><%= pluralize(activity.errors.count, "error") %> prevented this activity from being saved.</h2>
+      <ul class="mt-2 list-disc pl-5 text-sm"><% activity.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
     </div>
   <% end %>
 
-  <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
-    <!-- Two-column grid for better layout -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <%= form.label :customer, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.text_field :customer, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:customer].none?, "border-red-300 focus:ring-red-500": activity.errors[:customer].any?}] %>
-        <% if activity.errors[:customer].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:customer].first %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= form.label :phone, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.text_field :phone, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:phone].none?, "border-red-300 focus:ring-red-500": activity.errors[:phone].any?}] %>
-        <% if activity.errors[:phone].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:phone].first %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= form.label :TV_brand, "TV Brand", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.text_field :TV_brand, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:TV_brand].none?, "border-red-300 focus:ring-red-500": activity.errors[:TV_brand].any?}] %>
-        <% if activity.errors[:TV_brand].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:TV_brand].first %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= form.label :TV_size, "TV Size (inches)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.number_field :TV_size, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:TV_size].none?, "border-red-300 focus:ring-red-500": activity.errors[:TV_size].any?}] %>
-        <% if activity.errors[:TV_size].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:TV_size].first %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= form.label :model_no, "Model No.", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.text_field :model_no, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:model_no].none?, "border-red-300 focus:ring-red-500": activity.errors[:model_no].any?}] %>
-        <% if activity.errors[:model_no].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:model_no].first %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= form.label :date_in, "Date In", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.datetime_field :date_in, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:date_in].none?, "border-red-300 focus:ring-red-500": activity.errors[:date_in].any?}] %>
-        <% if activity.errors[:date_in].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:date_in].first %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= form.label :date_out, "Date Out", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.datetime_field :date_out, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:date_out].none?, "border-red-300 focus:ring-red-500": activity.errors[:date_out].any?}] %>
-        <% if activity.errors[:date_out].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:date_out].first %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= form.label :starting_price, "Starting Price", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.text_field :starting_price, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:starting_price].none?, "border-red-300 focus:ring-red-500": activity.errors[:starting_price].any?}] %>
-        <% if activity.errors[:starting_price].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:starting_price].first %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= form.label :final_price, "Final Price", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.text_field :final_price, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:final_price].none?, "border-red-300 focus:ring-red-500": activity.errors[:final_price].any?}] %>
-        <% if activity.errors[:final_price].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:final_price].first %></p>
-        <% end %>
-      </div>
-
-      <div class="my-5">
-          <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-1" %>
-          <%= form.select :status, 
-              Activity.statuses.keys.map { |status| [status.humanize, status] },
-              { include_blank: "Select status..." },
-              class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:status].none?, "border-red-300 focus:ring-red-500": activity.errors[:status].any?}] %>
-          <% if activity.errors[:status].any? %>
-            <p class="mt-1 text-sm text-red-600"><%= activity.errors[:status].first %></p>
-          <% end %>
-      </div>
-
-      <div>
-        <%= form.label :spare_used, "Spare Used", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.number_field :spare_used, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:spare_used].none?, "border-red-300 focus:ring-red-500": activity.errors[:spare_used].any?}] %>
-        <% if activity.errors[:spare_used].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:spare_used].first %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= form.label :cost_each, "Cost Each", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.text_field :cost_each, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:cost_each].none?, "border-red-300 focus:ring-red-500": activity.errors[:cost_each].any?}] %>
-        <% if activity.errors[:cost_each].any? %>
-          <p class="mt-1 text-sm text-red-600"><%= activity.errors[:cost_each].first %></p>
-        <% end %>
-      </div>
-
+  <section class="rounded-xl border bg-white p-6 shadow-sm">
+    <h2 class="mb-5 text-lg font-semibold">Customer & TV</h2>
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div><%= form.label :customer_id, "Customer", class: "label" %><%= form.collection_select :customer_id, @customers, :id, :name, { prompt: "Select customer" }, class: "field" %></div>
+      <div><%= form.label :tv_brand_id, "TV Brand", class: "label" %><%= form.collection_select :tv_brand_id, @tv_brands, :id, :name, { prompt: "Select brand" }, class: "field" %></div>
+      <div><%= form.label :tv_size_id, "TV Size", class: "label" %><%= form.collection_select :tv_size_id, @tv_sizes, :id, :size, { prompt: "Select size" }, class: "field" %></div>
+      <div><%= form.label :tatizo_id, "Problem", class: "label" %><%= form.collection_select :tatizo_id, @tatizos, :id, :name, { prompt: "Select problem" }, class: "field" %></div>
+      <div><%= form.label :phone, class: "label" %><%= form.text_field :phone, class: "field", placeholder: "Customer phone" %></div>
+      <div><%= form.label :model_no, "Model number", class: "label" %><%= form.text_field :model_no, class: "field" %></div>
+      <div><%= form.label :date_in, class: "label" %><%= form.datetime_local_field :date_in, class: "field" %></div>
+      <div><%= form.label :date_out, class: "label" %><%= form.datetime_local_field :date_out, class: "field" %></div>
+      <div><%= form.label :status, class: "label" %><%= form.select :status, Activity.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "field" %></div>
     </div>
+  </section>
 
-    <!-- Full width fields -->
-    <div>
-      <%= form.label :remarks, class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%= form.textarea :remarks, rows: 4, class: ["w-full rounded-lg border shadow-sm px-4 py-2.5 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent", {"border-gray-300": activity.errors[:remarks].none?, "border-red-300 focus:ring-red-500": activity.errors[:remarks].any?}] %>
-      <% if activity.errors[:remarks].any? %>
-        <p class="mt-1 text-sm text-red-600"><%= activity.errors[:remarks].first %></p>
+  <section class="rounded-xl border bg-white p-6 shadow-sm">
+    <h2 class="mb-5 text-lg font-semibold">Price & Labour</h2>
+    <div class="grid gap-5 md:grid-cols-3">
+      <div><%= form.label :price, "Price (TSh)", class: "label" %><%= form.number_field :price, step: 0.01, min: 0, class: "field" %></div>
+      <div><%= form.label :labour_charge, "Labour charge (TSh)", class: "label" %><%= form.number_field :labour_charge, step: 0.01, min: 0, class: "field" %></div>
+      <div class="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">Gross profit is calculated as <strong>Price − Labour − Spare cost</strong>.</div>
+    </div>
+  </section>
+
+  <section class="rounded-xl border bg-white p-6 shadow-sm">
+    <div class="mb-4 flex items-center justify-between">
+      <div><h2 class="text-lg font-semibold">Spares used</h2><p class="text-sm text-slate-500">Select stock items and quantity. Stock is deducted automatically.</p></div>
+      <button type="button" data-action="spares-form#add" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white">+ Add spare</button>
+    </div>
+    <div data-spares-form-target="rows" class="space-y-3">
+      <% activity.activity_spares.each do |item| %>
+        <div data-spare-row class="grid gap-3 rounded-lg border p-3 md:grid-cols-[1fr_160px_auto]">
+          <%= select_tag "spare_ids[]", options_from_collection_for_select(@spares, :id, ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" }, item.spare_id), include_blank: "Select spare", class: "field" %>
+          <%= number_field_tag "spare_quantities[]", item.quantity, min: 1, class: "field" %>
+          <button type="button" data-action="spares-form#remove" class="rounded-lg border px-3 py-2 text-sm">Remove</button>
+        </div>
       <% end %>
     </div>
+    <template data-spares-form-target="template">
+      <div data-spare-row class="grid gap-3 rounded-lg border p-3 md:grid-cols-[1fr_160px_auto]">
+        <%= select_tag "spare_ids[]", options_from_collection_for_select(@spares, :id, ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" }), include_blank: "Select spare", class: "field" %>
+        <%= number_field_tag "spare_quantities[]", 1, min: 1, class: "field" %>
+        <button type="button" data-action="spares-form#remove" class="rounded-lg border px-3 py-2 text-sm">Remove</button>
+      </div>
+    </template>
+  </section>
 
-<%= image_upload_fields(form) %>
+  <section class="rounded-xl border bg-white p-6 shadow-sm">
+    <%= form.label :remarks, class: "label" %>
+    <%= form.text_area :remarks, rows: 4, class: "field" %>
+  </section>
 
-    <!-- Submit Button -->
-    <div class="flex flex-col sm:flex-row gap-3 pt-2 border-t border-gray-200">
-      <%= form.submit class: "flex-1 sm:flex-none px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition duration-150 ease-in-out hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer" %>
-      <%= link_to "Cancel", activities_path, class: "flex-1 sm:flex-none px-6 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg text-center transition duration-150 ease-in-out" %>
+  <section class="rounded-xl border bg-white p-6 shadow-sm">
+    <h2 class="mb-5 text-lg font-semibold">Photos</h2>
+    <div class="grid gap-5 md:grid-cols-2">
+      <% [[:pattern_image, "COF Pattern"], [:model_image, "Model Number"], [:board_number, "Board Number"], [:tcon_number, "T-Con Number"], [:cof_number, "COF Number"], [:panel_number, "Panel Number"], [:image_before, "Before"], [:image_after, "After"]].each do |field, label| %>
+        <div><%= form.label field, label, class: "label" %><%= form.file_field field, accept: "image/*", capture: "environment", class: "field" %></div>
+      <% end %>
     </div>
-  </div>
+  </section>
+
+  <div class="flex gap-3"><%= form.submit class: "rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700" %><%= link_to "Cancel", activities_path, class: "rounded-lg border px-5 py-2.5" %></div>
 <% end %>

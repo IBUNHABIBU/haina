@@ -1,96 +1,87 @@
 class ActivitiesController < ApplicationController
-  before_action :set_activity, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_activity, only: %i[show edit update destroy]
+  before_action :load_form_options, only: %i[new edit create update]
 
-  # GET /activities or /activities.json
   def index
-    @activities = Activity.all
+    @activities = Activity.includes(:customer, :tv_brand, :tv_size, :tatizo).order(date_in: :desc, created_at: :desc)
   end
 
-  # GET /activities/1 or /activities/1.json
   def show
   end
 
-  # GET /activities/new
   def new
-    @activity = Activity.new
+    @activity = Activity.new(date_in: Time.current, status: :received)
   end
 
-  # GET /activities/1/edit
   def edit
   end
 
-  # POST /activities or /activities.json
   def create
-    @activity = Activity.new(activity_params)
-    @activity.user = current_user
+    @activity = current_user.activities.build(activity_params)
 
-    respond_to do |format|
-      if @activity.save
-        format.html { redirect_to @activity, notice: "Activity was successfully created." }
-        format.json { render :show, status: :created, location: @activity }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @activity.errors, status: :unprocessable_entity }
-      end
+    Activity.transaction do
+      @activity.save!
+      replace_spares!
     end
+
+    redirect_to @activity, notice: "Repair activity was successfully created."
+  rescue ActiveRecord::RecordInvalid
+    load_form_options
+    render :new, status: :unprocessable_entity
   end
 
-  # PATCH/PUT /activities/1 or /activities/1.json
   def update
-    respond_to do |format|
-      if @activity.update(activity_params)
-        format.html { redirect_to @activity, notice: "Activity was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @activity }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @activity.errors, status: :unprocessable_entity }
-      end
+    Activity.transaction do
+      @activity.update!(activity_params)
+      replace_spares!
     end
+
+    redirect_to @activity, notice: "Repair activity was successfully updated.", status: :see_other
+  rescue ActiveRecord::RecordInvalid
+    load_form_options
+    render :edit, status: :unprocessable_entity
   end
 
-  # DELETE /activities/1 or /activities/1.json
   def destroy
     @activity.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to activities_path, notice: "Activity was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to activities_path, notice: "Repair activity was successfully deleted.", status: :see_other
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_activity
-      @activity = Activity.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def activity_params
-      params.expect(activity: [ :customer,
-       :phone,
-       :TV_brand,
-       :TV_size,
-       :model_no,
-       :date_in,
-       :date_out,
-       :starting_price,
-        :final_price, 
-       :status, 
-       :spare_used,
-        :cost_each, 
-       :total_cost,
-        :profit,
-        :remarks,
-        :labour_cost,
-        :user_id,
-        :pattern_image,
-        :model_image,
-        :board_number,
-        :tcon_number,
-        :cof_number,
-        :panel_number,
-        :image_before,
-        :image_after,
-         ])
+  def set_activity
+    @activity = Activity.includes(:activity_spares, :repair_returns).find(params[:id])
+  end
+
+  def load_form_options
+    @customers = Customer.order(:name)
+    @tv_brands = TvBrand.order(:name)
+    @tv_sizes = TvSize.order(:size)
+    @tatizos = Tatizo.order(:name)
+    @spares = Spare.includes(:spare_category).order(:name)
+  end
+
+  def activity_params
+    params.require(:activity).permit(
+      :customer_id, :tv_brand_id, :tv_size_id, :tatizo_id, :phone, :model_no,
+      :date_in, :date_out, :price, :labour_charge, :status, :remarks,
+      :pattern_image, :model_image, :board_number, :tcon_number, :cof_number,
+      :panel_number, :image_before, :image_after
+    )
+  end
+
+  def replace_spares!
+    @activity.activity_spares.destroy_all
+
+    spare_ids = Array(params[:spare_ids]).reject(&:blank?)
+    quantities = Array(params[:spare_quantities])
+
+    spare_ids.each_with_index do |spare_id, index|
+      quantity = quantities[index].to_i
+      next if quantity <= 0
+
+      @activity.activity_spares.create!(spare_id: spare_id, quantity: quantity)
     end
+  end
 end

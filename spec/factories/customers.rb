@@ -3,6 +3,6 @@ FactoryBot.define do
     name { "MyString" }
     phone { "MyString" }
     mahali { "MyString" }
-    user { nil }
+    user
   end
 end

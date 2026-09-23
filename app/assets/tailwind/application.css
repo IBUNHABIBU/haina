@@ -84,3 +84,8 @@ button:focus {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+@layer components {
+  .field { @apply mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100; }
+  .label { @apply block text-sm font-medium text-slate-700; }
+}

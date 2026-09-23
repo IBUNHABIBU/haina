@@ -5,7 +5,10 @@ class User < ApplicationRecord
 
   validates :first_name, :last_name, presence: true
   validates :role, presence: true, inclusion: { in: %w[super_admin admin user] }
-  has_many :activities
+  has_many :activities, dependent: :restrict_with_error
+  has_many :customers, dependent: :restrict_with_error
+  has_many :expenses, dependent: :nullify
+  has_many :spare_purchases, dependent: :nullify
   
   scope :visible_users, -> { where(role: ['user', 'admin']) }
 

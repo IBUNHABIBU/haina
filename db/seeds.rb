@@ -1,9 +1,28 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Idempotent seed data for the repair-management module.
+puts "************   Start seeding  *****************"
+[
+  ["COF", "COF"],
+  ["T-Con", "TCON"],
+  ["Main Board", "MAIN"],
+  ["Power Supply", "PSU"],
+  ["Backlight", "BACKLIGHT"],
+  ["Panel", "PANEL"],
+  ["Other", "OTHER"]
+].each do |name, code|
+  SpareCategory.find_or_create_by!(code: code) { |category| category.name = name }
+end
+
+[
+  "No Power", "No Display", "No Backlight", "Lines on Screen", "Half Screen",
+  "No Signal", "Dead Panel", "Software Problem", "HDMI Problem", "Other"
+].each { |name| Tatizo.find_or_create_by!(name: name) }
+
+[
+  "Samsung", "LG", "Hisense", "TCL", "Aboarder", "Alitop", "Singsung", "Sony"
+].each { |name| TvBrand.find_or_create_by!(name: name) }
+
+[24, 32, 40, 43, 48, 50, 55, 58, 65, 70, 75, 85, 98, 100].each do |size|
+  TvSize.find_or_create_by!(size: size)
+end
+
+puts "********************  End seeding   *************************"

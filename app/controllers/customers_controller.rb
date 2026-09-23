@@ -21,7 +21,8 @@ class CustomersController < ApplicationController
 
   # POST /customers or /customers.json
   def create
-    @customer = Customer.new(customer_params)
+    @customer = current_user.customers.build(customer_params)
+    @customer.user = current_user
 
     respond_to do |format|
       if @customer.save
@@ -65,6 +66,6 @@ class CustomersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def customer_params
-      params.expect(customer: [ :name, :phone, :mahali, :user_id ])
+      params.expect(customer: [ :name, :phone, :mahali ])
     end
 end
