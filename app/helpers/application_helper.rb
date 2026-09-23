@@ -124,7 +124,7 @@ end
   end
 
   def full_title(page_title = '')
-   base_title = "Impeccable Africa Tour| Tanzania Safaris"
+   base_title = "Veefix bonding"
     if page_title.empty?
       base_title
     else
