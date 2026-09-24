@@ -1,4 +1,23 @@
-<div>
-  <h1 class="font-bold text-4xl">Pages#offline</h1>
-  <p>Find me in app/views/pages/offline.html.erb</p>
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-6">
+  <div class="max-w-md w-full text-center">
+    <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-slate-900 text-white text-3xl">
+      🔧
+    </div>
+
+    <h1 class="text-2xl font-bold text-gray-900">
+      You are offline
+    </h1>
+
+    <p class="mt-3 text-gray-600">
+      Repair Management App cannot connect to the server right now.
+      Please check your internet connection and try again.
+    </p>
+
+    <button
+      onclick="window.location.reload()"
+      class="mt-6 inline-flex items-center rounded-lg bg-slate-900 px-5 py-3 font-medium text-white hover:bg-slate-800"
+    >
+      Try Again
+    </button>
+  </div>
 </div>
