@@ -29,7 +29,6 @@ RSpec.describe "activities/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", activity_path(activity), "post" do
-
       assert_select "input[name=?]", "activity[customer]"
 
       assert_select "input[name=?]", "activity[phone]"

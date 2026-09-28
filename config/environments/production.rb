@@ -1,7 +1,7 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  # Settings specified here will take precedence over those in config/application.rb.
+# Settings specified here will take precedence over those in config/application.rb.
 
 # config/environments/production.rb
 config.action_mailer.default_url_options = { host: "impeccableafricatour.ecohygiene.site", protocol: "https" }
@@ -28,7 +28,7 @@ config.active_storage.resolve_model_to_route = :rails_storage_proxy
 # Precompile variants in background
 config.active_storage.queues.analysis = :active_storage_analysis
 config.active_storage.queues.purge = :active_storage_purge
-  
+
   # Code is not reloaded between requests.
   config.enable_reloading = false
 

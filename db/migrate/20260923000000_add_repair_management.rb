@@ -31,7 +31,7 @@ class AddRepairManagement < ActiveRecord::Migration[8.0]
       t.decimal :total_cost, precision: 15, scale: 2, null: false, default: 0
       t.timestamps
     end
-    add_index :activity_spares, [:activity_id, :spare_id], unique: true
+    add_index :activity_spares, [ :activity_id, :spare_id ], unique: true
 
     create_table :repair_returns do |t|
       t.references :activity, null: false, foreign_key: true
@@ -44,7 +44,7 @@ class AddRepairManagement < ActiveRecord::Migration[8.0]
       t.text :notes
       t.timestamps
     end
-    add_index :repair_returns, [:activity_id, :return_number], unique: true
+    add_index :repair_returns, [ :activity_id, :return_number ], unique: true
 
     create_table :expenses do |t|
       t.string :category, null: false

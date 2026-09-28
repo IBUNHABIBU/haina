@@ -6,7 +6,7 @@ RSpec.describe RepairReturn, type: :model do
     first = create(:repair_return, activity: activity)
     second = create(:repair_return, activity: activity)
 
-    expect([first.return_number, second.return_number]).to eq([1, 2])
+    expect([ first.return_number, second.return_number ]).to eq([ 1, 2 ])
     expect(activity.reload.returned_count).to eq(2)
   end
 end

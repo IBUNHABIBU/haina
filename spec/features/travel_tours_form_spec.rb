@@ -103,7 +103,7 @@ RSpec.describe 'Travel Tours Form', type: :feature do
   describe 'file uploads' do
     it 'allows main image upload' do
       attach_file('Main Tour Image', Rails.root.join('spec/fixtures/files/transport.jpg'))
-      
+
       travel_tour = TravelTour.last
       expect(travel_tour.image).to be_attached
     end
@@ -147,7 +147,7 @@ RSpec.describe 'Travel Tours Form', type: :feature do
     it 'accepts decimal values' do
       fill_in 'Price', with: '299.99'
       click_button 'Create Travel tour'
-      
+
       # Add expectation based on your application behavior
     end
   end
@@ -165,5 +165,4 @@ RSpec.describe 'Travel Tours Form', type: :feature do
       expect(field_value.gsub(/\r\n?/, "\n")).to eq(highlights)
     end
   end
-
 end

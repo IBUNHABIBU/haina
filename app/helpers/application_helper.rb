@@ -1,8 +1,7 @@
 module ApplicationHelper
-  
   def flash_class(type)
     base_classes = "relative rounded-lg p-4 mb-4 shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
-    
+
     case type.to_sym
     when :notice, :success
       "#{base_classes} bg-green-50 border-l-4 border-green-500 text-green-800"
@@ -63,11 +62,11 @@ def flash_close_button_hover_class(type)
 end
 
   def inline_svg_tag(filename, options = {})
-  file_path = Rails.root.join('app', 'assets', 'images', "#{filename}.svg")
+  file_path = Rails.root.join("app", "assets", "images", "#{filename}.svg")
     if File.exist?(file_path)
       file_content = File.read(file_path)
-      css_class = options[:class] || ''
-      file_content.gsub('<svg', "<svg class='#{css_class}'").html_safe
+      css_class = options[:class] || ""
+      file_content.gsub("<svg", "<svg class='#{css_class}'").html_safe
     else
       content_tag(:span, "Icon not found: #{filename}", class: options[:class])
     end
@@ -76,45 +75,45 @@ end
   def nav_link_to(text, path, options = {})
     options[:class] ||= ""
     options[:class] += " inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-    
+
     current_path = request.path
     is_current = current_path == path || (path != root_path && current_path.start_with?(path))
-    
+
     if is_current
       options[:class] += " border-amber-300 text-gray-100" # Golden yellow border, white text
     else
       options[:class] += " border-transparent text-gray-300 hover:border-amber-300 hover:text-gray-100"
     end
-    
+
     link_to text, path, options
   end
 
   def mobile_nav_link_to(text, path, options = {})
     options[:class] ||= ""
     options[:class] += " block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-    
+
     current_path = request.path
     is_current = current_path == path || (path != root_path && current_path.start_with?(path))
-    
+
     if is_current
       options[:class] += " border-amber-300 bg-orange-800 text-white"
     else
       options[:class] += " border-transparent text-gray-100 hover:bg-orange-800 hover:border-amber-300 hover:text-white"
     end
-    
+
     link_to text, path, options
   end
 
   def role_badge_color(role)
     case role
-    when 'super_admin'
-      'bg-purple-100 text-purple-800'
-    when 'admin'
-      'bg-blue-100 text-blue-800'
-    when 'user'
-      'bg-gray-100 text-gray-800'
+    when "super_admin"
+      "bg-purple-100 text-purple-800"
+    when "admin"
+      "bg-blue-100 text-blue-800"
+    when "user"
+      "bg-gray-100 text-gray-800"
     else
-      'bg-gray-100 text-gray-800'
+      "bg-gray-100 text-gray-800"
     end
   end
 
@@ -123,7 +122,7 @@ end
     user_signed_in? && current_user.super_admin?
   end
 
-  def full_title(page_title = '')
+  def full_title(page_title = "")
    base_title = "Veefix bonding"
     if page_title.empty?
       base_title
@@ -143,16 +142,16 @@ end
     "<ul class='list-disc list-inside space-y-1'>#{items.join}</ul>".html_safe
   end
 
-  
+
   IMAGE_FIELDS = [
-    [:pattern_image, "pattern picture"],
-    [:model_image, "Model number"],
-    [:board_number, "Board number"],
-    [:tcon_number, "T-CON number"],
-    [:cof_number, "COF number"],
-    [:panel_number, "panel number"],
-    [:image_before, "Image Before"],
-    [:image_after, "Image After"]
+    [ :pattern_image, "pattern picture" ],
+    [ :model_image, "Model number" ],
+    [ :board_number, "Board number" ],
+    [ :tcon_number, "T-CON number" ],
+    [ :cof_number, "COF number" ],
+    [ :panel_number, "panel number" ],
+    [ :image_before, "Image Before" ],
+    [ :image_after, "Image After" ]
   ].freeze
 
    def image_upload_fields(form)
@@ -186,6 +185,4 @@ end
     )
   end
 end
-
 end
-

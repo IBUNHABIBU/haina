@@ -15,7 +15,6 @@ RSpec.describe "tatizos/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", tatizo_path(tatizo), "post" do
-
       assert_select "input[name=?]", "tatizo[name]"
     end
   end

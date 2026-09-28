@@ -51,20 +51,20 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
-  gem 'rspec-rails', '~> 8.0.0'
-  gem 'factory_bot_rails'
+  gem "rspec-rails", "~> 8.0.0"
+  gem "factory_bot_rails"
   gem "faker"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-  gem 'letter_opener'
-  gem 'letter_opener_web'
+  gem "letter_opener"
+  gem "letter_opener_web"
 end
 
 group :test do
-  gem 'shoulda-matchers', '~> 6.0'
+  gem "shoulda-matchers", "~> 6.0"
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
@@ -72,16 +72,16 @@ end
 
 gem "devise", "~> 4.9"
 
-gem 'mail'
+gem "mail"
 
 gem "heroicon", "~> 1.0"
-gem 'heroicons'
+gem "heroicons"
 # Gemfile
-gem 'friendly_id', '~> 5.4'
+gem "friendly_id", "~> 5.4"
 
 # Ggem 'sitemap_generator'
-gem 'sitemap_generator'
-gem 'bullet', group: :development
+gem "sitemap_generator"
+gem "bullet", group: :development
 gem "active_storage_validations", "~> 3.0"
 
 gem "groupdate", "~> 6.7"

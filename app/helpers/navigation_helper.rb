@@ -14,8 +14,8 @@ module NavigationHelper
   end
 
   def nav_items
-    items = [["Home", root_path], ["Dashboard", dashboard_path], ["Activities", activities_path], ["Spares", spares_path], ["Expenses", expenses_path]]
-    user_signed_in? ? items : [["Home", root_path]]
+    items = [ [ "Home", root_path ], [ "Dashboard", dashboard_path ], [ "Activities", activities_path ], [ "Spares", spares_path ], [ "Expenses", expenses_path ] ]
+    user_signed_in? ? items : [ [ "Home", root_path ] ]
   end
 
   def mobile_only_items
@@ -24,6 +24,6 @@ module NavigationHelper
 
   def admin_nav_items
     return [] unless user_signed_in? && (current_user.admin? || current_user.super_admin?)
-    [["Users", users_path], ["Spare Categories", spare_categories_path]]
+    [ [ "Users", users_path ], [ "Spare Categories", spare_categories_path ] ]
   end
 end

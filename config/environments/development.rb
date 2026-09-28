@@ -1,28 +1,28 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  # Settings specified here will take precedence over those in config/application.rb.
+    # Settings specified here will take precedence over those in config/application.rb.
 
     config.after_initialize do
       Bullet.enable = true
       Bullet.alert = true
-      Bullet.console = 
-       # Show alerts in browser console (F12)
+      Bullet.console =
+      # Show alerts in browser console (F12)
       Bullet.rails_logger = true
-      
+
       # Add footer to page with warnings
       Bullet.add_footer = true
-      
+
       # Log to bullet.log file
       Bullet.bullet_logger = true
       Bullet.unused_eager_loading_enable = false
 
-        # Bullet.add_whitelist type: :unused_eager_loading,
-        #                class_name: "ActiveStorage::Attachment",
-        #                association: :blob
+      # Bullet.add_whitelist type: :unused_eager_loading,
+      #                class_name: "ActiveStorage::Attachment",
+      #                association: :blob
     end
-  
- config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+ config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 config.action_mailer.delivery_method = :smtp
 config.action_mailer.perform_deliveries = true
 config.action_mailer.smtp_settings = {
