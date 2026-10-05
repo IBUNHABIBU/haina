@@ -17,7 +17,7 @@
       <div><%= form.label :tv_brand_id, "TV Brand", class: "label" %><%= form.collection_select :tv_brand_id, @tv_brands, :id, :name, { prompt: "Select brand" }, class: "field" %></div>
       <div><%= form.label :tv_size_id, "TV Size", class: "label" %><%= form.collection_select :tv_size_id, @tv_sizes, :id, :size, { prompt: "Select size" }, class: "field" %></div>
       <div><%= form.label :tatizo_id, "Problem", class: "label" %><%= form.collection_select :tatizo_id, @tatizos, :id, :name, { prompt: "Select problem" }, class: "field" %></div>
-       <div><%= form.label :model_no, "Model number", class: "label" %><%= form.text_field :model_no, class: "field" %></div>
+       <div><%= form.label :model_no, "Model number", class: "label" %><%= form.text_field :model_no, autocomplete: "off", class: "field" %></div>
       <div><%= form.label :date_in, class: "label" %><%= form.datetime_local_field :date_in, value: form.object.date_in&.strftime("%Y-%m-%dT%H:%M"), class: "field" %></div>
       <div><%= form.label :date_out, class: "label" %><%= form.datetime_local_field :date_out, value: form.object.date_in&.strftime("%Y-%m-%dT%H:%M"), class: "field" %></div>
       <div><%= form.label :status, class: "label" %><%= form.select :status, Activity.statuses.keys.map { |s| [ s.humanize, s ] }, {}, class: "field" %></div>
@@ -42,7 +42,7 @@
       <% activity.activity_spares.each do |item| %>
         <div data-spare-row class="grid gap-3 rounded-lg border p-3 md:grid-cols-[1fr_160px_auto]">
           <%= select_tag "spare_ids[]", options_from_collection_for_select(@spares, :id, ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" }, item.spare_id), include_blank: "Select spare", class: "field" %>
-          <%= number_field_tag "spare_quantities[]", item.quantity, min: 1, class: "field" %>
+          <%= number_field_tag "spare_quantities[]", item.quantity, autocomplete: "off", min: 1, class: "field" %>
           <button type="button" data-action="spares-form#remove" class="rounded-lg border px-3 py-2 text-sm">Remove</button>
         </div>
       <% end %>
@@ -50,7 +50,7 @@
     <template data-spares-form-target="template">
       <div data-spare-row class="grid gap-3 rounded-lg border p-3 md:grid-cols-[1fr_160px_auto]">
         <%= select_tag "spare_ids[]", options_from_collection_for_select(@spares, :id, ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" }), include_blank: "Select spare", class: "field" %>
-        <%= number_field_tag "spare_quantities[]", 1, min: 1, class: "field" %>
+        <%= number_field_tag "spare_quantities[]", autocomplete: "off", 1, min: 1, class: "field" %>
         <button type="button" data-action="spares-form#remove" class="rounded-lg border px-3 py-2 text-sm">Remove</button>
       </div>
     </template>
