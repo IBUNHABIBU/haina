@@ -48,7 +48,7 @@
 
   <div class="flex items-center justify-between">
     <%= f.submit "Update", class: "inline-flex justify-center rounded-md border border-transparent bg-deep-green py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-5000 focus:outline-none focus:ring-2 focus:ring-golden-yellow focus:ring-offset-2" %>
-    
+
     <%= link_to "Back", :back, class: "text-sm text-charcoal hover:text-gray-600" %>
   </div>
 <% end %>
@@ -56,9 +56,9 @@
 <div class="mt-8 pt-8 border-t border-gray-200">
   <h3 class="text-lg font-medium text-deep-green mb-4">Cancel my account</h3>
   <p class="text-sm text-gray-600 mb-4">Unhappy? You can cancel your account at any time.</p>
-  
-  <%= button_to "Cancel my account", registration_path(resource_name), 
-                data: { confirm: "Are you sure? This action cannot be undone.", turbo_confirm: "Are you sure? This action cannot be undone." }, 
-                method: :delete, 
+
+  <%= button_to "Cancel my account", registration_path(resource_name),
+                data: { confirm: "Are you sure? This action cannot be undone.", turbo_confirm: "Are you sure? This action cannot be undone." },
+                method: :delete,
                 class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
 </div>

@@ -6,17 +6,15 @@
 ">
     <meta name="robots" content="index, follow">
 
-
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
-    <meta property="og:title" content="<%= yield(:title) || 'Ninja' %>">
-    <meta property="og:description" content="<%= yield(:description) || 'Best tv repair' %>">
-    <meta property="og:image" content="<%= image_url('favicon-32x32.png') %>">
+    <meta property="og:title" content="<%= yield(:title) || "Ninja" %>">
+    <meta property="og:description" content="<%= yield(:description) || "Best tv repair" %>">
+    <meta property="og:image" content="<%= image_url("favicon-32x32.png") %>">
     <meta property="og:url" content="<%= request.original_url %>">
     <meta property="og:type" content="website">
-
 
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -35,16 +33,15 @@
     <%= javascript_importmap_tags %>
   </head>
 
-
   <body class="min-h-screen bg-neutral-light">
-  
+
     <%= render "shared/navigation" %>
     <%= render "shared/flash_messages" %>
-    
+
     <main class="container mx-auto px-4 py-8">
       <%= yield %>
     </main>
-    
+
     <%= render "shared/footer" %>
   </body>
 </html>

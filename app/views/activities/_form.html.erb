@@ -2,7 +2,11 @@
   <% if activity.errors.any? %>
     <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
       <h2 class="font-semibold"><%= pluralize(activity.errors.count, "error") %> prevented this activity from being saved.</h2>
-      <ul class="mt-2 list-disc pl-5 text-sm"><% activity.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
+      <ul class="mt-2 list-disc pl-5 text-sm">
+          <% activity.errors.full_messages.each do |message| %>
+             <li><%= message %></li>
+          <% end %>
+      </ul>
     </div>
   <% end %>
 
@@ -16,7 +20,7 @@
        <div><%= form.label :model_no, "Model number", class: "label" %><%= form.text_field :model_no, class: "field" %></div>
       <div><%= form.label :date_in, class: "label" %><%= form.datetime_local_field :date_in, value: form.object.date_in&.strftime("%Y-%m-%dT%H:%M"), class: "field" %></div>
       <div><%= form.label :date_out, class: "label" %><%= form.datetime_local_field :date_out, value: form.object.date_in&.strftime("%Y-%m-%dT%H:%M"), class: "field" %></div>
-      <div><%= form.label :status, class: "label" %><%= form.select :status, Activity.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "field" %></div>
+      <div><%= form.label :status, class: "label" %><%= form.select :status, Activity.statuses.keys.map { |s| [ s.humanize, s ] }, {}, class: "field" %></div>
     </div>
   </section>
 
@@ -60,7 +64,7 @@
   <section class="rounded-xl border bg-white p-6 shadow-sm">
     <h2 class="mb-5 text-lg font-semibold">Photos</h2>
     <div class="grid gap-5 md:grid-cols-2">
-      <% [[:pattern_image, "COF Pattern"], [:model_image, "Model Number"], [:board_number, "Board Number"], [:tcon_number, "T-Con Number"], [:cof_number, "COF Number"], [:panel_number, "Panel Number"], [:image_before, "Before"], [:image_after, "After"]].each do |field, label| %>
+      <% [ [ :pattern_image, "COF Pattern" ], [ :model_image, "Model Number" ], [ :board_number, "Board Number" ], [ :tcon_number, "T-Con Number" ], [ :cof_number, "COF Number" ], [ :panel_number, "Panel Number" ], [ :image_before, "Before" ], [ :image_after, "After" ] ].each do |field, label| %>
         <div><%= form.label field, label, class: "label" %><%= form.file_field field, accept: "image/*", capture: "environment", class: "field" %></div>
       <% end %>
     </div>
