@@ -13,10 +13,9 @@
       <div><%= form.label :tv_brand_id, "TV Brand", class: "label" %><%= form.collection_select :tv_brand_id, @tv_brands, :id, :name, { prompt: "Select brand" }, class: "field" %></div>
       <div><%= form.label :tv_size_id, "TV Size", class: "label" %><%= form.collection_select :tv_size_id, @tv_sizes, :id, :size, { prompt: "Select size" }, class: "field" %></div>
       <div><%= form.label :tatizo_id, "Problem", class: "label" %><%= form.collection_select :tatizo_id, @tatizos, :id, :name, { prompt: "Select problem" }, class: "field" %></div>
-      <div><%= form.label :phone, class: "label" %><%= form.text_field :phone, class: "field", placeholder: "Customer phone" %></div>
-      <div><%= form.label :model_no, "Model number", class: "label" %><%= form.text_field :model_no, class: "field" %></div>
-      <div><%= form.label :date_in, class: "label" %><%= form.datetime_local_field :date_in, class: "field" %></div>
-      <div><%= form.label :date_out, class: "label" %><%= form.datetime_local_field :date_out, class: "field" %></div>
+       <div><%= form.label :model_no, "Model number", class: "label" %><%= form.text_field :model_no, class: "field" %></div>
+      <div><%= form.label :date_in, class: "label" %><%= form.datetime_local_field :date_in, value: form.object.date_in&.strftime("%Y-%m-%dT%H:%M"), class: "field" %></div>
+      <div><%= form.label :date_out, class: "label" %><%= form.datetime_local_field :date_out, value: form.object.date_in&.strftime("%Y-%m-%dT%H:%M"), class: "field" %></div>
       <div><%= form.label :status, class: "label" %><%= form.select :status, Activity.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "field" %></div>
     </div>
   </section>
