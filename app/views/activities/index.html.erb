@@ -9,7 +9,6 @@
         <table class="min-w-full divide-y">
           <thead class="bg-slate-50">
             <tr>
-            
               <th class="px-4 py-3 text-left text-xs uppercase">Date</th>
               <th class="px-4 py-3 text-left text-xs uppercase">Customer</th>
               <th class="px-4 py-3 text-left text-xs uppercase">TV</th>
@@ -25,7 +24,6 @@
           <tbody class="divide-y">
           <% @activities.each do |activity| %>
             <tr class="hover:bg-slate-50">
-            
               <td class="px-4 py-3"><%= activity.date_in&.in_time_zone("Africa/Dar_es_Salaam")&.strftime("%d %b %Y, %H:%M") || "—" %></td>
               <td class="px-4 py-3"><%= activity.customer&.name || "—" %></td>
               <td class="px-4 py-3"><%= [ activity.tv_brand&.name, activity.tv_size&.size ].compact.join(" ") %></td>
@@ -35,6 +33,23 @@
               <% if current_user.super_admin? %>
                 <td class="px-4 py-3 text-right font-semibold"><%= number_to_currency(activity.gross_profit, unit: "TSh ", precision: 0) %></td>
               <% end %>
+              <td>
+              <% edit_count = activity.versions.where(event: "update").count %>
+
+              <% if edit_count > 0 %>
+                <%= link_to activity_versions_path(
+                      item_type: "Activity",
+                      item_id: activity.id
+                    ),
+                    class: "text-sm text-blue-600 hover:text-blue-800" do %>
+                  🕘 <%= pluralize(edit_count, "edit") %>
+                <% end %>
+              <% else %>
+                <span class="text-sm text-gray-400">
+                  No edits
+                </span>
+              <% end %>
+              </td>
               <td class="px-4 py-3 text-right"><%= link_to "View", activity, class: "text-blue-600" %></td>
             </tr>
           <% end %>

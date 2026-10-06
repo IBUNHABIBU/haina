@@ -1,87 +1,161 @@
-<div class="max-w-5xl mx-auto px-4 py-6">
+<div class="mx-auto max-w-6xl px-4 py-6">
 
-  <div class="flex items-center justify-between mb-6">
+  <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">
+      <h1 class="text-2xl font-bold text-slate-900">
         Edit History
       </h1>
 
-      <p class="text-sm text-gray-500">
-        Activity #<%= @activity.id %>
+      <p class="text-sm text-slate-500">
+        <%= @item_type %> #<%= @item_id %>
       </p>
     </div>
 
-    <%= link_to "Back to Activity",
-                activity_path(@activity),
-                class: "px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200" %>
+    <%= link_to "Back",
+                request.referer || activities_path,
+                class: "rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200" %>
+
   </div>
+
 
   <% if @versions.empty? %>
 
-    <div class="bg-white rounded-xl border p-6 text-center">
-      <p class="text-gray-500">
-        No edits have been recorded for this activity.
+    <div class="rounded-xl border bg-white p-8 text-center shadow-sm">
+
+      <div class="text-3xl mb-3">
+        🕘
+      </div>
+
+      <h2 class="font-semibold text-slate-800">
+        No edits yet
+      </h2>
+
+      <p class="mt-1 text-sm text-slate-500">
+        This record has not been edited.
       </p>
+
     </div>
 
   <% else %>
+
+    <!-- Total edits -->
+
+    <div class="mb-6 rounded-xl border bg-white p-5 shadow-sm">
+
+      <p class="text-sm text-slate-500">
+        Total edits
+      </p>
+
+      <p class="mt-1 text-3xl font-bold text-slate-900">
+        <%= @versions.count %>
+      </p>
+
+    </div>
+
+
+    <!-- History -->
 
     <div class="space-y-4">
 
       <% @versions.each do |version| %>
 
-        <div class="bg-white border rounded-xl p-5 shadow-sm">
+        <% changes = version_changes(version).except(
+          "updated_at",
+          "created_at"
+        ) %>
 
-          <div class="flex items-center justify-between mb-4">
+        <div class="rounded-xl border bg-white shadow-sm">
+
+          <!-- Header -->
+
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b bg-slate-50 px-5 py-4">
 
             <div>
-              <p class="font-semibold text-gray-900">
-                <%= version.event.humanize %>
+
+              <p class="font-semibold text-slate-900">
+                <%= version_user(version) %>
               </p>
 
-              <p class="text-sm text-gray-500">
-                <%= version.created_at.strftime("%d %b %Y, %H:%M") %>
+              <p class="text-sm text-slate-500">
+                <%= version.created_at
+                      .in_time_zone("Africa/Dar_es_Salaam")
+                      .strftime("%d %b %Y, %H:%M") %>
               </p>
+
             </div>
 
-            <div class="text-sm text-gray-600">
-              User ID:
-              <%= version.whodunnit || "System" %>
+            <div>
+
+              <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                <%= pluralize(changes.size, "field") %> edited
+              </span>
+
             </div>
 
           </div>
 
-          <% changes = version.changeset %>
 
-          <% changes.each do |attribute, values| %>
+          <!-- Changed fields -->
 
-            <% next if attribute.in?(["updated_at", "created_at"]) %>
+          <div class="divide-y">
 
-            <div class="border-t py-3">
+            <% changes.each do |attribute, values| %>
 
-              <p class="font-medium text-gray-700">
-                <%= attribute.humanize %>
-              </p>
+              <% old_value = values[0] %>
+              <% new_value = values[1] %>
 
-              <div class="flex items-center gap-3 mt-1">
+              <div class="grid gap-3 px-5 py-4 md:grid-cols-3 md:items-center">
 
-                <span class="px-3 py-1 rounded-lg bg-red-50 text-red-700">
-                  <%= values[0].presence || "Empty" %>
-                </span>
+                <!-- Column -->
 
-                <span class="text-gray-400">
-                  →
-                </span>
+                <div>
 
-                <span class="px-3 py-1 rounded-lg bg-green-50 text-green-700">
-                  <%= values[1].presence || "Empty" %>
-                </span>
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                    Column
+                  </p>
+
+                  <p class="mt-1 font-semibold text-slate-800">
+                    <%= version_field_name(attribute) %>
+                  </p>
+
+                </div>
+
+
+                <!-- Old value -->
+
+                <div>
+
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                    Before
+                  </p>
+
+                  <p class="mt-1 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                    <%= version_value(attribute, old_value) %>
+                  </p>
+
+                </div>
+
+
+                <!-- New value -->
+
+                <div>
+
+                  <p class="text-xs font-medium uppercase tracking-wide text-slate-400">
+                    After
+                  </p>
+
+                  <p class="mt-1 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
+                    <%= version_value(attribute, new_value) %>
+                  </p>
+
+                </div>
 
               </div>
 
-            </div>
+            <% end %>
 
-          <% end %>
+          </div>
 
         </div>
 
