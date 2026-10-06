@@ -88,3 +88,5 @@ gem "active_storage_validations", "~> 3.0"
 gem "groupdate", "~> 6.7"
 
 gem "chartkick", "~> 5.2"
+
+gem "paper_trail"
