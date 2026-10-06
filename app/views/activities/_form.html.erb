@@ -50,7 +50,7 @@
     <template data-spares-form-target="template">
       <div data-spare-row class="grid gap-3 rounded-lg border p-3 md:grid-cols-[1fr_160px_auto]">
         <%= select_tag "spare_ids[]", options_from_collection_for_select(@spares, :id, ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" }), include_blank: "Select spare", class: "field" %>
-        <%= number_field_tag "spare_quantities[]", autocomplete: "off", 1, min: 1, class: "field" %>
+        <%= number_field_tag "spare_quantities[]", 1, autocomplete: "off", min: 1, class: "field" %>
         <button type="button" data-action="spares-form#remove" class="rounded-lg border px-3 py-2 text-sm">Remove</button>
       </div>
     </template>

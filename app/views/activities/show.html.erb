@@ -4,7 +4,19 @@
     <% [ [ "Price", @activity.price ], [ "Labour", @activity.labour_charge ], [ "Spare cost", @activity.spare_cost ], [ "Gross profit", @activity.gross_profit ] ].each do |label, value| %><div class="rounded-xl border bg-white p-5 shadow-sm"><p class="text-sm text-slate-500"><%= label %></p><p class="mt-1 text-xl font-bold"><%= number_to_currency(value, unit: "TSh ", precision: 0) %></p></div><% end %>
   </div>
   <div class="grid gap-6 lg:grid-cols-2">
-    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 font-semibold">Repair details</h2><dl class="grid grid-cols-2 gap-3 text-sm"><dt class="text-slate-500">Customer</dt><dd><%= @activity.customer&.name || "—" %></dd><dt class="text-slate-500">Brand</dt><dd><%= @activity.tv_brand&.name || "—" %></dd><dt class="text-slate-500">Size</dt><dd><%= @activity.tv_size&.size || "—" %></dd><dt class="text-slate-500">Problem</dt><dd><%= @activity.tatizo&.name || "—" %></dd><dt class="text-slate-500">Status</dt><dd><%= @activity.status.humanize %></dd><dt class="text-slate-500">Returns</dt><dd><%= @activity.returned_count %></dd></dl><% if @activity.remarks.present? %><div class="mt-5 border-t pt-4"><p class="text-sm text-slate-500">Remarks</p><p class="mt-1 whitespace-pre-wrap"><%= @activity.remarks %></p></div><% end %></section>
+    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 font-semibold">Repair details</h2>
+    <dl class="grid grid-cols-2 gap-3 text-sm">
+    <dt class="text-slate-500">Customer</dt>
+    <dd><%= @activity.customer&.name || "—" %></dd>
+     <dt class="text-slate-500">Phone number</dt>
+    <dd><%= @activity.customer&.phone || "—" %></dd>
+    <dt class="text-slate-500">Brand</dt>
+    <dd><%= @activity.tv_brand&.name || "—" %></dd><dt class="text-slate-500">Size</dt>
+    <dd><%= @activity.tv_size&.size || "—" %></dd><dt class="text-slate-500">Problem</dt>
+    <dd><%= @activity.tatizo&.name || "—" %></dd><dt class="text-slate-500">Status</dt>
+    <dd><%= @activity.status.humanize %></dd><dt class="text-slate-500">Returns</dt>
+    <dd><%= @activity.returned_count %></dd></dl>
+    <% if @activity.remarks.present? %><div class="mt-5 border-t pt-4"><p class="text-sm text-slate-500">Remarks</p><p class="mt-1 whitespace-pre-wrap"><%= @activity.remarks %></p></div><% end %></section>
     <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 font-semibold">Spares used</h2><% if @activity.activity_spares.any? %><div class="space-y-3"><% @activity.activity_spares.includes(spare: :spare_category).each do |item| %><div class="flex justify-between border-b pb-2 text-sm"><span><%= item.spare.name %> · <%= item.spare.spare_category.name %> × <%= item.quantity %></span><strong><%= number_to_currency(item.total_cost, unit: "TSh ", precision: 0) %></strong></div><% end %></div><% else %><p class="text-sm text-slate-500">No spares recorded.</p><% end %></section>
   </div>
   <section class="rounded-xl border bg-white p-6"><div class="mb-4 flex items-center justify-between"><h2 class="font-semibold">Return history</h2><%= link_to "Add return", new_activity_repair_return_path(@activity), class: "text-blue-600" %></div><% if @activity.repair_returns.any? %><div class="overflow-x-auto"><table class="min-w-full text-sm"><thead><tr class="border-b"><th class="py-2 text-left">#</th><th class="py-2 text-left">Date</th><th class="py-2 text-left">Location</th><th class="py-2 text-left">Reason</th><th class="py-2 text-left">Status</th></tr></thead><tbody><% @activity.repair_returns.order(:return_number).each do |r| %><tr class="border-b"><td class="py-2">#<%= r.return_number %></td><td class="py-2"><%= l(r.returned_at, format: :short) %></td><td class="py-2"><%= r.location %></td><td class="py-2"><%= r.reason %></td><td class="py-2"><%= r.status.humanize %></td></tr><% end %></tbody></table></div><% else %><p class="text-sm text-slate-500">No returns recorded.</p><% end %></section>
