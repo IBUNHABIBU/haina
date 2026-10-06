@@ -18,6 +18,8 @@ class Activity < ApplicationRecord
   has_one_attached :image_before
   has_one_attached :image_after
 
+  has_paper_trail
+
   enum :status, {
     received: 0,
     diagnosing: 1,

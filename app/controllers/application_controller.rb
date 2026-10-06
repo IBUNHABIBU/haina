@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   before_action :require_admin_access, if: -> { admin_action? }
   helper_method :can_grant_admin?
   helper_method :admin_user?
+  
+  before_action :set_paper_trail_whodunnit
 
   protected
 

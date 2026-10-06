@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "activity_versions/index"
   get "pages/offline"
   resources :tatizos
   resources :tv_sizes
