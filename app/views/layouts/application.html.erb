@@ -31,6 +31,20 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+          window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/service-worker.js")
+              .then((registration) => {
+                console.log("Service Worker registered:", registration.scope);
+              })
+              .catch((error) => {
+                console.error("Service Worker registration failed:", error);
+              });
+          });
+        }
+    </script>
   </head>
 
   <body class="min-h-screen bg-neutral-light">

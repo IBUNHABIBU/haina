@@ -1,23 +1,461 @@
 <div class="mx-auto max-w-6xl space-y-6">
-  <div class="flex flex-wrap items-start justify-between gap-3"><div><h1 class="text-2xl font-bold">Repair Activity</h1><p class="text-slate-500"><%= @activity.customer&.name || "No customer" %> · <%= [ @activity.tv_brand&.name, @activity.tv_size&.size ].compact.join(" ") %></p></div><div class="flex gap-2"><%= link_to "Edit", edit_activity_path(@activity), class: "rounded-lg border px-4 py-2" %><%= link_to "Record Return", new_activity_repair_return_path(@activity), class: "rounded-lg bg-amber-500 px-4 py-2 font-medium text-white" %></div></div>
-  <div class="grid gap-6 md:grid-cols-4">
-    <% [ [ "Price", @activity.price ], [ "Labour", @activity.labour_charge ], [ "Spare cost", @activity.spare_cost ], [ "Gross profit", @activity.gross_profit ] ].each do |label, value| %><div class="rounded-xl border bg-white p-5 shadow-sm"><p class="text-sm text-slate-500"><%= label %></p><p class="mt-1 text-xl font-bold"><%= number_to_currency(value, unit: "TSh ", precision: 0) %></p></div><% end %>
+
+  <!-- Header -->
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Repair Activity</h1>
+
+      <p class="mt-1 text-slate-500">
+        <%= @activity.customer&.name || "No customer" %>
+        ·
+        <%= [@activity.tv_brand&.name, @activity.tv_size&.size].compact.join(" ") %>
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-2">
+      <%= link_to "Edit",
+          edit_activity_path(@activity),
+          class: "rounded-lg border bg-white px-4 py-2 font-medium hover:bg-slate-50" %>
+
+      <%= link_to "Record Return",
+          new_activity_repair_return_path(@activity),
+          class: "rounded-lg bg-amber-500 px-4 py-2 font-medium text-white hover:bg-amber-600" %>
+    </div>
   </div>
+
+
+  <!-- Financial Summary -->
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+    <div class="rounded-xl border bg-white p-5 shadow-sm">
+      <p class="text-sm text-slate-500">Price</p>
+      <p class="mt-1 text-xl font-bold">
+        <%= number_to_currency(@activity.price, unit: "TSh ", precision: 0) %>
+      </p>
+    </div>
+
+    <div class="rounded-xl border bg-white p-5 shadow-sm">
+      <p class="text-sm text-slate-500">Labour</p>
+      <p class="mt-1 text-xl font-bold">
+        <%= number_to_currency(@activity.labour_charge, unit: "TSh ", precision: 0) %>
+      </p>
+    </div>
+
+    <div class="rounded-xl border bg-white p-5 shadow-sm">
+      <p class="text-sm text-slate-500">Spare Cost</p>
+      <p class="mt-1 text-xl font-bold">
+        <%= number_to_currency(@activity.spare_cost, unit: "TSh ", precision: 0) %>
+      </p>
+    </div>
+
+    <% if current_user.super_admin? %>
+      <div class="rounded-xl border bg-white p-5 shadow-sm">
+        <p class="text-sm text-slate-500">Gross Profit</p>
+        <p class="mt-1 text-xl font-bold">
+          <%= number_to_currency(@activity.gross_profit, unit: "TSh ", precision: 0) %>
+        </p>
+      </div>
+    <% end %>
+
+  </div>
+
+
+  <!-- Repair Information -->
   <div class="grid gap-6 lg:grid-cols-2">
-    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 font-semibold">Repair details</h2>
-    <dl class="grid grid-cols-2 gap-3 text-sm">
-    <dt class="text-slate-500">Customer</dt>
-    <dd><%= @activity.customer&.name || "—" %></dd>
-     <dt class="text-slate-500">Phone number</dt>
-    <dd><%= @activity.customer&.phone || "—" %></dd>
-    <dt class="text-slate-500">Brand</dt>
-    <dd><%= @activity.tv_brand&.name || "—" %></dd><dt class="text-slate-500">Size</dt>
-    <dd><%= @activity.tv_size&.size || "—" %></dd><dt class="text-slate-500">Problem</dt>
-    <dd><%= @activity.tatizo&.name || "—" %></dd><dt class="text-slate-500">Status</dt>
-    <dd><%= @activity.status.humanize %></dd><dt class="text-slate-500">Returns</dt>
-    <dd><%= @activity.returned_count %></dd></dl>
-    <% if @activity.remarks.present? %><div class="mt-5 border-t pt-4"><p class="text-sm text-slate-500">Remarks</p><p class="mt-1 whitespace-pre-wrap"><%= @activity.remarks %></p></div><% end %></section>
-    <section class="rounded-xl border bg-white p-6"><h2 class="mb-4 font-semibold">Spares used</h2><% if @activity.activity_spares.any? %><div class="space-y-3"><% @activity.activity_spares.includes(spare: :spare_category).each do |item| %><div class="flex justify-between border-b pb-2 text-sm"><span><%= item.spare.name %> · <%= item.spare.spare_category.name %> × <%= item.quantity %></span><strong><%= number_to_currency(item.total_cost, unit: "TSh ", precision: 0) %></strong></div><% end %></div><% else %><p class="text-sm text-slate-500">No spares recorded.</p><% end %></section>
+
+    <!-- Customer / TV -->
+    <section class="rounded-xl border bg-white p-6 shadow-sm">
+
+      <h2 class="mb-5 text-lg font-semibold text-slate-900">
+        Repair Details
+      </h2>
+
+      <dl class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+
+        <dt class="text-slate-500">Customer</dt>
+        <dd class="font-medium">
+          <%= @activity.customer&.name || "—" %>
+        </dd>
+
+        <dt class="text-slate-500">Phone Number</dt>
+        <dd class="font-medium">
+          <%= @activity.customer&.phone || "—" %>
+        </dd>
+
+        <dt class="text-slate-500">TV Brand</dt>
+        <dd class="font-medium">
+          <%= @activity.tv_brand&.name || "—" %>
+        </dd>
+
+        <dt class="text-slate-500">TV Size</dt>
+        <dd class="font-medium">
+          <%= @activity.tv_size&.size || "—" %>
+        </dd>
+
+        <dt class="text-slate-500">Problem</dt>
+        <dd class="font-medium">
+          <%= @activity.tatizo&.name || "—" %>
+        </dd>
+
+        <dt class="text-slate-500">Status</dt>
+        <dd>
+          <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium">
+            <%= @activity.status&.humanize || "—" %>
+          </span>
+        </dd>
+
+        <dt class="text-slate-500">Returns</dt>
+        <dd class="font-medium">
+          <%= @activity.returned_count %>
+        </dd>
+
+      </dl>
+
+    </section>
+
+
+    <!-- Technical Information -->
+    <section class="rounded-xl border bg-white p-6 shadow-sm">
+
+      <h2 class="mb-5 text-lg font-semibold text-slate-900">
+        Technical Information
+      </h2>
+
+      <dl class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+
+        <dt class="text-slate-500">Model Number</dt>
+        <dd class="font-medium">
+          <%= @activity.model_no.presence || "—" %>
+        </dd>
+
+        <dt class="text-slate-500">Board Number</dt>
+        <dd class="font-medium">
+          <%= @activity.board_number.presence || "—" %>
+        </dd>
+
+        <dt class="text-slate-500">T-Con Number</dt>
+        <dd class="font-medium">
+          <%= @activity.tcon_number.presence || "—" %>
+        </dd>
+
+        <dt class="text-slate-500">COF Number</dt>
+        <dd class="font-medium">
+          <%= @activity.cof_number.presence || "—" %>
+        </dd>
+
+        <dt class="text-slate-500">Panel Number</dt>
+        <dd class="font-medium">
+          <%= @activity.panel_number.presence || "—" %>
+        </dd>
+
+      </dl>
+
+    </section>
+
   </div>
-  <section class="rounded-xl border bg-white p-6"><div class="mb-4 flex items-center justify-between"><h2 class="font-semibold">Return history</h2><%= link_to "Add return", new_activity_repair_return_path(@activity), class: "text-blue-600" %></div><% if @activity.repair_returns.any? %><div class="overflow-x-auto"><table class="min-w-full text-sm"><thead><tr class="border-b"><th class="py-2 text-left">#</th><th class="py-2 text-left">Date</th><th class="py-2 text-left">Location</th><th class="py-2 text-left">Reason</th><th class="py-2 text-left">Status</th></tr></thead><tbody><% @activity.repair_returns.order(:return_number).each do |r| %><tr class="border-b"><td class="py-2">#<%= r.return_number %></td><td class="py-2"><%= l(r.returned_at, format: :short) %></td><td class="py-2"><%= r.location %></td><td class="py-2"><%= r.reason %></td><td class="py-2"><%= r.status.humanize %></td></tr><% end %></tbody></table></div><% else %><p class="text-sm text-slate-500">No returns recorded.</p><% end %></section>
+
+
+  <!-- Dates -->
+  <section class="rounded-xl border bg-white p-6 shadow-sm">
+
+    <h2 class="mb-5 text-lg font-semibold text-slate-900">
+      Repair Timeline
+    </h2>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+
+      <div>
+        <p class="text-sm text-slate-500">Date In</p>
+        <p class="mt-1 font-medium">
+          <%= @activity.date_in&.in_time_zone("Africa/Dar_es_Salaam")&.strftime("%d %b %Y, %H:%M") || "—" %>
+        </p>
+      </div>
+
+      <div>
+        <p class="text-sm text-slate-500">Date Out</p>
+        <p class="mt-1 font-medium">
+          <%= @activity.date_out&.in_time_zone("Africa/Dar_es_Salaam")&.strftime("%d %b %Y, %H:%M") || "—" %>
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- Repair Photos -->
+  <section class="rounded-xl border bg-white p-6 shadow-sm">
+
+    <div class="mb-5">
+      <h2 class="text-lg font-semibold text-slate-900">
+        Repair Photos
+      </h2>
+
+      <p class="mt-1 text-sm text-slate-500">
+        Images recorded during diagnosis and repair.
+      </p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+
+      <% if @activity.pattern_image.attached? %>
+        <div>
+          <p class="mb-2 text-sm font-medium text-slate-600">
+            Pattern Image
+          </p>
+
+          <%= link_to url_for(@activity.pattern_image),
+              target: "_blank",
+              rel: "noopener" do %>
+
+            <%= image_tag @activity.pattern_image,
+                class: "h-56 w-full rounded-xl border object-cover shadow-sm transition hover:opacity-90" %>
+
+          <% end %>
+        </div>
+      <% end %>
+
+
+      <% if @activity.model_image.attached? %>
+        <div>
+          <p class="mb-2 text-sm font-medium text-slate-600">
+            Model Image
+          </p>
+
+          <%= link_to url_for(@activity.model_image),
+              target: "_blank",
+              rel: "noopener" do %>
+
+            <%= image_tag @activity.model_image,
+                class: "h-56 w-full rounded-xl border object-cover shadow-sm transition hover:opacity-90" %>
+
+          <% end %>
+        </div>
+      <% end %>
+
+
+      <% if @activity.image_before.attached? %>
+        <div>
+          <p class="mb-2 text-sm font-medium text-slate-600">
+            Before Repair
+          </p>
+
+          <%= link_to url_for(@activity.image_before),
+              target: "_blank",
+              rel: "noopener" do %>
+
+            <%= image_tag @activity.image_before,
+                class: "h-56 w-full rounded-xl border object-cover shadow-sm transition hover:opacity-90" %>
+
+          <% end %>
+        </div>
+      <% end %>
+
+
+      <% if @activity.image_after.attached? %>
+        <div>
+          <p class="mb-2 text-sm font-medium text-slate-600">
+            After Repair
+          </p>
+
+          <%= link_to url_for(@activity.image_after),
+              target: "_blank",
+              rel: "noopener" do %>
+
+            <%= image_tag @activity.image_after,
+                class: "h-56 w-full rounded-xl border object-cover shadow-sm transition hover:opacity-90" %>
+
+          <% end %>
+        </div>
+      <% end %>
+
+    </div>
+
+
+    <% unless @activity.pattern_image.attached? ||
+              @activity.model_image.attached? ||
+              @activity.image_before.attached? ||
+              @activity.image_after.attached? %>
+
+      <div class="rounded-lg bg-slate-50 px-4 py-8 text-center">
+        <p class="text-sm text-slate-500">
+          No repair photos uploaded.
+        </p>
+      </div>
+
+    <% end %>
+
+  </section>
+
+
+  <!-- Remarks -->
+  <% if @activity.remarks.present? %>
+
+    <section class="rounded-xl border bg-white p-6 shadow-sm">
+
+      <h2 class="mb-3 text-lg font-semibold text-slate-900">
+        Remarks
+      </h2>
+
+      <p class="whitespace-pre-wrap text-sm leading-6 text-slate-700">
+        <%= @activity.remarks %>
+      </p>
+
+    </section>
+
+  <% end %>
+
+
+  <!-- Spares Used -->
+  <section class="rounded-xl border bg-white p-6 shadow-sm">
+
+    <h2 class="mb-5 text-lg font-semibold text-slate-900">
+      Spares Used
+    </h2>
+
+    <% if @activity.activity_spares.any? %>
+
+      <div class="overflow-x-auto">
+
+        <table class="min-w-full text-sm">
+
+          <thead>
+            <tr class="border-b text-left">
+              <th class="px-3 py-3">Spare</th>
+              <th class="px-3 py-3">Category</th>
+              <th class="px-3 py-3">Quantity</th>
+              <th class="px-3 py-3 text-right">Total Cost</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y">
+
+            <% @activity.activity_spares.includes(spare: :spare_category).each do |item| %>
+
+              <tr>
+
+                <td class="px-3 py-3 font-medium">
+                  <%= item.spare.name %>
+                </td>
+
+                <td class="px-3 py-3 text-slate-500">
+                  <%= item.spare.spare_category&.name || "—" %>
+                </td>
+
+                <td class="px-3 py-3">
+                  <%= item.quantity %>
+                </td>
+
+                <td class="px-3 py-3 text-right font-medium">
+                  <%= number_to_currency(
+                        item.total_cost,
+                        unit: "TSh ",
+                        precision: 0
+                      ) %>
+                </td>
+
+              </tr>
+
+            <% end %>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    <% else %>
+
+      <p class="text-sm text-slate-500">
+        No spares recorded.
+      </p>
+
+    <% end %>
+
+  </section>
+
+
+  <!-- Return History -->
+  <section class="rounded-xl border bg-white p-6 shadow-sm">
+
+    <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+
+      <h2 class="font-semibold text-slate-900">
+        Return History
+      </h2>
+
+      <%= link_to "Add Return",
+          new_activity_repair_return_path(@activity),
+          class: "text-sm font-medium text-blue-600 hover:text-blue-800" %>
+
+    </div>
+
+    <% if @activity.repair_returns.any? %>
+
+      <div class="overflow-x-auto">
+
+        <table class="min-w-full text-sm">
+
+          <thead>
+
+            <tr class="border-b">
+
+              <th class="px-3 py-3 text-left">#</th>
+              <th class="px-3 py-3 text-left">Date</th>
+              <th class="px-3 py-3 text-left">Location</th>
+              <th class="px-3 py-3 text-left">Reason</th>
+              <th class="px-3 py-3 text-left">Status</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody class="divide-y">
+
+            <% @activity.repair_returns.order(:return_number).each do |r| %>
+
+              <tr>
+
+                <td class="px-3 py-3">
+                  #<%= r.return_number %>
+                </td>
+
+                <td class="px-3 py-3">
+                  <%= l(r.returned_at, format: :short) %>
+                </td>
+
+                <td class="px-3 py-3">
+                  <%= r.location %>
+                </td>
+
+                <td class="px-3 py-3">
+                  <%= r.reason %>
+                </td>
+
+                <td class="px-3 py-3">
+                  <span class="rounded-full bg-slate-100 px-2 py-1 text-xs">
+                    <%= r.status.humanize %>
+                  </span>
+                </td>
+
+              </tr>
+
+            <% end %>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    <% else %>
+
+      <p class="text-sm text-slate-500">
+        No returns recorded.
+      </p>
+
+    <% end %>
+
+  </section>
+
 </div>
