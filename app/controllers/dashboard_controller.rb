@@ -12,7 +12,13 @@ class DashboardController < ApplicationController
     @repair_count = @activities.count
     @return_count = RepairReturn.where(returned_at: @range).count
     @low_stock_count = Spare.low_stock.count
-    @sales_by_day = @activities.group_by_day(:date_in, range: @range).sum(:price)
+    @sales_by_day =  Activity
+    .where(date_in: @range)
+    .where.not(price: [nil, 0])
+    .group("DATE(date_in)")
+    .sum(:price)
+    .transform_keys { |d| d.strftime("%d %b") }
+    .reject { |_date, amount| amount.to_f.zero? }   # ← hapa
   end
 
   private

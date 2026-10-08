@@ -113,7 +113,8 @@
   <!-- ============ Two-column panel ============ -->
   <div class="grid gap-6 lg:grid-cols-2">
 
-    <!-- Sales by day -->
+  </div>
+   <!-- Sales by day -->
     <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
         <div>
@@ -151,45 +152,4 @@
         <div class="px-6 py-10 text-center text-sm text-slate-500">No sales in this period.</div>
       <% end %>
     </section>
-
-    <!-- Formula / info panel -->
-    <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-        <div>
-          <h2 class="text-sm font-semibold text-slate-900">Formula</h2>
-          <p class="mt-0.5 text-xs text-slate-500">How profit is calculated</p>
-        </div>
-        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
-          </svg>
-        </div>
-      </header>
-
-      <div class="space-y-4 px-6 py-5">
-        <div class="rounded-lg bg-slate-50 px-4 py-3">
-          <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Gross profit</p>
-          <p class="mt-1 text-sm leading-6 text-slate-700">
-            <span class="font-mono text-slate-900">Price − Labour charge − Cost of spares used</span>
-          </p>
-        </div>
-
-        <div class="rounded-lg bg-slate-50 px-4 py-3">
-          <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Net profit</p>
-          <p class="mt-1 text-sm leading-6 text-slate-700">
-            <span class="font-mono text-slate-900">Gross profit − Operating expenses</span>
-          </p>
-        </div>
-
-        <div class="flex items-start gap-2 rounded-lg border border-indigo-100 bg-indigo-50/60 px-4 py-3">
-          <svg class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-          </svg>
-          <p class="text-xs leading-5 text-indigo-800">
-            Figures update automatically based on the selected period above.
-          </p>
-        </div>
-      </div>
-    </section>
-  </div>
 </div>
