@@ -5,8 +5,8 @@ class DashboardController < ApplicationController
     @period = params[:period].presence_in(%w[daily weekly monthly yearly]) || "monthly"
     @range = period_range(@period)
     @activities = Activity.where(date_in: @range)
-    @sales = @activities.sales.sum(:price).to_d
-    @gross_profit = @activities.sales.sum(:gross_profit).to_d
+    @sales = @activities.sum(:price).to_d
+    @gross_profit = @activities.sum(:gross_profit).to_d
     @expenses = Expense.where(spent_on: @range.begin.to_date..@range.end.to_date).sum(:amount).to_d
     @net_profit = @gross_profit - @expenses
     @repair_count = @activities.count

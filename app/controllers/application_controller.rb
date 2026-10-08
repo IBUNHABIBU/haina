@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_confirmation, unless: :devise_controller?
-  before_action :require_admin_access, if: -> { admin_action? }
   helper_method :can_grant_admin?
   helper_method :admin_user?
   

@@ -1,5 +1,195 @@
-<div class="mx-auto max-w-7xl space-y-6">
-  <div class="flex flex-wrap items-end justify-between gap-3"><div><h1 class="text-2xl font-bold">Repair Dashboard</h1><p class="text-slate-500">Sales and profit performance for the selected period.</p></div><div class="flex gap-2"><% %w[daily weekly monthly yearly].each do |period| %><%= link_to period.humanize, dashboard_path(period: period), class: "rounded-lg border px-3 py-2 text-sm #{'bg-slate-900 text-white' if @period == period}" %><% end %></div></div>
-  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5"><% [ [ "Sales", @sales ], [ "Gross profit", @gross_profit ], [ "Expenses", @expenses ], [ "Net profit", @net_profit ] ].each do |label, value| %><div class="rounded-xl border bg-white p-5 shadow-sm"><p class="text-sm text-slate-500"><%= label %></p><p class="mt-1 text-xl font-bold"><%= number_to_currency(value, unit: "TSh ", precision: 0) %></p></div><% end %><div class="rounded-xl border bg-white p-5 shadow-sm"><p class="text-sm text-slate-500">Repairs</p><p class="mt-1 text-xl font-bold"><%= @repair_count %></p><p class="text-xs text-slate-400"><%= @return_count %> returns · <%= @low_stock_count %> low stock</p></div></div>
-  <div class="grid gap-6 lg:grid-cols-2"><section class="rounded-xl border bg-white p-6"><h2 class="mb-4 font-semibold">Sales by day</h2><div class="space-y-2"><% @sales_by_day.each do |date, amount| %><div class="flex justify-between border-b py-2 text-sm"><span><%= date %></span><strong><%= number_to_currency(amount, unit: "TSh ", precision: 0) %></strong></div><% end %></div></section><section class="rounded-xl border bg-white p-6"><h2 class="mb-4 font-semibold">Formula</h2><p class="text-sm leading-6 text-slate-600">Gross profit = Price − Labour charge − cost of spares used.</p><p class="mt-2 text-sm leading-6 text-slate-600">Net profit = Gross profit − operating expenses.</p></section></div>
+<% content_for :title, "Repair Dashboard" %>
+
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+  <!-- ============ Page header ============ -->
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Repair Dashboard</h1>
+      <p class="mt-1 text-sm text-slate-500">Sales and profit performance for the selected period.</p>
+    </div>
+
+    <!-- Period switcher (segmented control) -->
+    <div class="inline-flex items-center rounded-lg border border-slate-200 bg-white p-0.5 shadow-sm">
+      <% %w[daily weekly monthly yearly].each do |period| %>
+        <%= link_to period.humanize,
+            dashboard_path(period: period),
+            class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{@period == period ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- ============ KPI cards ============ -->
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+
+    <!-- Sales -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Sales</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums tracking-tight text-slate-900">
+        <%= number_to_currency(@sales, unit: "TSh ", precision: 0) %>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">Total revenue</p>
+    </div>
+
+    <!-- Gross profit -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Gross profit</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums tracking-tight
+        <%= @gross_profit.to_f.positive? ? 'text-emerald-600' : @gross_profit.to_f.negative? ? 'text-rose-600' : 'text-slate-900' %>">
+        <%= number_to_currency(@gross_profit, unit: "TSh ", precision: 0) %>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">After spares &amp; labour</p>
+    </div>
+
+    <!-- Expenses -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Expenses</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums tracking-tight text-slate-900">
+        <%= number_to_currency(@expenses, unit: "TSh ", precision: 0) %>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">Operating costs</p>
+    </div>
+
+    <!-- Net profit -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Net profit</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg
+          <%= @net_profit.to_f.positive? ? 'bg-emerald-50 text-emerald-600' : @net_profit.to_f.negative? ? 'bg-rose-50 text-rose-600' : 'bg-slate-100 text-slate-500' %>">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums tracking-tight
+        <%= @net_profit.to_f.positive? ? 'text-emerald-600' : @net_profit.to_f.negative? ? 'text-rose-600' : 'text-slate-900' %>">
+        <%= number_to_currency(@net_profit, unit: "TSh ", precision: 0) %>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">Bottom line</p>
+    </div>
+
+    <!-- Repairs + secondary stats -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Repairs</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums tracking-tight text-slate-900"><%= @repair_count %></p>
+      <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+        <span class="text-slate-400"><%= @return_count %> returns</span>
+        <span class="text-slate-300">·</span>
+        <span class="<%= @low_stock_count.to_i.positive? ? 'font-medium text-rose-600' : 'text-slate-400' %>">
+          <%= @low_stock_count %> low stock
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Two-column panel ============ -->
+  <div class="grid gap-6 lg:grid-cols-2">
+
+    <!-- Sales by day -->
+    <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Sales by day</h2>
+          <p class="mt-0.5 text-xs text-slate-500">Daily revenue breakdown</p>
+        </div>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+          </svg>
+        </div>
+      </header>
+
+      <% if @sales_by_day.present? %>
+        <ul class="divide-y divide-slate-100">
+          <% max = @sales_by_day.values.map(&:to_f).max.to_f %>
+          <% @sales_by_day.each do |date, amount| %>
+            <li class="flex items-center gap-4 px-6 py-3">
+              <div class="w-24 shrink-0 text-sm text-slate-500">
+                <%= date %>
+              </div>
+
+              <div class="relative h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+                <div class="absolute inset-y-0 left-0 rounded-full bg-indigo-500"
+                     style="width: <%= max.positive? ? (amount.to_f / max * 100).round(1) : 0 %>%"></div>
+              </div>
+
+              <div class="w-28 shrink-0 text-right text-sm font-semibold tabular-nums text-slate-900">
+                <%= number_to_currency(amount, unit: "TSh ", precision: 0) %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="px-6 py-10 text-center text-sm text-slate-500">No sales in this period.</div>
+      <% end %>
+    </section>
+
+    <!-- Formula / info panel -->
+    <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Formula</h2>
+          <p class="mt-0.5 text-xs text-slate-500">How profit is calculated</p>
+        </div>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+          </svg>
+        </div>
+      </header>
+
+      <div class="space-y-4 px-6 py-5">
+        <div class="rounded-lg bg-slate-50 px-4 py-3">
+          <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Gross profit</p>
+          <p class="mt-1 text-sm leading-6 text-slate-700">
+            <span class="font-mono text-slate-900">Price − Labour charge − Cost of spares used</span>
+          </p>
+        </div>
+
+        <div class="rounded-lg bg-slate-50 px-4 py-3">
+          <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Net profit</p>
+          <p class="mt-1 text-sm leading-6 text-slate-700">
+            <span class="font-mono text-slate-900">Gross profit − Operating expenses</span>
+          </p>
+        </div>
+
+        <div class="flex items-start gap-2 rounded-lg border border-indigo-100 bg-indigo-50/60 px-4 py-3">
+          <svg class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+          </svg>
+          <p class="text-xs leading-5 text-indigo-800">
+            Figures update automatically based on the selected period above.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
