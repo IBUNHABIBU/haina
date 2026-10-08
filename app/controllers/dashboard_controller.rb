@@ -12,7 +12,7 @@ class DashboardController < ApplicationController
     @repair_count = @activities.count
     @return_count = RepairReturn.where(returned_at: @range).count
     @low_stock_count = Spare.low_stock.count
-    @sales_by_day = @activities.sales.group_by_day(:date_in, range: @range).sum(:price)
+    @sales_by_day = @activities.group_by_day(:date_in, range: @range).sum(:price)
   end
 
   private
