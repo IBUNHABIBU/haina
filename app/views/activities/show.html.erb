@@ -1,426 +1,379 @@
-<div class="mx-auto max-w-6xl space-y-6">
+<% content_for :title, "Repair Activity" %>
 
-  <!-- Header -->
+<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+  <% if notice.present? %>
+    <div class="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 shadow-sm" id="notice">
+      <svg class="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <%# ============================================================
+      HEADER
+      ============================================================ %>
   <div class="flex flex-wrap items-start justify-between gap-4">
-    <div>
-      <h1 class="text-2xl font-bold text-slate-900">Repair Activity</h1>
-
-      <p class="mt-1 text-slate-500">
-        <%= @activity.customer&.name || "No customer" %>
-        ·
-        <%= [@activity.tv_brand&.name, @activity.tv_size&.size].compact.join(" ") %>
-      </p>
-    </div>
-
-    <div class="flex flex-wrap gap-2">
-      <%= link_to "Edit",
-          edit_activity_path(@activity),
-          class: "rounded-lg border bg-white px-4 py-2 font-medium hover:bg-slate-50" %>
-
-      <%= link_to "Record Return",
-          new_activity_repair_return_path(@activity),
-          class: "rounded-lg bg-amber-500 px-4 py-2 font-medium text-white hover:bg-amber-600" %>
-    </div>
-  </div>
-
-
-  <!-- Financial Summary -->
-  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-
-    <div class="rounded-xl border bg-white p-5 shadow-sm">
-      <p class="text-sm text-slate-500">Price</p>
-      <p class="mt-1 text-xl font-bold">
-        <%= number_to_currency(@activity.price, unit: "TSh ", precision: 0) %>
-      </p>
-    </div>
-
-    <div class="rounded-xl border bg-white p-5 shadow-sm">
-      <p class="text-sm text-slate-500">Labour</p>
-      <p class="mt-1 text-xl font-bold">
-        <%= number_to_currency(@activity.labour_charge, unit: "TSh ", precision: 0) %>
-      </p>
-    </div>
-
-    <div class="rounded-xl border bg-white p-5 shadow-sm">
-      <p class="text-sm text-slate-500">Spare Cost</p>
-      <p class="mt-1 text-xl font-bold">
-        <%= number_to_currency(@activity.spare_cost, unit: "TSh ", precision: 0) %>
-      </p>
-    </div>
-
-    <% if current_user.super_admin? %>
-      <div class="rounded-xl border bg-white p-5 shadow-sm">
-        <p class="text-sm text-slate-500">Gross Profit</p>
-        <p class="mt-1 text-xl font-bold">
-          <%= number_to_currency(@activity.gross_profit, unit: "TSh ", precision: 0) %>
-        </p>
+    <div class="flex items-start gap-4">
+      <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
+        </svg>
       </div>
-    <% end %>
-
-  </div>
-
-
-  <!-- Repair Information -->
-  <div class="grid gap-6 lg:grid-cols-2">
-
-    <!-- Customer / TV -->
-    <section class="rounded-xl border bg-white p-6 shadow-sm">
-
-      <h2 class="mb-5 text-lg font-semibold text-slate-900">
-        Repair Details
-      </h2>
-
-      <dl class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
-
-        <dt class="text-slate-500">Customer</dt>
-        <dd class="font-medium">
-          <%= @activity.customer&.name || "—" %>
-        </dd>
-
-        <dt class="text-slate-500">Phone Number</dt>
-        <dd class="font-medium">
-          <%= @activity.customer&.phone || "—" %>
-        </dd>
-
-        <dt class="text-slate-500">TV Brand</dt>
-        <dd class="font-medium">
-          <%= @activity.tv_brand&.name || "—" %>
-        </dd>
-
-        <dt class="text-slate-500">TV Size</dt>
-        <dd class="font-medium">
-          <%= @activity.tv_size&.size || "—" %>
-        </dd>
-
-        <dt class="text-slate-500">Problem</dt>
-        <dd class="font-medium">
-          <%= @activity.tatizo&.name || "—" %>
-        </dd>
-
-        <dt class="text-slate-500">Status</dt>
-        <dd>
-          <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium">
-            <%= @activity.status&.humanize || "—" %>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Repair Activity</h1>
+          <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+            <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+            <%= @activity.status&.humanize || "Not set" %>
           </span>
-        </dd>
-
-        <dt class="text-slate-500">Returns</dt>
-        <dd class="font-medium">
-          <%= @activity.returned_count %>
-        </dd>
-
-      </dl>
-
-    </section>
-
-
-    <!-- Technical Information -->
-    <section class="rounded-xl border bg-white p-6 shadow-sm">
-
-      <h2 class="mb-5 text-lg font-semibold text-slate-900">
-        Technical Information
-      </h2>
-
-      <dl class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
-
-        <dt class="text-slate-500">Model Number</dt>
-        <dd class="font-medium">
-          <%= @activity.model_no.presence || "—" %>
-        </dd>
-
-        <dt class="text-slate-500">Board Number</dt>
-        <dd class="font-medium">
-          <%= @activity.board_number.presence || "—" %>
-        </dd>
-
-        <dt class="text-slate-500">T-Con Number</dt>
-        <dd class="font-medium">
-          <%= @activity.tcon_number.presence || "—" %>
-        </dd>
-
-        <dt class="text-slate-500">COF Number</dt>
-        <dd class="font-medium">
-          <%= @activity.cof_number.presence || "—" %>
-        </dd>
-
-        <dt class="text-slate-500">Panel Number</dt>
-        <dd class="font-medium">
-          <%= @activity.panel_number.presence || "—" %>
-        </dd>
-
-      </dl>
-
-    </section>
-
-  </div>
-
-
-  <!-- Dates -->
-  <section class="rounded-xl border bg-white p-6 shadow-sm">
-
-    <h2 class="mb-5 text-lg font-semibold text-slate-900">
-      Repair Timeline
-    </h2>
-
-    <div class="grid gap-4 sm:grid-cols-2">
-
-      <div>
-        <p class="text-sm text-slate-500">Date In</p>
-        <p class="mt-1 font-medium">
-          <%= @activity.date_in&.in_time_zone("Africa/Dar_es_Salaam")&.strftime("%d %b %Y, %H:%M") || "—" %>
+        </div>
+        <p class="mt-1 text-sm text-slate-500">
+          <%= @activity.customer&.name || "No customer" %>
+          <% if (tv = [@activity.tv_brand&.name, @activity.tv_size&.size].compact.join(" ")).present? %>
+            <span class="text-slate-300 mx-1">·</span>
+            <%= tv %>
+          <% end %>
+          <span class="text-slate-300 mx-1">·</span>
+          <span class="text-slate-400">#<%= @activity.id %></span>
         </p>
       </div>
-
-      <div>
-        <p class="text-sm text-slate-500">Date Out</p>
-        <p class="mt-1 font-medium">
-          <%= @activity.date_out&.in_time_zone("Africa/Dar_es_Salaam")&.strftime("%d %b %Y, %H:%M") || "—" %>
-        </p>
-      </div>
-
     </div>
 
-  </section>
-
-
-  <!-- Repair Photos -->
-<section class="rounded-xl border bg-white p-6 shadow-sm">
-
-  <div class="mb-5">
-    <h2 class="text-lg font-semibold text-slate-900">
-      Repair Photos
-    </h2>
-
-    <p class="mt-1 text-sm text-slate-500">
-      Images recorded during diagnosis and repair.
-    </p>
-  </div>
-
-  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-
-    <% {
-         "Pattern Image"  => @activity.pattern_image,
-         "Model Image"    => @activity.model_image,
-         "Board Image"    => @activity.board_image,
-         "T-Con Image"    => @activity.tcon_image,
-         "COF Image"      => @activity.cof_image,
-         "Panel Image"    => @activity.panel_image,
-         "Before Repair"  => @activity.image_before,
-         "After Repair"   => @activity.image_after
-       }.each do |label, attachment| %>
-
-      <% if attachment.attached? %>
-        <div>
-          <p class="mb-2 text-sm font-medium text-slate-600">
-            <%= label %>
-          </p>
-
-          <%= link_to url_for(attachment),
-              target: "_blank",
-              rel: "noopener" do %>
-
-            <%= image_tag attachment,
-                class: "h-56 w-full rounded-xl border object-cover shadow-sm transition hover:opacity-90" %>
-
-          <% end %>
-        </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <%= link_to edit_activity_path(@activity),
+          class: "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50" do %>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
+        </svg>
+        Edit
       <% end %>
 
-    <% end %>
-
+      <%= link_to new_activity_repair_return_path(@activity),
+          class: "inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-600" do %>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+        </svg>
+        Record Return
+      <% end %>
+    </div>
   </div>
 
-  <%# Empty state %>
-  <% if [
-       @activity.pattern_image,
-       @activity.model_image,
-       @activity.board_image,
-       @activity.tcon_image,
-       @activity.cof_image,
-       @activity.panel_image,
-       @activity.image_before,
-       @activity.image_after
-     ].none?(&:attached?) %>
+  <%# ============================================================
+      FINANCIAL SUMMARY (KPI cards)
+      ============================================================ %>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
-    <div class="rounded-lg bg-slate-50 px-4 py-8 text-center">
-      <p class="text-sm text-slate-500">
-        No repair photos uploaded.
+    <!-- Price -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Price</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums tracking-tight text-slate-900">
+        <%= number_to_currency(@activity.price, unit: "TSh ", precision: 0) %>
       </p>
+      <p class="mt-1 text-xs text-slate-400">Customer charge</p>
     </div>
 
-  <% end %>
-
-</section>
-
-
-  <!-- Remarks -->
-  <% if @activity.remarks.present? %>
-
-    <section class="rounded-xl border bg-white p-6 shadow-sm">
-
-      <h2 class="mb-3 text-lg font-semibold text-slate-900">
-        Remarks
-      </h2>
-
-      <p class="whitespace-pre-wrap text-sm leading-6 text-slate-700">
-        <%= @activity.remarks %>
+    <!-- Labour -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Labour</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums tracking-tight text-slate-900">
+        <%= number_to_currency(@activity.labour_charge, unit: "TSh ", precision: 0) %>
       </p>
+      <p class="mt-1 text-xs text-slate-400">Technician time</p>
+    </div>
 
+    <!-- Spare Cost -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Spare Cost</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums tracking-tight text-slate-900">
+        <%= number_to_currency(@activity.spare_cost, unit: "TSh ", precision: 0) %>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">Parts consumed</p>
+    </div>
+
+    <!-- Gross Profit -->
+    <% if current_user.super_admin? %>
+      <% positive = @activity.gross_profit.to_f.positive? %>
+      <% negative = @activity.gross_profit.to_f.negative? %>
+      <div class="rounded-xl border p-5 shadow-sm
+        <%= positive ? 'border-emerald-200 bg-emerald-50/40' : negative ? 'border-rose-200 bg-rose-50/40' : 'border-slate-200 bg-white' %>">
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-medium uppercase tracking-wider
+            <%= positive ? 'text-emerald-700' : negative ? 'text-rose-700' : 'text-slate-500' %>">
+            Gross Profit
+          </p>
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg
+            <%= positive ? 'bg-emerald-100 text-emerald-600' : negative ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-600' %>">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+            </svg>
+          </div>
+        </div>
+        <p class="mt-3 text-2xl font-semibold tabular-nums tracking-tight
+          <%= positive ? 'text-emerald-700' : negative ? 'text-rose-700' : 'text-slate-900' %>">
+          <%= number_to_currency(@activity.gross_profit, unit: "TSh ", precision: 0) %>
+        </p>
+        <p class="mt-1 text-xs
+          <%= positive ? 'text-emerald-600' : negative ? 'text-rose-600' : 'text-slate-400' %>">
+          After spares &amp; labour
+        </p>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ============================================================
+      REPAIR + TECHNICAL INFO
+      ============================================================ %>
+  <div class="grid gap-6 lg:grid-cols-2">
+
+    <!-- Repair Details -->
+    <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Repair Details</h2>
+          <p class="text-xs text-slate-500">Customer and repair status.</p>
+        </div>
+      </header>
+
+      <dl class="divide-y divide-slate-100">
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Customer</dt>
+          <dd class="font-medium text-slate-900"><%= @activity.customer&.name || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Phone Number</dt>
+          <dd class="font-medium tabular-nums text-slate-900"><%= @activity.customer&.phone || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">TV Brand</dt>
+          <dd class="font-medium text-slate-900"><%= @activity.tv_brand&.name || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">TV Size</dt>
+          <dd class="font-medium text-slate-900">
+            <%= @activity.tv_size&.size ? "#{@activity.tv_size.size} in" : "—" %>
+          </dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Problem</dt>
+          <dd class="font-medium text-slate-900"><%= @activity.tatizo&.name || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Status</dt>
+          <dd>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+              <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+              <%= @activity.status&.humanize || "—" %>
+            </span>
+          </dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Returns</dt>
+          <dd>
+            <% if @activity.returned_count.to_i.positive? %>
+              <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-200">
+                <%= @activity.returned_count %>
+              </span>
+            <% else %>
+              <span class="text-slate-900">0</span>
+            <% end %>
+          </dd>
+        </div>
+      </dl>
     </section>
 
-  <% end %>
+    <!-- Technical Information -->
+    <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Technical Information</h2>
+          <p class="text-xs text-slate-500">Board and panel identifiers.</p>
+        </div>
+      </header>
 
+      <dl class="divide-y divide-slate-100">
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Model Number</dt>
+          <dd class="font-medium font-mono text-slate-900"><%= @activity.model_no.presence || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Board Number</dt>
+          <dd class="font-medium font-mono text-slate-900"><%= @activity.board_number.presence || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">T-Con Number</dt>
+          <dd class="font-medium font-mono text-slate-900"><%= @activity.tcon_number.presence || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">COF Number</dt>
+          <dd class="font-medium font-mono text-slate-900"><%= @activity.cof_number.presence || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Panel Number</dt>
+          <dd class="font-medium font-mono text-slate-900"><%= @activity.panel_number.presence || "—" %></dd>
+        </div>
+      </dl>
+    </section>
+  </div>
 
-  <!-- Spares Used -->
-  <section class="rounded-xl border bg-white p-6 shadow-sm">
-
-    <h2 class="mb-5 text-lg font-semibold text-slate-900">
-      Spares Used
-    </h2>
-
-    <% if @activity.activity_spares.any? %>
-
-      <div class="overflow-x-auto">
-
-        <table class="min-w-full text-sm">
-
-          <thead>
-            <tr class="border-b text-left">
-              <th class="px-3 py-3">Spare</th>
-              <th class="px-3 py-3">Category</th>
-              <th class="px-3 py-3">Quantity</th>
-              <th class="px-3 py-3 text-right">Total Cost</th>
-            </tr>
-          </thead>
-
-          <tbody class="divide-y">
-
-            <% @activity.activity_spares.includes(spare: :spare_category).each do |item| %>
-
-              <tr>
-
-                <td class="px-3 py-3 font-medium">
-                  <%= item.spare.name %>
-                </td>
-
-                <td class="px-3 py-3 text-slate-500">
-                  <%= item.spare.spare_category&.name || "—" %>
-                </td>
-
-                <td class="px-3 py-3">
-                  <%= item.quantity %>
-                </td>
-
-                <td class="px-3 py-3 text-right font-medium">
-                  <%= number_to_currency(
-                        item.total_cost,
-                        unit: "TSh ",
-                        precision: 0
-                      ) %>
-                </td>
-
-              </tr>
-
-            <% end %>
-
-          </tbody>
-
-        </table>
-
+  <%# ============================================================
+      TIMELINE
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
       </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Repair Timeline</h2>
+        <p class="text-xs text-slate-500">When the device was received and released.</p>
+      </div>
+    </header>
 
-    <% else %>
+    <div class="p-6">
+      <ol class="relative space-y-6 border-l-2 border-slate-100 pl-6">
+        <!-- Date In -->
+        <li class="relative">
+          <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-indigo-500 ring-1 ring-indigo-200">
+            <svg class="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+          </span>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Date In</p>
+            <p class="mt-1 text-sm font-medium text-slate-900">
+              <%= @activity.date_in&.in_time_zone("Africa/Dar_es_Salaam")&.strftime("%d %b %Y, %H:%M") || "Not recorded" %>
+            </p>
+          </div>
+        </li>
 
-      <p class="text-sm text-slate-500">
-        No spares recorded.
-      </p>
-
-    <% end %>
-
-  </section>
-
-
-  <!-- Return History -->
-  <section class="rounded-xl border bg-white p-6 shadow-sm">
-
-    <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-
-      <h2 class="font-semibold text-slate-900">
-        Return History
-      </h2>
-
-      <%= link_to "Add Return",
-          new_activity_repair_return_path(@activity),
-          class: "text-sm font-medium text-blue-600 hover:text-blue-800" %>
-
+        <!-- Date Out -->
+        <li class="relative">
+          <% has_out = @activity.date_out.present? %>
+          <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white
+            <%= has_out ? 'bg-emerald-500 ring-1 ring-emerald-200' : 'bg-slate-300 ring-1 ring-slate-200' %>">
+            <% if has_out %>
+              <svg class="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+            <% else %>
+              <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+            <% end %>
+          </span>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Date Out</p>
+            <p class="mt-1 text-sm font-medium text-slate-900">
+              <%= @activity.date_out&.in_time_zone("Africa/Dar_es_Salaam")&.strftime("%d %b %Y, %H:%M") || "Not yet released" %>
+            </p>
+          </div>
+        </li>
+      </ol>
     </div>
-
-    <% if @activity.repair_returns.any? %>
-
-      <div class="overflow-x-auto">
-
-        <table class="min-w-full text-sm">
-
-          <thead>
-
-            <tr class="border-b">
-
-              <th class="px-3 py-3 text-left">#</th>
-              <th class="px-3 py-3 text-left">Date</th>
-              <th class="px-3 py-3 text-left">Location</th>
-              <th class="px-3 py-3 text-left">Reason</th>
-              <th class="px-3 py-3 text-left">Status</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody class="divide-y">
-
-            <% @activity.repair_returns.order(:return_number).each do |r| %>
-
-              <tr>
-
-                <td class="px-3 py-3">
-                  #<%= r.return_number %>
-                </td>
-
-                <td class="px-3 py-3">
-                  <%= l(r.returned_at, format: :short) %>
-                </td>
-
-                <td class="px-3 py-3">
-                  <%= r.location %>
-                </td>
-
-                <td class="px-3 py-3">
-                  <%= r.reason %>
-                </td>
-
-                <td class="px-3 py-3">
-                  <span class="rounded-full bg-slate-100 px-2 py-1 text-xs">
-                    <%= r.status.humanize %>
-                  </span>
-                </td>
-
-              </tr>
-
-            <% end %>
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    <% else %>
-
-      <p class="text-sm text-slate-500">
-        No returns recorded.
-      </p>
-
-    <% end %>
-
   </section>
 
-</div>
+  <%# ============================================================
+      PHOTOS
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Repair Photos</h2>
+        <p class="text-xs text-slate-500">Images recorded during diagnosis and repair.</p>
+      </div>
+    </header>
+
+    <% photos = {
+         "Pattern Image" => @activity.pattern_image,
+         "Model Image"   => @activity.model_image,
+         "Board Image"   => @activity.board_image,
+         "T-Con Image"   => @activity.tcon_image,
+         "COF Image"     => @activity.cof_image,
+         "Panel Image"   => @activity.panel_image,
+         "Before Repair" => @activity.image_before,
+         "After Repair"  => @activity.image_after
+       } %>
+
+    <% if photos.values.any?(&:attached?) %>
+      <div class="grid gap-5 p-6 sm:grid-cols-2 lg:grid-cols-4">
+        <% photos.each do |label, attachment| %>
+          <% next unless attachment.attached? %>
+          <div class="group">
+            <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500"><%= label %></p>
+            <%= link_to url_for(attachment), target: "_blank", rel: "noopener", class: "block" do %>
+              <div class="relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+                <%= image_tag attachment,
+                    class: "h-48 w-full object-cover transition duration-300 group-hover:scale-105" %>
+                <div class="pointer-events-none absolute inset-0 bg-slate-900/0 transition group-hover:bg-slate-900/10"></div>
+                <div class="pointer-events-none absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 shadow-sm transition group-hover:opacity-100">
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                  </svg>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="flex flex-col items-center justify-center px-6 py-12 text-center">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+          <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
+        </div>
+        <p class="mt-3 text-sm text-slate-500">No repair photos uploaded.</p>
+      </div>
+    <% end %>
+  </section>
+
+  <%# ============================================================
+      REMARKS
+      ============================================================ %>
+  <% if @activity.remarks.present? %>
+    <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
+        </div>
+<div>
