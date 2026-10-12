@@ -376,4 +376,169 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
           </svg>
         </div>
-<div>
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Remarks</h2>
+          <p class="text-xs text-slate-500">Notes from the technician.</p>
+        </div>
+      </header>
+
+      <div class="p-6">
+        <p class="whitespace-pre-wrap text-sm leading-6 text-slate-700"><%= @activity.remarks %></p>
+      </div>
+    </section>
+  <% end %>
+
+  <%# ============================================================
+      SPARES USED
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center justify-between gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Spares Used</h2>
+          <p class="text-xs text-slate-500">Parts consumed for this repair.</p>
+        </div>
+      </div>
+
+      <% if @activity.activity_spares.any? %>
+        <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+          <%= pluralize(@activity.activity_spares.size, "item") %>
+        </span>
+      <% end %>
+    </header>
+
+    <% if @activity.activity_spares.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-100">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Spare</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Category</th>
+              <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Qty</th>
+              <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Total Cost</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <% @activity.activity_spares.includes(spare: :spare_category).each do |item| %>
+              <tr class="transition hover:bg-slate-50/70">
+                <td class="whitespace-nowrap px-6 py-3.5 text-sm font-medium text-slate-900">
+                  <%= item.spare.name %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-3.5">
+                  <% if item.spare.spare_category&.name.present? %>
+                    <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
+                      <%= item.spare.spare_category.name %>
+                    </span>
+                  <% else %>
+                    <span class="text-sm text-slate-400">—</span>
+                  <% end %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
+                  <%= item.quantity %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm font-semibold tabular-nums text-slate-900">
+                  <%= number_to_currency(item.total_cost, unit: "TSh ", precision: 0) %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="flex flex-col items-center justify-center px-6 py-12 text-center">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+          <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </div>
+        <p class="mt-3 text-sm text-slate-500">No spares recorded.</p>
+      </div>
+    <% end %>
+  </section>
+
+  <%# ============================================================
+      RETURN HISTORY
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Return History</h2>
+          <p class="text-xs text-slate-500">
+            <%= pluralize(@activity.repair_returns.size, "return") %> recorded.
+          </p>
+        </div>
+      </div>
+
+      <%= link_to new_activity_repair_return_path(@activity),
+          class: "inline-flex items-center gap-1 text-sm font-medium text-indigo-600 transition hover:text-indigo-800" do %>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Add Return
+      <% end %>
+    </header>
+
+    <% if @activity.repair_returns.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-100">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">#</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Location</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Reason</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <% @activity.repair_returns.order(:return_number).each do |r| %>
+              <tr class="transition hover:bg-slate-50/70">
+                <td class="whitespace-nowrap px-6 py-3.5">
+                  <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
+                    #<%= r.return_number %>
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-6 py-3.5 text-sm text-slate-600">
+                  <%= l(r.returned_at, format: :short) %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-3.5 text-sm text-slate-600">
+                  <%= r.location %>
+                </td>
+                <td class="px-6 py-3.5 text-sm text-slate-600">
+                  <%= r.reason %>
+                </td>
+                <td class="whitespace-nowrap px-6 py-3.5">
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                    <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                    <%= r.status.humanize %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="flex flex-col items-center justify-center px-6 py-12 text-center">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+          <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+          </svg>
+        </div>
+        <p class="mt-3 text-sm text-slate-500">No returns recorded.</p>
+      </div>
+    <% end %>
+  </section>
+
+</div>
