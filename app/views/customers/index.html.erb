@@ -35,7 +35,6 @@
               <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Name</th>
               <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Phone</th>
               <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Mahali</th>
-              <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">User</th>
               <th scope="col" class="relative px-6 py-3.5">
                 <span class="sr-only">Actions</span>
               </th>
@@ -54,11 +53,7 @@
                 </td>
                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600"><%= customer.phone %></td>
                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600"><%= customer.mahali %></td>
-                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
-                  <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
-                    #<%= customer.user_id %>
-                  </span>
-                </td>
+                
                 <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                   <div class="inline-flex items-center gap-1 opacity-70 transition group-hover:opacity-100">
                     <%= link_to "Show", customer,

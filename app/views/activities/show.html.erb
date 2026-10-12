@@ -184,108 +184,73 @@
 
 
   <!-- Repair Photos -->
-  <section class="rounded-xl border bg-white p-6 shadow-sm">
+<section class="rounded-xl border bg-white p-6 shadow-sm">
 
-    <div class="mb-5">
-      <h2 class="text-lg font-semibold text-slate-900">
-        Repair Photos
-      </h2>
+  <div class="mb-5">
+    <h2 class="text-lg font-semibold text-slate-900">
+      Repair Photos
+    </h2>
 
-      <p class="mt-1 text-sm text-slate-500">
-        Images recorded during diagnosis and repair.
-      </p>
-    </div>
+    <p class="mt-1 text-sm text-slate-500">
+      Images recorded during diagnosis and repair.
+    </p>
+  </div>
 
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 
-      <% if @activity.pattern_image.attached? %>
+    <% {
+         "Pattern Image"  => @activity.pattern_image,
+         "Model Image"    => @activity.model_image,
+         "Board Image"    => @activity.board_image,
+         "T-Con Image"    => @activity.tcon_image,
+         "COF Image"      => @activity.cof_image,
+         "Panel Image"    => @activity.panel_image,
+         "Before Repair"  => @activity.image_before,
+         "After Repair"   => @activity.image_after
+       }.each do |label, attachment| %>
+
+      <% if attachment.attached? %>
         <div>
           <p class="mb-2 text-sm font-medium text-slate-600">
-            Pattern Image
+            <%= label %>
           </p>
 
-          <%= link_to url_for(@activity.pattern_image),
+          <%= link_to url_for(attachment),
               target: "_blank",
               rel: "noopener" do %>
 
-            <%= image_tag @activity.pattern_image,
+            <%= image_tag attachment,
                 class: "h-56 w-full rounded-xl border object-cover shadow-sm transition hover:opacity-90" %>
 
           <% end %>
         </div>
       <% end %>
-
-
-      <% if @activity.model_image.attached? %>
-        <div>
-          <p class="mb-2 text-sm font-medium text-slate-600">
-            Model Image
-          </p>
-
-          <%= link_to url_for(@activity.model_image),
-              target: "_blank",
-              rel: "noopener" do %>
-
-            <%= image_tag @activity.model_image,
-                class: "h-56 w-full rounded-xl border object-cover shadow-sm transition hover:opacity-90" %>
-
-          <% end %>
-        </div>
-      <% end %>
-
-
-      <% if @activity.image_before.attached? %>
-        <div>
-          <p class="mb-2 text-sm font-medium text-slate-600">
-            Before Repair
-          </p>
-
-          <%= link_to url_for(@activity.image_before),
-              target: "_blank",
-              rel: "noopener" do %>
-
-            <%= image_tag @activity.image_before,
-                class: "h-56 w-full rounded-xl border object-cover shadow-sm transition hover:opacity-90" %>
-
-          <% end %>
-        </div>
-      <% end %>
-
-
-      <% if @activity.image_after.attached? %>
-        <div>
-          <p class="mb-2 text-sm font-medium text-slate-600">
-            After Repair
-          </p>
-
-          <%= link_to url_for(@activity.image_after),
-              target: "_blank",
-              rel: "noopener" do %>
-
-            <%= image_tag @activity.image_after,
-                class: "h-56 w-full rounded-xl border object-cover shadow-sm transition hover:opacity-90" %>
-
-          <% end %>
-        </div>
-      <% end %>
-
-    </div>
-
-
-    <% unless @activity.pattern_image.attached? ||
-              @activity.model_image.attached? ||
-              @activity.image_before.attached? ||
-              @activity.image_after.attached? %>
-
-      <div class="rounded-lg bg-slate-50 px-4 py-8 text-center">
-        <p class="text-sm text-slate-500">
-          No repair photos uploaded.
-        </p>
-      </div>
 
     <% end %>
 
-  </section>
+  </div>
+
+  <%# Empty state %>
+  <% if [
+       @activity.pattern_image,
+       @activity.model_image,
+       @activity.board_image,
+       @activity.tcon_image,
+       @activity.cof_image,
+       @activity.panel_image,
+       @activity.image_before,
+       @activity.image_after
+     ].none?(&:attached?) %>
+
+    <div class="rounded-lg bg-slate-50 px-4 py-8 text-center">
+      <p class="text-sm text-slate-500">
+        No repair photos uploaded.
+      </p>
+    </div>
+
+  <% end %>
+
+</section>
 
 
   <!-- Remarks -->

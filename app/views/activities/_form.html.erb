@@ -1,74 +1,335 @@
-<%= form_with(model: activity, class: "space-y-8", data: { controller: "spares-form" }) do |form| %>
+<%= form_with(model: activity, class: "space-y-6", data: { controller: "spares-form" }) do |form| %>
+
+  <%# ---------- Error summary ---------- %>
   <% if activity.errors.any? %>
-    <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
-      <h2 class="font-semibold"><%= pluralize(activity.errors.count, "error") %> prevented this activity from being saved.</h2>
-      <ul class="mt-2 list-disc pl-5 text-sm">
-          <% activity.errors.full_messages.each do |message| %>
-             <li><%= message %></li>
-          <% end %>
-      </ul>
+    <div class="rounded-xl border border-rose-200 bg-rose-50 p-4">
+      <div class="flex items-start gap-3">
+        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+          </svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h2 class="text-sm font-semibold text-rose-800">
+            <%= pluralize(activity.errors.count, "error") %> prevented this activity from being saved.
+          </h2>
+          <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-rose-700">
+            <% activity.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
     </div>
   <% end %>
 
-  <section class="rounded-xl border bg-white p-6 shadow-sm">
-    <h2 class="mb-5 text-lg font-semibold">Customer & TV</h2>
-    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-      <div><%= form.label :customer_id, "Customer", class: "label" %><%= form.collection_select :customer_id, @customers, :id, :name, { prompt: "Select customer" }, class: "field" %></div>
-      <div><%= form.label :tv_brand_id, "TV Brand", class: "label" %><%= form.collection_select :tv_brand_id, @tv_brands, :id, :name, { prompt: "Select brand" }, class: "field" %></div>
-      <div><%= form.label :tv_size_id, "TV Size", class: "label" %><%= form.collection_select :tv_size_id, @tv_sizes, :id, :size, { prompt: "Select size" }, class: "field" %></div>
-      <div><%= form.label :tatizo_id, "Problem", class: "label" %><%= form.collection_select :tatizo_id, @tatizos, :id, :name, { prompt: "Select problem" }, class: "field" %></div>
-       <div><%= form.label :model_no, "Model number", class: "label" %><%= form.text_field :model_no, autocomplete: "off", class: "field" %></div>
-      <div><%= form.label :date_in, class: "label" %><%= form.datetime_local_field :date_in, value: form.object.date_in&.strftime("%Y-%m-%dT%H:%M"), class: "field" %></div>
-      <div><%= form.label :date_out, class: "label" %><%= form.datetime_local_field :date_out, value: form.object.date_in&.strftime("%Y-%m-%dT%H:%M"), class: "field" %></div>
-      <div><%= form.label :status, class: "label" %><%= form.select :status, Activity.statuses.keys.map { |s| [ s.humanize, s ] }, {}, class: "field" %></div>
+  <%# ============================================================
+      SECTION 1 — Customer & TV
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Customer &amp; TV</h2>
+        <p class="text-xs text-slate-500">Who is this repair for, and what device?</p>
+      </div>
+    </header>
+
+    <div class="grid gap-5 p-6 md:grid-cols-2 lg:grid-cols-3">
+      <div>
+        <%= form.label :customer_id, "Customer", class: "label" %>
+        <%= form.collection_select :customer_id, @customers, :id, :name,
+              { prompt: "Select customer" }, class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :tv_brand_id, "TV Brand", class: "label" %>
+        <%= form.collection_select :tv_brand_id, @tv_brands, :id, :name,
+              { prompt: "Select brand" }, class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :tv_size_id, "TV Size", class: "label" %>
+        <%= form.collection_select :tv_size_id, @tv_sizes, :id, :size,
+              { prompt: "Select size" }, class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :tatizo_id, "Problem", class: "label" %>
+        <%= form.collection_select :tatizo_id, @tatizos, :id, :name,
+              { prompt: "Select problem" }, class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :model_no, "Model Number", class: "label" %>
+        <%= form.text_field :model_no, autocomplete: "off", class: "field",
+              placeholder: "e.g. UA32T5300" %>
+      </div>
+
+      <div>
+        <%= form.label :board_number, "Board Number", class: "label" %>
+        <%= form.text_field :board_number, autocomplete: "off", class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :tcon_number, "T-Con Number", class: "label" %>
+        <%= form.text_field :tcon_number, autocomplete: "off", class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :cof_number, "COF Number", class: "label" %>
+        <%= form.text_field :cof_number, autocomplete: "off", class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :panel_number, "Panel Number", class: "label" %>
+        <%= form.text_field :panel_number, autocomplete: "off", class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :date_in, "Date In", class: "label" %>
+        <%= form.datetime_local_field :date_in,
+              value: form.object.date_in&.strftime("%Y-%m-%dT%H:%M"),
+              class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :date_out, "Date Out", class: "label" %>
+        <%= form.datetime_local_field :date_out,
+              value: form.object.date_out&.strftime("%Y-%m-%dT%H:%M"),
+              class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :status, "Status", class: "label" %>
+        <%= form.select :status,
+              Activity.statuses.keys.map { |s| [s.humanize, s] },
+              {}, class: "field" %>
+      </div>
     </div>
   </section>
 
-  <section class="rounded-xl border bg-white p-6 shadow-sm">
-    <h2 class="mb-5 text-lg font-semibold">Price & Labour</h2>
-    <div class="grid gap-5 md:grid-cols-3">
-      <div><%= form.label :price, "Price (TSh)", class: "label" %><%= form.number_field :price, step: 0.01, min: 0, class: "field" %></div>
-      <div><%= form.label :labour_charge, "Labour charge (TSh)", class: "label" %><%= form.number_field :labour_charge, step: 0.01, min: 0, class: "field" %></div>
-      <div class="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">Gross profit is calculated as <strong>Price − Labour − Spare cost</strong>.</div>
+  <%# ============================================================
+      SECTION 2 — Price & Labour
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Price &amp; Labour</h2>
+        <p class="text-xs text-slate-500">What are we charging for this job?</p>
+      </div>
+    </header>
+
+    <div class="grid gap-5 p-6 md:grid-cols-3">
+      <div>
+        <%= form.label :price, "Price (TSh)", class: "label" %>
+        <div class="relative">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm font-medium text-slate-400">
+            TSh
+          </span>
+          <%= form.number_field :price, step: 0.01, min: 0,
+                class: "field pl-12",
+                placeholder: "0" %>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :labour_charge, "Labour Charge (TSh)", class: "label" %>
+        <div class="relative">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm font-medium text-slate-400">
+            TSh
+          </span>
+          <%= form.number_field :labour_charge, step: 0.01, min: 0,
+                class: "field pl-12",
+                placeholder: "0" %>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-2 rounded-lg border border-indigo-100 bg-indigo-50/60 p-4">
+        <svg class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+        </svg>
+        <div class="text-xs leading-5 text-indigo-800">
+          <p class="font-semibold">Gross profit formula</p>
+          <p class="mt-0.5 font-mono text-[11px]">
+            Price − Labour − Spare Cost
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="rounded-xl border bg-white p-6 shadow-sm">
-    <div class="mb-4 flex items-center justify-between">
-      <div><h2 class="text-lg font-semibold">Spares used</h2><p class="text-sm text-slate-500">Select stock items and quantity. Stock is deducted automatically.</p></div>
-      <button type="button" data-action="spares-form#add" class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white">+ Add spare</button>
-    </div>
-    <div data-spares-form-target="rows" class="space-y-3">
-      <% activity.activity_spares.each do |item| %>
-        <div data-spare-row class="grid gap-3 rounded-lg border p-3 md:grid-cols-[1fr_160px_auto]">
-          <%= select_tag "spare_ids[]", options_from_collection_for_select(@spares, :id, ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" }, item.spare_id), include_blank: "Select spare", class: "field" %>
-          <%= number_field_tag "spare_quantities[]", item.quantity, autocomplete: "off", min: 1, class: "field" %>
-          <button type="button" data-action="spares-form#remove" class="rounded-lg border px-3 py-2 text-sm">Remove</button>
+  <%# ============================================================
+      SECTION 3 — Spares Used
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Spares Used</h2>
+          <p class="text-xs text-slate-500">Stock is deducted automatically.</p>
+        </div>
+      </div>
+
+      <button type="button"
+              data-action="spares-form#add"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-medium text-white transition hover:bg-slate-800">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Add Spare
+      </button>
+    </header>
+
+    <div data-spares-form-target="rows" class="space-y-3 p-6">
+      <% if activity.activity_spares.any? %>
+        <% activity.activity_spares.each do |item| %>
+          <div data-spare-row class="grid gap-3 rounded-lg border border-slate-200 bg-slate-50/50 p-3 md:grid-cols-[1fr_140px_auto]">
+            <div>
+              <%= select_tag "spare_ids[]",
+                    options_from_collection_for_select(
+                      @spares,
+                      :id,
+                      ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" },
+                      item.spare_id
+                    ),
+                    include_blank: "Select spare",
+                    class: "field" %>
+            </div>
+
+            <div>
+              <%= number_field_tag "spare_quantities[]", item.quantity,
+                    autocomplete: "off", min: 1, class: "field" %>
+            </div>
+
+            <button type="button"
+                    data-action="spares-form#remove"
+                    class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-rose-200 bg-white px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
+                    title="Remove spare">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>
+              <span class="hidden sm:inline">Remove</span>
+            </button>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="rounded-lg border border-dashed border-slate-300 bg-slate-50/50 px-4 py-8 text-center">
+          <p class="text-sm text-slate-500">No spares added yet.</p>
+          <p class="mt-0.5 text-xs text-slate-400">Click <strong class="font-medium text-slate-600">Add Spare</strong> to attach stock items.</p>
         </div>
       <% end %>
     </div>
+
     <template data-spares-form-target="template">
-      <div data-spare-row class="grid gap-3 rounded-lg border p-3 md:grid-cols-[1fr_160px_auto]">
-        <%= select_tag "spare_ids[]", options_from_collection_for_select(@spares, :id, ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" }), include_blank: "Select spare", class: "field" %>
-        <%= number_field_tag "spare_quantities[]", 1, autocomplete: "off", min: 1, class: "field" %>
-        <button type="button" data-action="spares-form#remove" class="rounded-lg border px-3 py-2 text-sm">Remove</button>
+      <div data-spare-row class="grid gap-3 rounded-lg border border-slate-200 bg-slate-50/50 p-3 md:grid-cols-[1fr_140px_auto]">
+        <%= select_tag "spare_ids[]",
+              options_from_collection_for_select(
+                @spares,
+                :id,
+                ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" }
+              ),
+              include_blank: "Select spare",
+              class: "field" %>
+
+        <%= number_field_tag "spare_quantities[]", 1,
+              autocomplete: "off", min: 1, class: "field" %>
+
+        <button type="button"
+                data-action="spares-form#remove"
+                class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-rose-200 bg-white px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
+                title="Remove spare">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+          </svg>
+          <span class="hidden sm:inline">Remove</span>
+        </button>
       </div>
     </template>
   </section>
 
-  <section class="rounded-xl border bg-white p-6 shadow-sm">
-    <%= form.label :remarks, class: "label" %>
-    <%= form.text_area :remarks, rows: 4, class: "field" %>
+  <%# ============================================================
+      SECTION 4 — Remarks
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Remarks</h2>
+        <p class="text-xs text-slate-500">Any extra notes about this repair.</p>
+      </div>
+    </header>
+
+    <div class="p-6">
+      <%= form.text_area :remarks, rows: 4, class: "field", placeholder: "Add any observations, parts needed, or follow-up notes..." %>
+    </div>
   </section>
 
-  <section class="rounded-xl border bg-white p-6 shadow-sm">
-    <h2 class="mb-5 text-lg font-semibold">Photos</h2>
-    <div class="grid gap-5 md:grid-cols-2">
-      <% [ [ :pattern_image, "COF Pattern" ], [ :model_image, "Model Number" ], [ :board_number, "Board Number" ], [ :tcon_number, "T-Con Number" ], [ :cof_number, "COF Number" ], [ :panel_number, "Panel Number" ], [ :image_before, "Before" ], [ :image_after, "After" ] ].each do |field, label| %>
-        <div><%= form.label field, label, class: "label" %><%= form.file_field field, accept: "image/*", capture: "environment", class: "field" %></div>
+  <%# ============================================================
+      SECTION 5 — Photos
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Photos</h2>
+        <p class="text-xs text-slate-500">Attach reference and before/after images.</p>
+      </div>
+    </header>
+
+    <div class="grid gap-5 p-6 md:grid-cols-2">
+      <% [
+        [:model_image,   "Model Number Photo", "Photo of the model number sticker."],
+        [:board_image,   "Board Number Photo", "Photo of the model number sticker."],
+        [:tcon_image,   "TCON Number Photo", "Photo of the model number sticker."]
+        [:pattern_image, "COF Pattern", "Reference image of the COF pattern."],
+        [:model_image,   "Model Number Photo", "Photo of the model number sticker."],
+        [:image_before,  "Before Repair", "Condition when received."],
+        [:image_after,   "After Repair", "Condition when completed."]
+      ].each do |field, label, hint| %>
+        <div>
+          <%= form.label field, label, class: "label" %>
+          <%= form.file_field field,
+                accept: "image/*",
+                capture: "environment",
+                class: "field file:mr-3 file:rounded-md file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-slate-700 hover:file:bg-slate-200" %>
+          <p class="mt-1 text-xs text-slate-400"><%= hint %></p>
+        </div>
       <% end %>
     </div>
   </section>
 
-  <div class="flex gap-3"><%= form.submit class: "rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700" %><%= link_to "Cancel", activities_path, class: "rounded-lg border px-5 py-2.5" %></div>
+  <%# ============================================================
+      ACTIONS
+      ============================================================ %>
+  <div class="sticky bottom-0 -mx-4 sm:-mx-6 lg:-mx-8 border-t border-slate-200 bg-white/80 px-4 sm:px-6 lg:px-8 py-4 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-end gap-3">
+      <%= link_to "Cancel", activities_path,
+            class: "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50" %>
+
+      <%= form.submit class: "inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer" %>
+    </div>
+  </div>
 <% end %>

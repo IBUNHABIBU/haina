@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_06_120660) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_08_210437) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,6 +80,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_120660) do
     t.decimal "labour_charge", precision: 15, scale: 2, default: "0.0", null: false
     t.decimal "gross_profit", precision: 15, scale: 2, default: "0.0", null: false
     t.integer "returned_count", default: 0, null: false
+    t.string "board_number"
+    t.string "tcon_number"
+    t.string "cof_number"
+    t.string "panel_number"
     t.index ["customer_id"], name: "index_activities_on_customer_id"
     t.index ["date_in"], name: "index_activities_on_date_in"
     t.index ["status"], name: "index_activities_on_status"
