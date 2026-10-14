@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :spare_requests
    resources :activity_versions,
             controller: "activity_versions",
             only: :index

@@ -5,6 +5,7 @@ class Spare < ApplicationRecord
   has_many :spare_purchases, dependent: :restrict_with_error
 
   validates :name, presence: true
+  validates :part_number, presence: true, uniquness: true
   validates :unit_cost, :selling_price, :quantity, :reorder_level, numericality: { greater_than_or_equal_to: 0 }
 
   scope :low_stock, -> { where("quantity <= reorder_level") }
