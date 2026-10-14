@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_08_210437) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_14_134758) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -106,6 +106,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_210437) do
     t.index ["spare_id"], name: "index_activity_spares_on_spare_id"
   end
 
+  create_table "blogs", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "customers", force: :cascade do |t|
     t.string "name"
     t.string "phone"
@@ -170,6 +176,26 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_210437) do
     t.index ["purchased_on"], name: "index_spare_purchases_on_purchased_on"
     t.index ["spare_id"], name: "index_spare_purchases_on_spare_id"
     t.index ["user_id"], name: "index_spare_purchases_on_user_id"
+  end
+
+  create_table "spare_requests", force: :cascade do |t|
+    t.bigint "activity_id", null: false
+    t.bigint "spare_id", null: false
+    t.bigint "requested_by_id", null: false
+    t.bigint "issued_by_id"
+    t.integer "requested_quantity"
+    t.integer "issued_quantity", default: 0, null: false
+    t.decimal "unit_cost_at_issue", precision: 12, scale: 2
+    t.string "status", default: "requested", null: false
+    t.text "reason"
+    t.text "store_notes"
+    t.datetime "issued_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["activity_id"], name: "index_spare_requests_on_activity_id"
+    t.index ["issued_by_id"], name: "index_spare_requests_on_issued_by_id"
+    t.index ["requested_by_id"], name: "index_spare_requests_on_requested_by_id"
+    t.index ["spare_id"], name: "index_spare_requests_on_spare_id"
   end
 
   create_table "spares", force: :cascade do |t|
@@ -252,5 +278,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_210437) do
   add_foreign_key "repair_returns", "activities"
   add_foreign_key "spare_purchases", "spares"
   add_foreign_key "spare_purchases", "users"
+  add_foreign_key "spare_requests", "activities"
+  add_foreign_key "spare_requests", "spares"
+  add_foreign_key "spare_requests", "users", column: "issued_by_id"
+  add_foreign_key "spare_requests", "users", column: "requested_by_id"
   add_foreign_key "spares", "spare_categories"
 end

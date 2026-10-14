@@ -6,3 +6,5 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 
 pin "trix"
 pin "@rails/actiontext", to: "actiontext.js"
+pin "trix"
+pin "@rails/actiontext", to: "actiontext.esm.js"
