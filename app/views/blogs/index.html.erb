@@ -75,9 +75,9 @@
               <% if blog.respond_to?(:user) && blog.user.present? %>
                 <div class="flex items-center gap-1.5">
                   <div class="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 text-[10px] font-semibold text-indigo-700">
-                    <%= blog.user.try(:name).to_s.first&.upcase || "?" %>
+                    <%= blog.user.try(:first_name).to_s.first&.upcase || "?" %>
                   </div>
-                  <span><%= blog.user.try(:name) || "Unknown" %></span>
+                  <span><%= blog.user.try(:first_name) || "Unknown" %></span>
                 </div>
                 <span class="text-slate-300">·</span>
               <% end %>
