@@ -1,0 +1,2 @@
+module SpareRequestsHelper
+end
