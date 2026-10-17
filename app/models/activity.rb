@@ -54,16 +54,16 @@ class Activity < ApplicationRecord
         .map    { |s| statuses[s] }
 
       conditions = [
-        "customers.name LIKE :q",
-        "customers.phone LIKE :q",
-        "tv_brands.name LIKE :q",
+        "customers.name ILIKE :q",
+        "customers.phone ILIKE :q",
+        "tv_brands.name ILIKE :q",
         "CAST(tv_sizes.size AS TEXT) LIKE :q",   # ← cast hapa
-        "tatizos.name LIKE :q",
-        "activities.model_no LIKE :q",
-        "activities.board_number LIKE :q",
-        "activities.tcon_number LIKE :q",
-        "activities.cof_number LIKE :q",
-        "activities.panel_number LIKE :q"
+        "tatizos.name ILIKE :q",
+        "activities.model_no ILIKE :q",
+        "activities.board_number ILIKE :q",
+        "activities.tcon_number ILIKE :q",
+        "activities.cof_number ILIKE :q",
+        "activities.panel_number ILIKE :q"
       ]
 
       bindings = { q: pattern }
