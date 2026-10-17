@@ -1,5 +1,78 @@
 <% content_for :title, "Spare Inventory" %>
 
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <!-- Total items -->
+  <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="flex items-center justify-between">
+      <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Total items</p>
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+        </svg>
+      </div>
+    </div>
+    <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900"><%= @spares.count %></p>
+    <p class="mt-1 text-xs text-slate-400">Across all categories</p>
+  </div>
+
+  <!-- Low stock -->
+  <div class="rounded-xl border p-5 shadow-sm
+    <%= @low_stock_count.to_i.positive? ? 'border-rose-200 bg-rose-50/40' : 'border-slate-200 bg-white' %>">
+    <div class="flex items-center justify-between">
+      <p class="text-xs font-medium uppercase tracking-wider
+        <%= @low_stock_count.to_i.positive? ? 'text-rose-700' : 'text-slate-500' %>">Low stock</p>
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg
+        <%= @low_stock_count.to_i.positive? ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-500' %>">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+        </svg>
+      </div>
+    </div>
+    <p class="mt-3 text-2xl font-semibold tabular-nums
+      <%= @low_stock_count.to_i.positive? ? 'text-rose-700' : 'text-slate-900' %>">
+      <%= @low_stock_count %>
+    </p>
+    <p class="mt-1 text-xs
+      <%= @low_stock_count.to_i.positive? ? 'text-rose-600' : 'text-slate-400' %>">
+      <%= @low_stock_count.to_i.positive? ? "Needs reordering" : "All levels healthy" %>
+    </p>
+  </div>
+
+  <!-- Total value (kama una @total_stock_value kwenye controller) -->
+  <% if defined?(@total_stock_value) && @total_stock_value %>
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Inventory value</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900">
+        <%= number_to_currency(@total_stock_value, unit: "TSh ", precision: 0) %>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">Total cost of all spares</p>
+    </div>
+  <% end %>
+
+  <!-- Categories -->
+  <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div class="flex items-center justify-between">
+      <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Categories</p>
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+        </svg>
+      </div>
+    </div>
+    <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900"><%= @spares.map(&:spare_category_id).uniq.compact.size %></p>
+    <p class="mt-1 text-xs text-slate-400">Distinct categories</p>
+  </div>
+</div>
+
+
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
   <% if notice.present? %>
     <div class="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 shadow-sm" id="notice">
@@ -176,3 +249,9 @@
     <% end %>
   </div>
 </div>
+
+<% if @pagy.pages > 1 %>
+  <div class="flex justify-center">
+    <%==  @pagy.series_nav %>
+  </div>
+<% end %>

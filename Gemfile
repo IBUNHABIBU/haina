@@ -90,3 +90,4 @@ gem "groupdate", "~> 6.7"
 gem "chartkick", "~> 5.2"
 
 gem "paper_trail"
+gem "pagy", "~> 43.8"

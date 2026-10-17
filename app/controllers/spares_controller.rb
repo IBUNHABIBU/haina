@@ -3,8 +3,13 @@ class SparesController < ApplicationController
   before_action :set_spare, only: %i[show edit update destroy]
 
   def index
-    @spares = Spare.includes(:spare_category).order(:name)
+    # @spares = Spare.includes(:spare_category).order(:name)
+     @pagy, @spares = pagy(
+         Spare.includes(:spare_category).order(:name),
+         items: 50
+     )
     @low_stock_count = Spare.low_stock.count
+    @total_stock_value = @spares.sum(&:stock_value)  # au @spares.sum { |s| s.quantity * s.unit_cost }
   end
 
   def show
