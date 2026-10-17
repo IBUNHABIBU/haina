@@ -4,7 +4,29 @@ class ActivitiesController < ApplicationController
   before_action :load_form_options, only: %i[new edit create update]
 
   def index
-    @activities = Activity.includes(:customer, :tv_brand, :tv_size, :tatizo).order(date_in: :desc, created_at: :desc)
+    scope = Activity
+      .includes(:customer, :tv_brand, :tv_size, :tatizo)
+      .search(params[:q])
+      .order(date_in: :desc, created_at: :desc)
+
+    @activities = scope
+
+    # KPI — overall stats (sio filtered)
+    @total_count     = Activity.count
+    @in_progress     = Activity.where(status: %w[received in_progress]).count
+    @completed_today = Activity.where(status: "completed", updated_at: Time.current.all_day).count
+    @total_revenue   = Activity.sum(:price)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "activities",
+          partial: "activities/list",
+          locals: { activities: @activities, query: params[:q] }
+        )
+      end
+    end
   end
 
   def show
@@ -57,9 +79,9 @@ class ActivitiesController < ApplicationController
   def load_form_options
     @customers = Customer.order(:name)
     @tv_brands = TvBrand.order(:name)
-    @tv_sizes = TvSize.order(:size)
-    @tatizos = Tatizo.order(:name)
-    @spares = Spare.includes(:spare_category).order(:name)
+    @tv_sizes  = TvSize.order(:size)
+    @tatizos   = Tatizo.order(:name)
+    @spares    = Spare.includes(:spare_category).order(:name)
   end
 
   def activity_params
@@ -67,7 +89,7 @@ class ActivitiesController < ApplicationController
       :customer_id, :tv_brand_id, :tv_size_id, :tatizo_id, :phone, :model_no,
       :date_in, :date_out, :price, :labour_charge, :status, :remarks,
       :pattern_image, :model_image, :board_number, :tcon_number, :cof_number,
-      :panel_number, :image_before, :image_after , :model_image, :board_image, 
+      :panel_number, :image_before, :image_after, :model_image, :board_image,
       :tcon_image, :cof_image, :panel_image
     )
   end

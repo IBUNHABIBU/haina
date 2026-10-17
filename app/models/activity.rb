@@ -38,6 +38,46 @@ class Activity < ApplicationRecord
 
   scope :sales, -> { where(status: %i[completed delivered returned]) }
 
+  # ============================================================
+  # SEARCH — inatafuta kwenye customer, TV, problem, status,
+  # na technical numbers (model, board, tcon, cof, panel)
+  # ============================================================
+    scope :search, ->(q) {
+      next all if q.blank?
+
+      q_str = q.to_s.strip
+      pattern = "%#{sanitize_sql_like(q_str)}%"
+
+      # Match enum statuses kwa jina
+      status_values = statuses.keys
+        .select { |s| s.include?(q_str.downcase) }
+        .map    { |s| statuses[s] }
+
+      conditions = [
+        "customers.name LIKE :q",
+        "customers.phone LIKE :q",
+        "tv_brands.name LIKE :q",
+        "CAST(tv_sizes.size AS TEXT) LIKE :q",   # ← cast hapa
+        "tatizos.name LIKE :q",
+        "activities.model_no LIKE :q",
+        "activities.board_number LIKE :q",
+        "activities.tcon_number LIKE :q",
+        "activities.cof_number LIKE :q",
+        "activities.panel_number LIKE :q"
+      ]
+
+      bindings = { q: pattern }
+
+      if status_values.any?
+        conditions << "activities.status IN (:status_values)"
+        bindings[:status_values] = status_values
+      end
+
+      left_joins(:customer, :tv_brand, :tv_size, :tatizo)
+        .where(conditions.join(" OR "), bindings)
+        .distinct
+    }
+
   def spare_cost
     activity_spares.sum(:total_cost).to_d
   end
