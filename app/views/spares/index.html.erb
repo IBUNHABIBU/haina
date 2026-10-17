@@ -1,78 +1,5 @@
 <% content_for :title, "Spare Inventory" %>
 
-<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-  <!-- Total items -->
-  <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-    <div class="flex items-center justify-between">
-      <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Total items</p>
-      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-        </svg>
-      </div>
-    </div>
-    <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900"><%= @spares.count %></p>
-    <p class="mt-1 text-xs text-slate-400">Across all categories</p>
-  </div>
-
-  <!-- Low stock -->
-  <div class="rounded-xl border p-5 shadow-sm
-    <%= @low_stock_count.to_i.positive? ? 'border-rose-200 bg-rose-50/40' : 'border-slate-200 bg-white' %>">
-    <div class="flex items-center justify-between">
-      <p class="text-xs font-medium uppercase tracking-wider
-        <%= @low_stock_count.to_i.positive? ? 'text-rose-700' : 'text-slate-500' %>">Low stock</p>
-      <div class="flex h-8 w-8 items-center justify-center rounded-lg
-        <%= @low_stock_count.to_i.positive? ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-500' %>">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-        </svg>
-      </div>
-    </div>
-    <p class="mt-3 text-2xl font-semibold tabular-nums
-      <%= @low_stock_count.to_i.positive? ? 'text-rose-700' : 'text-slate-900' %>">
-      <%= @low_stock_count %>
-    </p>
-    <p class="mt-1 text-xs
-      <%= @low_stock_count.to_i.positive? ? 'text-rose-600' : 'text-slate-400' %>">
-      <%= @low_stock_count.to_i.positive? ? "Needs reordering" : "All levels healthy" %>
-    </p>
-  </div>
-
-  <!-- Total value (kama una @total_stock_value kwenye controller) -->
-  <% if defined?(@total_stock_value) && @total_stock_value %>
-    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div class="flex items-center justify-between">
-        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Inventory value</p>
-        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-        </div>
-      </div>
-      <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900">
-        <%= number_to_currency(@total_stock_value, unit: "TSh ", precision: 0) %>
-      </p>
-      <p class="mt-1 text-xs text-slate-400">Total cost of all spares</p>
-    </div>
-  <% end %>
-
-  <!-- Categories -->
-  <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-    <div class="flex items-center justify-between">
-      <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Categories</p>
-      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
-        </svg>
-      </div>
-    </div>
-    <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900"><%= @spares.map(&:spare_category_id).uniq.compact.size %></p>
-    <p class="mt-1 text-xs text-slate-400">Distinct categories</p>
-  </div>
-</div>
-
-
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
   <% if notice.present? %>
     <div class="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 shadow-sm" id="notice">
@@ -87,171 +14,133 @@
   <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
       <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Spare Inventory</h1>
-      <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
-        <span><%= pluralize(@spares.count, "item") %></span>
-        <span class="text-slate-300">·</span>
-        <% if @low_stock_count.to_i.positive? %>
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2 py-0.5 text-xs font-medium text-rose-700 ring-1 ring-inset ring-rose-200">
-            <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
-            <%= @low_stock_count %> low stock
-          </span>
-        <% else %>
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-200">
-            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-            All stocked
-          </span>
-        <% end %>
-      </div>
+      <p class="mt-1 text-sm text-slate-500">Manage spare parts, stock levels and reorder points.</p>
     </div>
 
-    <div class="flex items-center gap-2">
-      <%= link_to new_spare_path,
-          class: "inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" do %>
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-        Add Spare
-      <% end %>
-    </div>
+    <%= link_to new_spare_path,
+        class: "inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" do %>
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      Add Spare
+    <% end %>
   </div>
 
-  <!-- Table card -->
-  <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-slate-200">
-        <thead class="bg-slate-50">
-          <tr>
-            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Spare</th>
-            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Category</th>
-            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Part number</th>
-            <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Cost</th>
-            <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Stock</th>
-            <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Value</th>
-            <th class="relative px-4 py-3"><span class="sr-only">Actions</span></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          <% @spares.each do |spare| %>
-            <% low = spare.quantity.to_i <= spare.reorder_level.to_i %>
-            <tr id="<%= dom_id spare %>" class="group transition hover:bg-slate-50/70">
+  <%# ============================================================
+      KPI CARDS
+      ============================================================ %>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
-              <!-- Spare name (avatar + name + low stock chip) -->
-              <td class="whitespace-nowrap px-4 py-3">
-                <div class="flex items-center gap-3">
-                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full
-                    <%= low ? 'bg-rose-100 text-rose-600' : 'bg-indigo-100 text-indigo-700' %>">
-                    <% if low %>
-                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-                      </svg>
-                    <% else %>
-                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                      </svg>
-                    <% end %>
-                  </div>
-                  <div>
-                    <div class="text-sm font-medium text-slate-900"><%= spare.name %></div>
-                    <% if low %>
-                      <span class="mt-0.5 inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-wide text-rose-600">
-                        Low stock · reorder at <%= spare.reorder_level %>
-                      </span>
-                    <% end %>
-                  </div>
-                </div>
-              </td>
-
-              <!-- Category chip -->
-              <td class="whitespace-nowrap px-4 py-3">
-                <% if spare.spare_category.present? %>
-                  <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">
-                    <%= spare.spare_category.name %>
-                  </span>
-                <% else %>
-                  <span class="text-sm text-slate-400">—</span>
-                <% end %>
-              </td>
-
-              <!-- Part number (mono) -->
-              <td class="whitespace-nowrap px-4 py-3">
-                <% if spare.part_number.present? %>
-                  <span class="font-mono text-sm text-slate-700"><%= spare.part_number %></span>
-                <% else %>
-                  <span class="text-sm text-slate-400">—</span>
-                <% end %>
-              </td>
-
-              <!-- Cost -->
-              <td class="whitespace-nowrap px-4 py-3 text-right text-sm tabular-nums text-slate-600">
-                <%= number_to_currency(spare.unit_cost, unit: "TSh ", precision: 0) %>
-              </td>
-
-              <!-- Stock quantity (pill) -->
-              <td class="whitespace-nowrap px-4 py-3 text-right">
-                <span class="inline-flex min-w-[3rem] justify-center items-center rounded-md px-2 py-1 text-xs font-semibold tabular-nums ring-1 ring-inset
-                  <%= low ? 'bg-rose-50 text-rose-700 ring-rose-200' : 'bg-emerald-50 text-emerald-700 ring-emerald-200' %>">
-                  <%= spare.quantity %>
-                </span>
-              </td>
-
-              <!-- Stock value -->
-              <td class="whitespace-nowrap px-4 py-3 text-right text-sm font-semibold tabular-nums text-slate-900">
-                <%= number_to_currency(spare.stock_value, unit: "TSh ", precision: 0) %>
-              </td>
-
-              <!-- Actions -->
-              <td class="whitespace-nowrap px-4 py-3 text-right">
-                <div class="inline-flex items-center justify-end gap-1 opacity-70 transition group-hover:opacity-100">
-                  <%= link_to spare, class: "rounded-lg p-1.5 text-indigo-600 transition hover:bg-indigo-50", title: "View" do %>
-                    <span class="sr-only">View</span>
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    </svg>
-                  <% end %>
-
-                  <%= link_to edit_spare_path(spare), class: "rounded-lg p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800", title: "Edit" do %>
-                    <span class="sr-only">Edit</span>
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
-                    </svg>
-                  <% end %>
-
-                  <%= button_to spare, method: :delete,
-                      data: { turbo_confirm: "Are you sure?" },
-                      class: "rounded-lg p-1.5 text-rose-500 transition hover:bg-rose-50 hover:text-rose-700 cursor-pointer",
-                      title: "Delete" do %>
-                    <span class="sr-only">Delete</span>
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                    </svg>
-                  <% end %>
-                </div>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-
-    <% if @spares.empty? %>
-      <div class="flex flex-col items-center justify-center px-6 py-16 text-center">
-        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-          <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+    <!-- Total items -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Total items</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
           </svg>
         </div>
-        <h3 class="mt-4 text-sm font-semibold text-slate-900">No spares in inventory</h3>
-        <p class="mt-1 text-sm text-slate-500">Get started by adding your first spare part.</p>
-        <%= link_to "Add Spare", new_spare_path,
-            class: "mt-6 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500" %>
       </div>
-    <% end %>
-  </div>
-</div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900"><%= Spare.count %></p>
+      <p class="mt-1 text-xs text-slate-400">Across all categories</p>
+    </div>
 
-<% if @pagy.pages > 1 %>
-  <div class="flex justify-center">
-    <%==  @pagy.series_nav %>
+    <!-- Low stock -->
+    <div class="rounded-xl border p-5 shadow-sm <%= @low_stock_count.to_i.positive? ? 'border-rose-200 bg-rose-50/40' : 'border-slate-200 bg-white' %>">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider <%= @low_stock_count.to_i.positive? ? 'text-rose-700' : 'text-slate-500' %>">
+          Low stock
+        </p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg <%= @low_stock_count.to_i.positive? ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-500' %>">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums <%= @low_stock_count.to_i.positive? ? 'text-rose-700' : 'text-slate-900' %>">
+        <%= @low_stock_count %>
+      </p>
+      <p class="mt-1 text-xs <%= @low_stock_count.to_i.positive? ? 'text-rose-600' : 'text-slate-400' %>">
+        <%= @low_stock_count.to_i.positive? ? "Needs reordering" : "All levels healthy" %>
+      </p>
+    </div>
+
+    <!-- Inventory value -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Inventory value</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900">
+        <%= number_to_currency(@total_stock_value, unit: "TSh ", precision: 0) %>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">Total cost of all spares</p>
+    </div>
+
+    <!-- Categories -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Categories</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900"><%= @category_count %></p>
+      <p class="mt-1 text-xs text-slate-400">Distinct categories</p>
+    </div>
   </div>
-<% end %>
+
+  <%# ============================================================
+      SEARCH BAR
+      ============================================================ %>
+  <%= form_with url: spares_path, method: :get,
+      data: {
+        controller: "search",
+        turbo_frame: "spares",
+        turbo_action: "advance",
+        action: "input->search#submit"
+      }, class: "rounded-xl border border-slate-200 bg-white p-3 shadow-sm" do |f| %>
+
+    <div class="flex items-center gap-2">
+      <div class="relative flex-1">
+        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </div>
+
+        <%= f.search_field :q,
+            value: params[:q],
+            placeholder: "Search by name, part number, or category…",
+            autocomplete: "off",
+            class: "block w-full rounded-lg border border-slate-200 bg-white pl-10 pr-3 py-2 text-sm text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" %>
+      </div>
+
+      <% if params[:q].present? %>
+        <%= link_to spares_path,
+            data: { turbo_frame: "spares", turbo_action: "advance" },
+            class: "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50",
+            title: "Clear search" do %>
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+          Clear
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# ============================================================
+      TABLE (Turbo Frame)
+      ============================================================ %>
+  <%= turbo_frame_tag "spares" do %>
+    <%= render "spares/list", spares: @spares, query: params[:q] %>
+  <% end %>
+</div>

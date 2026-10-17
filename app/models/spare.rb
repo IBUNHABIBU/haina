@@ -13,4 +13,14 @@ class Spare < ApplicationRecord
   def stock_value
     quantity.to_d * unit_cost.to_d
   end
+
+    scope :search, ->(q) {
+    next all if q.blank?
+    pattern = "%#{q.to_s.strip}%"
+    if connection.adapter_name.downcase.include?("postgres")
+      where("spares.name ILIKE :q OR spares.part_number ILIKE :q OR spare_categories.name ILIKE :q", q: pattern)
+    else
+      where("spares.name LIKE :q OR spares.part_number LIKE :q OR spare_categories.name LIKE :q", q: pattern)
+    end.references(:spare_category)
+  }
 end
