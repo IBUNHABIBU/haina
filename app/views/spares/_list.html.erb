@@ -126,9 +126,20 @@
     </div>
   <% end %>
 </div>
-
 <% if @pagy.pages > 1 %>
-  <div class="flex justify-center border-t border-slate-100 px-4 py-3">
-    <%== @pagy.series_nav  %>
+  <div class="flex flex-col items-center gap-3 border-t border-slate-100 bg-slate-50/40 px-4 py-4 sm:flex-row sm:justify-between">
+    <!-- Info -->
+    <p class="text-xs text-slate-500">
+      Showing
+      <span class="font-medium text-slate-700"><%= @pagy.from %></span>–<span class="font-medium text-slate-700"><%= @pagy.to %></span>
+      of
+      <span class="font-medium text-slate-700"><%= @pagy.count %></span>
+      results
+    </p>
+
+    <!-- Nav -->
+    <div class="pagy-nav">
+      <%== @pagy.series_nav %>
+    </div>
   </div>
 <% end %>
