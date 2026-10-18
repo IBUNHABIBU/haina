@@ -14,7 +14,7 @@ module NavigationHelper
   end
 
   def nav_items
-    items = [ [ "Home", root_path ], [ "Dashboard", dashboard_path ], [ "customers", customers_path ], [ "Spares", spares_path ], [ "Expenses", expenses_path ] ]
+    items = [ [ "Home", root_path ], [ "Dashboard", dashboard_path ], [ "customers", customers_path ], [ "Spares", spares_path ], [ "Expenses", expenses_path ], ["blog", blogs_path] ]
     user_signed_in? ? items : [ [ "Home", root_path ] ]
   end
 
