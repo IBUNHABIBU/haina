@@ -1,1 +1,80 @@
-hero
+<%# app/views/home/index.html.erb %>
+<% content_for :title, "Home" %>
+
+<div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+
+  <div class="text-center">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">
+      Karibu, <%= current_user.first_name.presence || current_user.email.split("@").first %>
+    </h1>
+    <p class="mt-2 text-slate-600">What would you like to do today?</p>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+
+    <%= link_to new_activity_path,
+        class: "group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-indigo-300 hover:shadow-md" do %>
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 transition group-hover:bg-indigo-100">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+      </div>
+      <div>
+        <p class="font-semibold text-slate-900">Add Activity</p>
+        <p class="text-sm text-slate-500">Log a new repair job</p>
+      </div>
+      <svg class="ml-auto h-5 w-5 text-slate-400 transition group-hover:translate-x-1 group-hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+      </svg>
+    <% end %>
+
+    <%= link_to new_customer_path,
+        class: "group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-emerald-300 hover:shadow-md" do %>
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 transition group-hover:bg-emerald-100">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+        </svg>
+      </div>
+      <div>
+        <p class="font-semibold text-slate-900">Add Customer</p>
+        <p class="text-sm text-slate-500">Register a new customer</p>
+      </div>
+      <svg class="ml-auto h-5 w-5 text-slate-400 transition group-hover:translate-x-1 group-hover:text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+      </svg>
+    <% end %>
+
+    <%= link_to spares_path,
+        class: "group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-amber-300 hover:shadow-md" do %>
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600 transition group-hover:bg-amber-100">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+        </svg>
+      </div>
+      <div>
+        <p class="font-semibold text-slate-900">Orders / Spares</p>
+        <p class="text-sm text-slate-500">Manage spare parts</p>
+      </div>
+      <svg class="ml-auto h-5 w-5 text-slate-400 transition group-hover:translate-x-1 group-hover:text-amber-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+      </svg>
+    <% end %>
+
+    <%= link_to activities_path,
+        class: "group flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-300 hover:shadow-md" do %>
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 transition group-hover:bg-slate-200">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        </svg>
+      </div>
+      <div>
+        <p class="font-semibold text-slate-900">All Activities</p>
+        <p class="text-sm text-slate-500">View repair history</p>
+      </div>
+      <svg class="ml-auto h-5 w-5 text-slate-400 transition group-hover:translate-x-1 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+      </svg>
+    <% end %>
+
+  </div>
+</div>
