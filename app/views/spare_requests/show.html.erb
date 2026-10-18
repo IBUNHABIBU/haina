@@ -1,15 +1,208 @@
-<% content_for :title, "Showing spare request" %>
+<% content_for :title, "Spare Request ##{@spare_request.id}" %>
 
-<div class="md:w-2/3 w-full">
+<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
   <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+    <div class="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 shadow-sm" id="notice">
+      <svg class="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+      <%= notice %>
+    </div>
   <% end %>
 
-  <h1 class="font-bold text-4xl">Showing spare request</h1>
+  <!-- Back link -->
+  <div>
+    <%= link_to spare_requests_path, class: "inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition hover:text-slate-900" do %>
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      Back to requests
+    <% end %>
+  </div>
 
-  <%= render @spare_request %>
+  <%# ============================================================
+      HEADER
+      ============================================================ %>
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="flex items-start gap-4">
+      <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+        </svg>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Spare Request #<%= @spare_request.id %></h1>
 
-  <%= link_to "Edit this spare request", edit_spare_request_path(@spare_request), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to spare requests", spare_requests_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= button_to "Destroy this spare request", @spare_request, method: :delete, form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2", class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+          <% status_str = @spare_request.status.to_s.downcase %>
+          <% status_style = case status_str
+             when "pending", "requested" then "bg-amber-50 text-amber-700 ring-amber-200"
+             when "approved" then "bg-blue-50 text-blue-700 ring-blue-200"
+             when "fulfilled", "completed" then "bg-emerald-50 text-emerald-700 ring-emerald-200"
+             when "rejected", "cancelled" then "bg-rose-50 text-rose-700 ring-rose-200"
+             else "bg-slate-100 text-slate-700 ring-slate-200"
+             end %>
+          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset <%= status_style %>">
+            <span class="h-1.5 w-1.5 rounded-full <%= status_style.split(" ").last.sub("ring-", "bg-") %>"></span>
+            <%= @spare_request.status.humanize %>
+          </span>
+        </div>
+        <p class="mt-1 text-sm text-slate-500">
+          Requested by
+          <span class="font-medium text-slate-700">
+            <%= [@spare_request.requested_by&.first_name, @spare_request.requested_by&.last_name].compact.join(" ").presence || "Unknown" %>
+          </span>
+          <% if @spare_request.created_at %>
+            <span class="text-slate-300 mx-1">·</span>
+            <%= @spare_request.created_at.strftime("%d %b %Y, %H:%M") %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-wrap items-center gap-2">
+      <%= link_to edit_spare_request_path(@spare_request),
+          class: "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50" do %>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
+        </svg>
+        Edit
+      <% end %>
+      
+      <%#= button_to @spare_request, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-white px-4 py-2.5 text-sm font-medium text-rose-600 shadow-sm transition hover:bg-rose-50 cursor-pointer" do %>
+        <%# <svg class="h-4 w-4" ...> Delete %>
+      <%# end %>
+    </div>
+  </div>
+
+  <%# ============================================================
+      KPI / DETAILS
+      ============================================================ %>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+    <!-- Type -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Request type</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-base font-semibold text-slate-900">
+        <%= @spare_request.request_type.humanize %>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">Purpose of this request</p>
+    </div>
+
+    <!-- Qty -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Quantity</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 text-2xl font-semibold tabular-nums text-slate-900">
+        <%= @spare_request.requested_quantity %>
+      </p>
+      <p class="mt-1 text-xs text-slate-400">Units requested</p>
+    </div>
+
+    <!-- Spare name -->
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:col-span-2">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Spare part</p>
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+          </svg>
+        </div>
+      </div>
+      <p class="mt-3 truncate text-base font-semibold text-slate-900">
+        <%= @spare_request.spare&.name || "Spare unavailable" %>
+      </p>
+      <p class="mt-1 font-mono text-xs text-slate-500">
+        <%= @spare_request.spare&.part_number.presence || "No part number" %>
+      </p>
+    </div>
+  </div>
+
+  <%# ============================================================
+      LINKED ACTIVITY (kama ipo)
+      ============================================================ %>
+  <% if @spare_request.activity.present? %>
+    <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <header class="flex items-center justify-between gap-3 border-b border-slate-100 px-6 py-4">
+        <div class="flex items-center gap-3">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-sm font-semibold text-slate-900">Linked Activity</h2>
+            <p class="text-xs text-slate-500">This request is attached to a repair job.</p>
+          </div>
+        </div>
+        <%= link_to activity_path(@spare_request.activity),
+            class: "inline-flex items-center gap-1 text-sm font-medium text-indigo-600 transition hover:text-indigo-800" do %>
+          View Activity
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        <% end %>
+      </header>
+
+      <dl class="divide-y divide-slate-100">
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Activity</dt>
+          <dd class="font-medium text-slate-900">
+            <%= link_to "##{@spare_request.activity.id}", activity_path(@spare_request.activity), class: "text-indigo-600 hover:underline" %>
+          </dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Customer</dt>
+          <dd class="font-medium text-slate-900"><%= @spare_request.activity.customer&.name || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Phone</dt>
+          <dd class="font-medium tabular-nums text-slate-900"><%= @spare_request.activity.customer&.phone || "—" %></dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">TV</dt>
+          <dd class="font-medium text-slate-900">
+            <%= [@spare_request.activity.tv_brand&.name, @spare_request.activity.tv_size&.size].compact.join(" ").presence || "—" %>
+          </dd>
+        </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Problem</dt>
+          <dd class="font-medium text-slate-900"><%= @spare_request.activity.tatizo&.name || "—" %></dd>
+        </div>
+      </dl>
+    </section>
+  <% else %>
+    <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50/50 px-6 py-8 text-center">
+      <p class="text-sm text-slate-500">This request is not linked to any activity.</p>
+    </div>
+  <% end %>
+
+  <%# ============================================================
+      FOOTER ACTIONS
+      ============================================================ %>
+  <div class="flex flex-wrap items-center gap-3 border-t border-slate-200 pt-6">
+    <%= link_to "Edit Request",
+        edit_spare_request_path(@spare_request),
+        class: "inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
+
+    <%= link_to "Back to requests",
+        spare_requests_path,
+        class: "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50" %>
+  </div>
 </div>
