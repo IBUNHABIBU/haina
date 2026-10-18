@@ -25,8 +25,8 @@
             <tr>
               <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">TV Size</th>
               <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Idadi ya COF</th>
-              <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Bei ya Fundi</th>
-              <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Bei ya Mteja</th>
+              <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Technician</th>
+              <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Customer</th>
               <th class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
             </tr>
           </thead>
@@ -36,18 +36,17 @@
                 <td class="whitespace-nowrap px-6 py-3.5 text-sm font-medium text-slate-900">
                   <%= price.tv_size&.size ? "#{price.tv_size.size} in" : "—" %>
                 </td>
-                               
+                
                 <td class="whitespace-nowrap px-6 py-3.5 text-sm text-slate-600">
                   <%= price.idadiyacof.presence || "—" %>
                 </td>
-                
                 <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
                   <%= number_to_currency(price.technician_price, unit: "TSh ", precision: 0) %>
                 </td>
                 <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
                   <%= number_to_currency(price.customer_price, unit: "TSh ", precision: 0) %>
                 </td>
-
+               
                 <td class="whitespace-nowrap px-6 py-3.5 text-right">
                   <div class="inline-flex items-center justify-end gap-1">
                     <%= link_to price, class: "rounded-lg p-1.5 text-indigo-600 transition hover:bg-indigo-50", title: "View" do %>
