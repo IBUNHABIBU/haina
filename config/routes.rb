@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :tv_sizes
   resources :tv_brands
   resources :customers
+  resources :all_prices
   resources :activities do
     resources :repair_returns, except: :index
   end
