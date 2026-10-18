@@ -1,0 +1,2 @@
+module AllPricesHelper
+end

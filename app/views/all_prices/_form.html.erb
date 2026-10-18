@@ -1,0 +1,52 @@
+<%# app/views/all_prices/_form.html.erb %>
+<%= form_with(model: all_price, class: "space-y-6") do |f| %>
+
+  <% if all_price.errors.any? %>
+    <div class="rounded-lg border border-rose-200 bg-rose-50 p-4">
+      <h2 class="text-sm font-semibold text-rose-800">
+        <%= pluralize(all_price.errors.count, "error") %> prohibited this record from being saved:
+      </h2>
+      <ul class="mt-2 list-disc list-inside text-sm text-rose-700">
+        <% all_price.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :tv_size_id, "TV Size", class: "block text-sm font-medium text-slate-700 mb-1" %>
+    <%= f.collection_select :tv_size_id,
+        TvSize.order(:size), :id, :size,
+        { prompt: "Select TV size" },
+        class: "block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" %>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div>
+      <%= f.label :technician_price, "Technician Price (TSh)", class: "block text-sm font-medium text-slate-700 mb-1" %>
+      <%= f.number_field :technician_price, min: 0, step: 1,
+          class: "block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" %>
+    </div>
+
+    <div>
+      <%= f.label :customer_price, "Customer Price (TSh)", class: "block text-sm font-medium text-slate-700 mb-1" %>
+      <%= f.number_field :customer_price, min: 0, step: 1,
+          class: "block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :idadiyacof, "Idadi ya COF", class: "block text-sm font-medium text-slate-700 mb-1" %>
+    <%= f.text_field :idadiyacof,
+        placeholder: "e.g. 1, 2, 3...",
+        class: "block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" %>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <%= f.submit class: "inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 cursor-pointer" %>
+    <%= link_to "Cancel", all_prices_path,
+        class: "text-sm font-medium text-slate-600 hover:text-slate-800" %>
+  </div>
+
+<% end %>
