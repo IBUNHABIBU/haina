@@ -20,6 +20,9 @@
 
       <%# Links %>
       <nav class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+      
+        <%= link_to "Home", root_path,
+            class: "text-slate-600 transition hover:text-indigo-600" %>
         <%= link_to "Activities", activities_path,
             class: "text-slate-600 transition hover:text-indigo-600" %>
         <%= link_to "Spares", spares_path,
