@@ -1,1 +1,179 @@
-<div class="mx-auto max-w-5xl"><div class="mb-6 flex items-center justify-between"><div><h1 class="text-2xl font-bold">Purchases: <%= @spare.name %></h1><p class="text-slate-500">Stock purchases are also recorded as spare expenses.</p></div><%= link_to "Record Purchase", new_spare_spare_purchase_path(@spare), class: "rounded-lg bg-blue-600 px-4 py-2.5 text-white" %></div><div class="overflow-x-auto rounded-xl border bg-white"><table class="min-w-full divide-y"><thead class="bg-slate-50"><tr><th class="px-4 py-3 text-left">Date</th><th class="px-4 py-3 text-left">Supplier</th><th class="px-4 py-3 text-right">Qty</th><th class="px-4 py-3 text-right">Unit cost</th><th class="px-4 py-3 text-right">Total</th></tr></thead><tbody class="divide-y"><% @purchases.each do |purchase| %><tr><td class="px-4 py-3"><%= purchase.purchased_on %></td><td class="px-4 py-3"><%= purchase.supplier.presence || "—" %></td><td class="px-4 py-3 text-right"><%= purchase.quantity %></td><td class="px-4 py-3 text-right"><%= number_to_currency(purchase.unit_cost, unit: "TSh ", precision: 0) %></td><td class="px-4 py-3 text-right font-semibold"><%= number_to_currency(purchase.total_cost, unit: "TSh ", precision: 0) %></td></tr><% end %></tbody></table></div></div>
+<% content_for :title, "Purchases — #{@spare.name}" %>
+
+<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+  <%# ============ HEADER ============ %>
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="flex items-start gap-4">
+      <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
+      </div>
+
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-2xl font-semibold tracking-tight text-slate-900">
+            Purchases
+          </h1>
+          <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+            <%= @spare.name %>
+          </span>
+        </div>
+        <p class="mt-1 text-sm text-slate-500">
+          Stock purchases are also recorded as spare expenses.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <%= link_to spare_path(@spare),
+          class: "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50" do %>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        Back to Spare
+      <% end %>
+
+      <%= link_to new_spare_spare_purchase_path(@spare),
+          class: "inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500" do %>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Record Purchase
+      <% end %>
+    </div>
+  </div>
+
+  <%# ============ KPI CARDS ============ %>
+  <div class="grid gap-4 grid-cols-2 lg:grid-cols-4">
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Total purchases</p>
+      <p class="mt-1 text-2xl font-semibold tabular-nums text-slate-900"><%= @purchases.count %></p>
+    </div>
+
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Total quantity</p>
+      <p class="mt-1 text-2xl font-semibold tabular-nums text-slate-900">
+        <%= @purchases.sum(:quantity) %>
+      </p>
+    </div>
+
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Total cost</p>
+      <p class="mt-1 text-2xl font-semibold tabular-nums text-slate-900">
+        <%= number_to_currency(@purchases.sum(:total_cost), unit: "TSh ", precision: 0) %>
+      </p>
+    </div>
+
+    <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Avg unit cost</p>
+      <p class="mt-1 text-2xl font-semibold tabular-nums text-slate-900">
+        <%= @purchases.any? ? number_to_currency(@purchases.sum(:total_cost) / @purchases.sum(:quantity), unit: "TSh ", precision: 0) : "—" %>
+      </p>
+    </div>
+  </div>
+
+  <%# ============ PURCHASES TABLE ============ %>
+  <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-sm font-semibold text-slate-900">Purchase History</h2>
+          <p class="text-xs text-slate-500">All stock purchases for this spare.</p>
+        </div>
+      </div>
+    </header>
+
+    <% if @purchases.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-100">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Supplier</th>
+              <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Qty</th>
+              <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Unit cost</th>
+              <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Total</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Reference</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-slate-100">
+            <% @purchases.each do |purchase| %>
+              <tr class="transition hover:bg-slate-50/70">
+                <td class="whitespace-nowrap px-6 py-3.5 text-sm text-slate-600">
+                  <%= purchase.purchased_on&.strftime("%d %b %Y") || "—" %>
+                </td>
+
+                <td class="whitespace-nowrap px-6 py-3.5 text-sm font-medium text-slate-900">
+                  <%= purchase.supplier.presence || "—" %>
+                </td>
+
+                <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
+                  <%= purchase.quantity %>
+                </td>
+
+                <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
+                  <%= number_to_currency(purchase.unit_cost, unit: "TSh ", precision: 0) %>
+                </td>
+
+                <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm font-semibold tabular-nums text-slate-900">
+                  <%= number_to_currency(purchase.total_cost, unit: "TSh ", precision: 0) %>
+                </td>
+
+                <td class="whitespace-nowrap px-6 py-3.5 text-sm text-slate-500">
+                  <% if purchase.reference.present? %>
+                    <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700 font-mono">
+                      <%= purchase.reference %>
+                    </span>
+                  <% else %>
+                    <span class="text-slate-400">—</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+
+          <tfoot class="bg-slate-50">
+            <tr>
+              <td colspan="2" class="px-6 py-3 text-sm font-semibold text-slate-700">Total</td>
+              <td class="px-6 py-3 text-right text-sm font-semibold tabular-nums text-slate-900">
+                <%= @purchases.sum(:quantity) %>
+              </td>
+              <td></td>
+              <td class="px-6 py-3 text-right text-sm font-bold tabular-nums text-slate-900">
+                <%= number_to_currency(@purchases.sum(:total_cost), unit: "TSh ", precision: 0) %>
+              </td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    <% else %>
+      <%# Empty state %>
+      <div class="flex flex-col items-center justify-center px-6 py-16 text-center">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+          <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+          </svg>
+        </div>
+        <h3 class="mt-4 text-sm font-semibold text-slate-900">No purchases yet</h3>
+        <p class="mt-1 text-sm text-slate-500">Record your first stock purchase for this spare.</p>
+        <%= link_to new_spare_spare_purchase_path(@spare),
+            class: "mt-6 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500" do %>
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Record Purchase
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+</div>
