@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :all_prices
   resources :activities do
     resources :repair_returns, except: :index
+    resources :spare_requests, only: %i[new create]
   end
   resources :spares do
     resources :spare_purchases, only: %i[index new create]

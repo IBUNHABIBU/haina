@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_14_142222) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_18_203009) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -106,6 +106,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_14_142222) do
     t.index ["spare_id"], name: "index_activity_spares_on_spare_id"
   end
 
+  create_table "all_prices", force: :cascade do |t|
+    t.bigint "tv_size_id", null: false
+    t.integer "technician_price"
+    t.integer "customer_price"
+    t.string "idadiyacof"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tv_size_id"], name: "index_all_prices_on_tv_size_id"
+  end
+
   create_table "blogs", force: :cascade do |t|
     t.string "title"
     t.datetime "created_at", null: false
@@ -181,7 +191,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_14_142222) do
   end
 
   create_table "spare_requests", force: :cascade do |t|
-    t.bigint "activity_id", null: false
+    t.bigint "activity_id"
     t.bigint "spare_id", null: false
     t.bigint "requested_by_id", null: false
     t.bigint "issued_by_id"
@@ -194,8 +204,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_14_142222) do
     t.datetime "issued_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "request_type", default: "activity", null: false
     t.index ["activity_id"], name: "index_spare_requests_on_activity_id"
     t.index ["issued_by_id"], name: "index_spare_requests_on_issued_by_id"
+    t.index ["request_type"], name: "index_spare_requests_on_request_type"
     t.index ["requested_by_id"], name: "index_spare_requests_on_requested_by_id"
     t.index ["spare_id"], name: "index_spare_requests_on_spare_id"
   end
@@ -275,6 +287,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_14_142222) do
   add_foreign_key "activities", "users"
   add_foreign_key "activity_spares", "activities"
   add_foreign_key "activity_spares", "spares"
+  add_foreign_key "all_prices", "tv_sizes"
   add_foreign_key "blogs", "users"
   add_foreign_key "customers", "users"
   add_foreign_key "expenses", "users"

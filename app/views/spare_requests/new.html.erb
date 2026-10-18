@@ -1,9 +1,25 @@
-<% content_for :title, "New spare request" %>
+<% content_for :title, "New Spare Request" %>
 
-<div class="md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">New spare request</h1>
+<div class="mx-auto w-full max-w-2xl px-4 py-6">
+  <h1 class="text-3xl font-bold text-gray-900">
+    New Spare Request
+  </h1>
 
-  <%= render "form", spare_request: @spare_request %>
+  <p class="mt-2 text-gray-600">
+    Request a spare for an activity, workshop use, or stock replenishment.
+  </p>
 
-  <%= link_to "Back to spare requests", spare_requests_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+  <div class="mt-6 rounded-xl border bg-white p-6 shadow-sm">
+    <%= render "form", spare_request: @spare_request %>
+  </div>
+
+  <div class="mt-4">
+    <% if @activity %>
+      <%= link_to "Back to Activity", activity_path(@activity),
+        class: "text-indigo-600 hover:underline" %>
+    <% else %>
+      <%= link_to "Back to Spare Requests", spare_requests_path,
+        class: "text-indigo-600 hover:underline" %>
+    <% end %>
+  </div>
 </div>

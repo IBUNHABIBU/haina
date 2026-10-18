@@ -3,7 +3,9 @@ class SpareRequestsController < ApplicationController
 
   # GET /spare_requests or /spare_requests.json
   def index
-    @spare_requests = SpareRequest.all
+      @spare_requests = SpareRequest.includes(
+    :activity, :spare, :requested_by
+  ).order(created_at: :desc)
   end
 
   # GET /spare_requests/1 or /spare_requests/1.json
@@ -12,7 +14,15 @@ class SpareRequestsController < ApplicationController
 
   # GET /spare_requests/new
   def new
-    @spare_request = SpareRequest.new
+      @activity = Activity.find(params[:activity_id]) if params[:activity_id]
+
+  @spare_request = SpareRequest.new(
+    activity: @activity,
+    request_type: @activity ? :activity : nil,
+    requested_quantity: 1,
+    issued_quantity: 0,
+    status: :requested
+  )
   end
 
   # GET /spare_requests/1/edit
@@ -21,17 +31,26 @@ class SpareRequestsController < ApplicationController
 
   # POST /spare_requests or /spare_requests.json
   def create
-    @spare_request = SpareRequest.new(spare_request_params)
+      @activity = Activity.find(params[:activity_id]) if params[:activity_id]
 
-    respond_to do |format|
-      if @spare_request.save
-        format.html { redirect_to @spare_request, notice: "Spare request was successfully created." }
-        format.json { render :show, status: :created, location: @spare_request }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @spare_request.errors, status: :unprocessable_entity }
+      @spare_request = SpareRequest.new(spare_request_params)
+      @spare_request.activity = @activity if @activity
+      @spare_request.requested_by = current_user
+      @spare_request.issued_quantity = 0
+      @spare_request.status = :requested
+
+      if @activity
+        @spare_request.request_type = :activity
       end
-    end
+
+      if @spare_request.save
+        redirect_to(
+          @activity || spare_requests_path,
+          notice: "Spare request was successfully created."
+        )
+      else
+        render :new, status: :unprocessable_entity
+      end
   end
 
   # PATCH/PUT /spare_requests/1 or /spare_requests/1.json
@@ -65,6 +84,14 @@ class SpareRequestsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def spare_request_params
-      params.expect(spare_request: [ :activity_id, :spare_id, :requested_by_id, :issued_by_id, :requested_quantity, :issued_quantity, :unit_cost_at_issue, :status, :reason, :store_notes, :issued_at ])
+        params.expect(
+        spare_request: [
+          :request_type,
+          :activity_id,
+          :spare_id,
+          :requested_quantity,
+          :reason
+        ]
+      )
     end
 end
