@@ -6,6 +6,13 @@ class SpareRequestsController < ApplicationController
       @spare_requests = SpareRequest.includes(
     :activity, :spare, :requested_by
   ).order(created_at: :desc)
+
+      respond_to do |format|
+        format.html
+        format.xlsx do
+          response.headers['Content-Disposition'] = "attachment; filename=spare_requests_#{Time.current.strftime('%Y-%m-%d')}.xlsx"
+        end
+      end
   end
 
   # GET /spare_requests/1 or /spare_requests/1.json
@@ -94,4 +101,35 @@ class SpareRequestsController < ApplicationController
         ]
       )
     end
-end
+
+    
+def generate_csv(requests)
+  CSV.generate(headers: true) do |csv|
+    # Ongeza vichwa vya safu (Headers)
+    csv << [
+      "Request ID", "Date", "Type", "Spare Name", "Part Number", 
+      "Qty Requested", "Linked Activity", "Customer", "TV Brand", 
+      "TV Size", "Requested By", "Status"
+    ]
+
+    # Weka data ya kila request
+    requests.each do |request|
+      csv << [
+        "##{request.id}",
+        request.created_at&.strftime("%Y-%m-%d %H:%M"),
+        request.request_type&.humanize,
+        request.spare&.name || "Spare unavailable",
+        request.spare&.part_number || "—",
+        request.requested_quantity,
+        request.activity ? "##{request.activity.id}" : "—",
+        request.activity&.customer&.name || "—",
+        request.activity&.tv_brand&.name || "—",
+        request.activity&.tv_size&.size || "—",
+        [request.requested_by&.first_name, request.requested_by&.last_name].compact.join(" ").presence || "—",
+        request.status&.humanize
+      ]
+    end
+  end
+
+end 
+end 

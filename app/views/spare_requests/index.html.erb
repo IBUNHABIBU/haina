@@ -11,7 +11,7 @@
   <% end %>
 
   <!-- Page header -->
-  <div class="flex flex-wrap items-end justify-between gap-4">
+  <div class="flex flex-wrap items-end justify-between gap-2">
     <div>
       <h1 class="text-2xl font-semibold tracking-tight text-slate-900">All Spare Requests</h1>
       <p class="mt-1 text-sm text-slate-500">Activity repairs, workshop requirements and stock replenishment.</p>
@@ -23,6 +23,14 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
       </svg>
       New Spare Request
+    <% end %>
+
+        <%= link_to spare_requests_path(format: :xlsx),
+        class: "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50" do %>
+      <svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+      </svg>
+      Export Excel
     <% end %>
   </div>
 

@@ -91,3 +91,7 @@ gem "chartkick", "~> 5.2"
 
 gem "paper_trail"
 gem "pagy", "~> 43.8"
+
+gem "caxlsx", "~> 4.5"
+
+gem "caxlsx_rails", "~> 0.7.2"
