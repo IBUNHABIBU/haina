@@ -1,0 +1,46 @@
+# app/views/spare_requests/index.xlsx.axlsx
+wb = xlsx_package.workbook
+
+# Sanaa (Styles) za Excel
+header_style = wb.styles.add_style(
+  b: true, # Bold
+  bg_color: "4F46E5", # Indigo
+  fg_color: "FFFFFF", # White text
+  alignment: { horizontal: :center, vertical: :center },
+  border: { style: :thin, color: "E2E8F0" }
+)
+
+body_style = wb.styles.add_style(
+  border: { style: :thin, color: "E2E8F0" },
+  alignment: { vertical: :center }
+)
+
+wb.add_worksheet(name: "Spare Requests") do |sheet|
+  # Kichwa cha habari
+  sheet.add_row [
+    "Request ID", "Date", "Type", "Spare Name", "Part Number",
+    "Qty", "Linked Activity", "Customer", "TV Brand", "TV Size",
+    "Requested By", "Status"
+  ], style: header_style
+
+  # Data
+  @spare_requests.each do |request|
+    sheet.add_row [
+      "##{request.id}",
+      request.created_at&.strftime("%Y-%m-%d %H:%M"),
+      request.request_type&.humanize,
+      request.spare&.name || "Spare unavailable",
+      request.spare&.part_number || "—",
+      request.requested_quantity,
+      request.activity ? "##{request.activity.id}" : "—",
+      request.activity&.customer&.name || "—",
+      request.activity&.tv_brand&.name || "—",
+      request.activity&.tv_size&.size || "—",
+      [request.requested_by&.first_name, request.requested_by&.last_name].compact.join(" ").presence || "—",
+      request.status&.humanize
+    ], style: body_style
+  end
+
+  # Kurekebisha upana wa columns (Auto-width)
+  sheet.column_widths 10, 20, 15, 25, 15, 8, 15, 20, 15, 10, 20, 15
+end
