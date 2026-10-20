@@ -82,7 +82,8 @@
 
       <div>
         <%= form.label :cof_number, "COF Number", class: "label" %>
-        <%= form.text_field :cof_number, autocomplete: "off", class: "field" %>
+        <%= form.text_field :cof_number, autocomplete: "off",
+      placeholder: "source COF , side COF ", class: "field" %>
       </div>
 
       <div>
@@ -131,7 +132,18 @@
 
     <div class="grid gap-5 p-6 md:grid-cols-3">
       <div>
-        <%= form.label :price, "Price (TSh)", class: "label" %>
+        <%= form.label :starting_price, "Bei aliyopatana (TSh)", class: "label" %>
+        <div class="relative">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm font-medium text-slate-400">
+            TSh
+          </span>
+          <%= form.number_field :starting_price, step: 0.01, min: 0,
+                class: "field pl-12",
+                placeholder: "0" %>
+        </div>
+      </div>
+      <div>
+        <%= form.label :price, "Kiasi alicholipa (TSh)", class: "label" %>
         <div class="relative">
           <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm font-medium text-slate-400">
             TSh
@@ -302,13 +314,13 @@
     <div class="grid gap-5 p-6 md:grid-cols-2">
       <% [
         [:model_image,   "Model Number Photo", "Photo of the model number sticker."],
-        [:board_image,   "Board Number Photo", "Photo of the model number sticker."],
-        [:tcon_image,   "TCON Number Photo", "Photo of the model number sticker."],
-        [:panel_image,   "Scalar pcb board Photo", "Photo of the model number sticker."],
-        [:cof_image,   "COF Photo", "Photo of the model number sticker."],
-        [:pattern_image, "COF Pattern", "Reference image of the COF pattern."],
-        [:image_before,  "Before Repair", "Condition when received."],
-        [:image_after,   "After Repair", "Condition when completed."]
+        [:board_image,   "Board Number Photo", "Photo of the board number sticker."],
+        [:tcon_image,   "TCON Number Photo", "Photo of the TCON number sticker."],
+        [:panel_image,   "Scalar pcb board Photo", "Photo of the scalar pcb number sticker."],
+        [:cof_image,   "Source COF Photo", "Photo of the source cof number number sticker."],
+        [:pattern_image, "Side cof Photo", "Reference image of the side COF pattern."],
+        [:image_before,  "Source COF pattern", "Photo of the source cof number number sticke"],
+        [:image_after,   "Side COF pattern", "Photo of the side cof number number sticke"]
       ].each do |field, label, hint| %>
         <div>
           <%= form.label field, label, class: "label" %>
