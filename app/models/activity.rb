@@ -89,4 +89,8 @@ class Activity < ApplicationRecord
   def calculate_gross_profit
     self.gross_profit = gross_profit_value
   end
+
+  def job_number
+  "NE#{id}-#{created_at.strftime('%d%m%Y')}"
+  end
 end
