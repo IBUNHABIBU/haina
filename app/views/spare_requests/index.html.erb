@@ -276,10 +276,10 @@
 
             <div class="min-w-0 flex-1">
               <p class="truncate text-sm font-semibold text-slate-900">
-                <%= request.spare&.name || "Spare unavailable" %>
+                <%= request.spare&.part_number || "Spare unavailable" %>
               </p>
               <p class="mt-0.5 text-xs text-slate-500">
-                Request #<%= request.id %> · Qty: <span class="font-semibold text-slate-700"><%= request.requested_quantity %></span>
+                <%= request.activity.customer&.name || "—" %> · Qty: <span class="font-semibold text-slate-700"><%= request.requested_quantity %></span>
               </p>
             </div>
 
@@ -302,7 +302,7 @@
                 <dd class="mt-0.5 text-slate-800"><%= request.request_type.humanize %></dd>
               </div>
               <div>
-                <dt class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Part Number</dt>
+                <dt class="text-[11px] font-semibold uppercase tracking-wider text-slate-500"><%= request.spare&.name.presence || "—" %></dt>
                 <dd class="mt-0.5 font-mono text-slate-800"><%= request.spare&.part_number.presence || "—" %></dd>
               </div>
               <div class="col-span-2">
