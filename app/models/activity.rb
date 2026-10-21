@@ -91,6 +91,6 @@ class Activity < ApplicationRecord
   end
 
   def job_number
-  "#{created_at.strftime('%H%M')}-#{created_at.strftime('%d%b%y')}NE#{id}"
-end
+  "#{tv_brand.name}#{tv_size.size.to_i}-#{created_at.strftime('%H%M')}-#{created_at.strftime('%d%b%y')}E#{id}"
+  end
 end

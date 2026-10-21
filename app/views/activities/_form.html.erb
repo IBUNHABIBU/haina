@@ -87,6 +87,14 @@
       </div>
 
       <div>
+        <%= form.label :number_of_cof, "Number of COF", class: "label" %>
+        <%= form.number_field :number_of_cof,
+            min: 0,
+            placeholder: "e.g. 1, 2, 3...",
+            class: "field" %>
+      </div>
+
+      <div>
         <%= form.label :panel_number, "Panel Number", class: "label" %>
         <%= form.text_field :panel_number, autocomplete: "off", class: "field" %>
       </div>
