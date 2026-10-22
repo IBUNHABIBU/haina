@@ -91,6 +91,9 @@ class Activity < ApplicationRecord
   end
 
   def job_number
-  "#{tv_brand.name}#{tv_size.size.to_i}-#{created_at.strftime('%H%M')}-#{created_at.strftime('%d%b%y')}E#{id}"
+    brand = tv_brand&.name.presence || "TV"
+    size = tv_size&.size&.to_i
+
+    "#{brand}#{size}-#{created_at.strftime('%H%M')}-#{created_at.strftime('%d%b%y')}E#{id}"
   end
 end
