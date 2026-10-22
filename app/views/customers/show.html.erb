@@ -1,6 +1,6 @@
 <% content_for :title, @customer.name.presence || "Customer Details" %>
 
-<div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
   
   <% if notice.present? %>
     <div class="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 shadow-sm" id="notice">
@@ -118,19 +118,132 @@
           <p class="text-3xl font-bold tabular-nums text-slate-900"><%= @customer.activities.count if @customer.respond_to?(:activities) %></p>
           <p class="text-xs text-slate-500 mt-1">Total repair activities</p>
         </div>
-        <!-- Unaweza kuongeza total revenue hapa kama una data -->
-      </div>
-
-      <div class="mt-6 pt-4 border-t border-slate-100">
-        <%= link_to activities_path(customer_id: @customer.id), 
-            class: "w-full inline-flex justify-center items-center gap-1.5 rounded-lg bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700 transition hover:bg-indigo-100" do %>
-          View all activities
-          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-          </svg>
-        <% end %>
       </div>
     </div>
+  </div>
+
+  <%# ============================================================
+      ACTIVITIES LIST
+      ============================================================ %>
+  <div class="pt-4">
+    <div class="flex items-end justify-between mb-4">
+      <div>
+        <h2 class="text-lg font-semibold tracking-tight text-slate-900">Repair History</h2>
+        <p class="text-sm text-slate-500">All activities recorded for this customer.</p>
+      </div>
+      <%= link_to "View all", activities_path(customer_id: @customer.id), class: "text-sm font-medium text-indigo-600 hover:text-indigo-800" if @customer.respond_to?(:activities) %>
+    </div>
+
+    <% if @customer.activities.any? %>
+      
+      <%# DESKTOP TABLE %>
+      <div class="hidden md:block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Date</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">TV</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Problem</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
+                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Price</th>
+                <th class="relative px-4 py-3"><span class="sr-only">View</span></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% @customer.activities.order(date_in: :desc).each do |activity| %>
+                <tr class="group transition hover:bg-slate-50/70">
+                  <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-700 tabular-nums">
+                    <%= activity.date_in&.strftime("%d %b %Y") || "—" %>
+                  </td>
+                  <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-700">
+                    <%= [activity.tv_brand&.name, activity.tv_size&.size].compact.join(" ").presence || "—" %>
+                  </td>
+                  <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-700">
+                    <%= activity.tatizo&.name || "—" %>
+                  </td>
+                  <td class="whitespace-nowrap px-4 py-3">
+                    <% s = status_badge_color(activity.status) %>
+                    <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset <%= s[:pill] %>">
+                      <span class="h-1.5 w-1.5 rounded-full <%= s[:dot] %>"></span>
+                      <%= activity.status&.humanize || "Not set" %>
+                    </span>
+                  </td>
+                  <td class="whitespace-nowrap px-4 py-3 text-right text-sm font-semibold tabular-nums text-slate-900">
+                    <%= number_to_currency(activity.price, unit: "TSh ", precision: 0) %>
+                  </td>
+                  <td class="whitespace-nowrap px-4 py-3 text-right">
+                    <%= link_to activity, class: "inline-flex items-center justify-center rounded-lg p-1.5 text-indigo-600 transition hover:bg-indigo-50", title: "View Activity" do %>
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                      </svg>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <%# MOBILE CARDS %>
+      <div class="md:hidden space-y-3">
+        <% @customer.activities.order(date_in: :desc).each do |activity| %>
+          <details class="group rounded-xl border border-slate-200 bg-white shadow-sm open:shadow-md">
+            <summary class="flex cursor-pointer items-center gap-3 px-4 py-3 list-none [&::-webkit-details-marker]:hidden">
+              <div class="min-w-0 flex-1">
+                <p class="truncate text-sm font-semibold text-slate-900">
+                  <%= [activity.tv_brand&.name, activity.tv_size&.size].compact.join(" ").presence || "—" %>
+                </p>
+                <p class="mt-0.5 text-xs text-slate-500">
+                  <%= activity.date_in&.strftime("%d %b %Y") || "—" %>
+                </p>
+              </div>
+              <div class="flex flex-col items-end gap-1">
+                <span class="text-sm font-semibold tabular-nums text-slate-900">
+                  <%= number_to_currency(activity.price, unit: "", precision: 0) %>
+                </span>
+                <% s = status_badge_color(activity.status) %>
+                <span class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium ring-1 ring-inset <%= s[:pill] %>">
+                  <span class="h-1.5 w-1.5 rounded-full <%= s[:dot] %>"></span>
+                  <%= activity.status&.humanize || "Not set" %>
+                </span>
+              </div>
+              <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </summary>
+            <div class="border-t border-slate-100 px-4 py-4 space-y-3">
+              <dl class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <dt class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Problem</dt>
+                  <dd class="mt-0.5 text-slate-800"><%= activity.tatizo&.name || "—" %></dd>
+                </div>
+                <div>
+                  <dt class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Price</dt>
+                  <dd class="mt-0.5 font-semibold tabular-nums text-slate-900">
+                    <%= number_to_currency(activity.price, unit: "TSh ", precision: 0) %>
+                  </dd>
+                </div>
+              </dl>
+              <div class="flex items-center gap-2 border-t border-slate-100 pt-3">
+                <%= link_to activity, class: "w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-indigo-600 transition hover:bg-indigo-50" do %>
+                  View Activity
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+          </details>
+        <% end %>
+      </div>
+
+    <% else %>
+      <div class="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+        <p class="text-sm text-slate-500">This customer has no repair activities yet.</p>
+      </div>
+    <% end %>
   </div>
 
 </div>
