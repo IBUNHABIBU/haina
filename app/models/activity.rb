@@ -29,7 +29,8 @@ class Activity < ApplicationRecord
     delivered: 5,
     returned: 6,
     irreparable: 7,
-    cancelled: 8
+    cancelled: 8,
+    spare_requested: 9
   }
 
   before_validation :calculate_gross_profit

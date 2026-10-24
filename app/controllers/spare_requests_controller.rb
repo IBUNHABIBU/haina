@@ -51,6 +51,9 @@ class SpareRequestsController < ApplicationController
       end
 
       if @spare_request.save
+        if @activity
+           @activity.update!(status: :spare_requested) 
+        end
         redirect_to(
           @activity || spare_requests_path,
           notice: "Spare request was successfully created."
