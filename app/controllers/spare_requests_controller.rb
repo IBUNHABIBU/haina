@@ -97,7 +97,8 @@ class SpareRequestsController < ApplicationController
           :activity_id,
           :spare_id,
           :requested_quantity,
-          :reason
+          :reason,
+          :status
         ]
       )
     end
