@@ -1,2 +1,1 @@
-bin/rails generate scaffold RepairJob customer:references tv_brand:references tv_size:references   labour_price:decimal total_sale:decimal status:integer tatizo: reference motherboard_number tcon_number panel_number cof_number 
- 
+ST3151A08-4-XC-01
