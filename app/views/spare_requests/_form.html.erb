@@ -117,15 +117,42 @@
     <div class="grid gap-5 p-6 sm:grid-cols-2">
 
       <div>
-        <%= form.label :spare_id, "Spare part", class: "label" %>
-        <%= form.collection_select :spare_id,
+  <%= form.label :spare_id, "Spare part", class: "label" %>
+
+  <% if @activity.present? %>
+    <% matching_spares = Spare.where(part_number: [
+          @activity.board_number,
+          @activity.tcon_number,
+          @activity.cof_number,
+          @activity.panel_number
+        ].compact).order(:part_number) %>
+
+    <% if matching_spares.any? %>
+      <%= form.collection_select :spare_id,
+            matching_spares,
+            :id,
+            ->(s) { "#{s.name} — #{s.part_number}" },
+            { prompt: "Select part number" },
+            class: "field" %>
+    <% else %>
+      <%= form.collection_select :spare_id,
+            Spare.order(:part_number),
+            :id,
+            ->(s) { "#{s.name} — #{s.part_number}" },
+            { prompt: "No match for this activity — select any spare" },
+            class: "field" %>
+    <% end %>
+  <% else %>
+    <%= form.collection_select :spare_id,
           Spare.order(:part_number),
           :id,
-          :part_number,
+          ->(s) { "#{s.name} — #{s.part_number}" },
           { prompt: "Select part number" },
           class: "field" %>
-        <p class="mt-1 text-xs text-slate-400">Choose from available stock.</p>
-      </div>
+  <% end %>
+
+  <p class="mt-1 text-xs text-slate-400">Choose from available stock.</p>
+</div>
 
       <div>
         <%= form.label :requested_quantity, "Quantity requested", class: "label" %>

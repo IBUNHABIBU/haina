@@ -9,7 +9,12 @@ module ActivitiesHelper
  def status_badge_color(status)
     case status.to_s.downcase
     when "received"
-      { pill: "bg-slate-100 text-slate-700 ring-slate-200", dot: "bg-slate-400" }
+      { pill: "bg-violet-50 text-violet-700 ring-violet-200",
+dot:  "bg-violet-400"}
+      
+    when "spare_requested"
+      { pill: "bg-rose-100 text-rose-900 ring-rose-300",
+dot:  "bg-rose-700" }
     when "diagnosing"
       { pill: "bg-blue-50 text-blue-700 ring-blue-200", dot: "bg-blue-500" }
     when "waiting_for_parts"
