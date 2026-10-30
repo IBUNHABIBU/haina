@@ -224,7 +224,7 @@
                     options_from_collection_for_select(
                       @spares,
                       :id,
-                      ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" },
+                      ->(s) { "#{s.name} (#{s.part_number}) — stock #{s.quantity}" },
                       item.spare_id
                     ),
                     include_blank: "Select spare",
@@ -261,7 +261,7 @@
               options_from_collection_for_select(
                 @spares,
                 :id,
-                ->(s) { "#{s.name} (#{s.spare_category.name}) — stock #{s.quantity}" }
+                ->(s) { "#{s.name} (#{s.part_number}) — stock #{s.quantity}" }
               ),
               include_blank: "Select spare",
               class: "field" %>
