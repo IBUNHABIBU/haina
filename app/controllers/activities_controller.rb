@@ -99,16 +99,43 @@ class ActivitiesController < ApplicationController
   end
 
   def replace_spares!
-    @activity.activity_spares.destroy_all
-
-    spare_ids = Array(params[:spare_ids]).reject(&:blank?)
+    spare_ids = Array(params[:spare_ids])
     quantities = Array(params[:spare_quantities])
 
+    requested = Hash.new(0)
+
     spare_ids.each_with_index do |spare_id, index|
+      next if spare_id.blank?
+
       quantity = quantities[index].to_i
       next if quantity <= 0
 
-      @activity.activity_spares.create!(spare_id: spare_id, quantity: quantity)
+      requested[spare_id.to_i] += quantity
     end
+
+    existing = @activity.activity_spares.to_a
+
+    # Remove spares ambazo hazipo tena kwenye form
+    existing.each do |item|
+      unless requested.key?(item.spare_id)
+        item.destroy!
+      end
+    end
+
+    # Add new spares or update quantities
+    requested.each do |spare_id, quantity|
+      item = existing.find { |record| record.spare_id == spare_id }
+
+      if item.nil?
+        @activity.activity_spares.create!(
+          spare_id: spare_id,
+          quantity: quantity
+        )
+      elsif item.quantity != quantity
+        item.update!(quantity: quantity)
+      end
+    end
+
+    @activity.recalculate_gross_profit!
   end
 end
