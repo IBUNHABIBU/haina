@@ -40,29 +40,33 @@ class ActivitiesController < ApplicationController
   end
 
   def create
-    @activity = current_user.activities.build(activity_params)
+      @activity = current_user.activities.build(activity_params)
 
-    Activity.transaction do
-      @activity.save!
-      replace_spares!
-    end
+      Activity.transaction do
+        @activity.save!
+        replace_spares!
+        @activity.recalculate_gross_profit!
+      end
 
-    redirect_to @activity, notice: "Repair activity was successfully created."
-  rescue ActiveRecord::RecordInvalid
-    load_form_options
-    render :new, status: :unprocessable_entity
+      redirect_to @activity, notice: "Repair activity was successfully created."
+      rescue ActiveRecord::RecordInvalid
+        load_form_options
+        render :new, status: :unprocessable_entity
   end
 
   def update
-    Activity.transaction do
-      @activity.update!(activity_params)
-      replace_spares!
-    end
+      Activity.transaction do
+        @activity.update!(activity_params)
+        replace_spares!
+        @activity.recalculate_gross_profit!
+      end
 
-    redirect_to @activity, notice: "Repair activity was successfully updated.", status: :see_other
-  rescue ActiveRecord::RecordInvalid
-    load_form_options
-    render :edit, status: :unprocessable_entity
+      redirect_to @activity,
+                  notice: "Repair activity was successfully updated.",
+                  status: :see_other
+    rescue ActiveRecord::RecordInvalid
+      load_form_options
+      render :edit, status: :unprocessable_entity
   end
 
   def destroy

@@ -87,6 +87,13 @@ class Activity < ApplicationRecord
     price.to_d - labour_charge.to_d - spare_cost
   end
 
+  def recalculate_gross_profit!
+    update_columns(
+      gross_profit: gross_profit_value,
+      updated_at: Time.current
+    )
+  end
+
   def calculate_gross_profit
     self.gross_profit = gross_profit_value
   end
