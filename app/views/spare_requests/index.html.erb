@@ -137,7 +137,7 @@
                 <!-- Type (badge) -->
                 <td class="whitespace-nowrap px-4 py-3">
                   <span class="text-sm font-medium text-slate-700">
-                    <%= request.created_at.strftime('%d%b%y, %H%M') %>
+                    <%= request.created_at.in_time_zone("Africa/Dar_es_Salaam").strftime('%d%b%y, %H:%M') %>
                   </span>
                 </td>
 
