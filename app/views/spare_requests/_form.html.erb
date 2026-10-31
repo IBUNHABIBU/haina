@@ -119,37 +119,53 @@
       <div>
   <%= form.label :spare_id, "Spare part", class: "label" %>
 
+ <div>
   <% if @activity.present? %>
-    <% matching_spares = Spare.where(part_number: [
-          @activity.board_number,
-          @activity.tcon_number,
-          @activity.cof_number,
-          @activity.panel_number
-        ].compact).order(:part_number) %>
 
-    <% if matching_spares.any? %>
-      <%= form.collection_select :spare_id,
-            matching_spares,
-            :id,
-            ->(s) { "#{s.name} — #{s.part_number}" },
-            { prompt: "Select part number" },
-            class: "field" %>
-    <% else %>
-      <%= form.collection_select :spare_id,
-            Spare.order(:part_number),
-            :id,
-            ->(s) { "#{s.name} — #{s.part_number}" },
-            { prompt: "No match for this activity — select any spare" },
-            class: "field" %>
-    <% end %>
+    <%= form.label :spare_type, "Spare Type", class: "label" %>
+
+    <%= form.select :spare_type,
+      SpareRequest::SPARE_TYPES.map { |value, label| [label, value] },
+      { prompt: "Select Spare Type" },
+      { class: "field", required: true } %>
+
+    <div class="mt-3 rounded-lg bg-indigo-50 p-3 text-sm text-indigo-800">
+      <p class="font-semibold">Part Number Requirements</p>
+
+      <p class="mt-2">
+        Motherboard:
+        <strong><%= @activity.board_number.presence || "Not entered" %></strong>
+      </p>
+
+      <p>
+        T-Con:
+        <strong><%= @activity.tcon_number.presence || "Not entered" %></strong>
+      </p>
+
+      <p>
+        COF:
+        <strong><%= @activity.cof_number.presence || "Not entered" %></strong>
+      </p>
+
+      <p class="mt-2 text-xs">
+        Motherboard, T-Con and COF require a part number
+        to be entered in the Activity before requesting.
+      </p>
+    </div>
+
   <% else %>
+
+    <%= form.label :spare_id, "Spare part", class: "label" %>
+
     <%= form.collection_select :spare_id,
-          Spare.order(:part_number),
-          :id,
-          ->(s) { "#{s.name} — #{s.part_number}" },
-          { prompt: "Select part number" },
-          class: "field" %>
+      Spare.order(:part_number),
+      :id,
+      ->(s) { "#{s.name} — #{s.part_number}" },
+      { prompt: "Select spare" },
+      class: "field" %>
+
   <% end %>
+</div>
 
   <p class="mt-1 text-xs text-slate-400">Choose from available stock.</p>
 </div>

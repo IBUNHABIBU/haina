@@ -38,29 +38,33 @@ class SpareRequestsController < ApplicationController
 
   # POST /spare_requests or /spare_requests.json
   def create
-      @activity = Activity.find(params[:activity_id]) if params[:activity_id]
+    @activity = Activity.find(params[:activity_id]) if params[:activity_id].present?
 
-      @spare_request = SpareRequest.new(spare_request_params)
-      @spare_request.activity = @activity if @activity
-      @spare_request.requested_by = current_user
-      @spare_request.issued_quantity = 0
-      @spare_request.status = :requested
+    @spare_request = SpareRequest.new(spare_request_params)
 
-      if @activity
-        @spare_request.request_type = :activity
+    if @activity
+      @spare_request.activity = @activity
+      @spare_request.request_type = :activity
+      @spare_request.spare_id = nil
+    end
+
+    @spare_request.requested_by = current_user
+    @spare_request.issued_quantity = 0
+    @spare_request.status = :requested
+
+    if @spare_request.valid?
+      SpareRequest.transaction do
+        @spare_request.save!
+        @activity.update!(status: :spare_requested) if @activity
       end
 
-      if @spare_request.save
-        if @activity
-           @activity.update!(status: :spare_requested) 
-        end
-        redirect_to(
-          @activity || spare_requests_path,
-          notice: "Spare request was successfully created."
-        )
-      else
-        render :new, status: :unprocessable_entity
-      end
+      redirect_to(
+        @activity || spare_requests_path,
+        notice: "Spare request was successfully created."
+      )
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /spare_requests/1 or /spare_requests/1.json
@@ -94,17 +98,18 @@ class SpareRequestsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def spare_request_params
-        params.expect(
+      params.expect(
         spare_request: [
           :request_type,
           :activity_id,
           :spare_id,
+          :spare_type,
           :requested_quantity,
           :reason,
           :status
         ]
       )
-    end
+   end
 
     
 def generate_csv(requests)

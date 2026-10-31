@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_21_171650) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_31_101144) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -193,7 +193,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_21_171650) do
 
   create_table "spare_requests", force: :cascade do |t|
     t.bigint "activity_id"
-    t.bigint "spare_id", null: false
+    t.bigint "spare_id"
     t.bigint "requested_by_id", null: false
     t.bigint "issued_by_id"
     t.integer "requested_quantity"
@@ -206,6 +206,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_21_171650) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "request_type", default: "activity", null: false
+    t.string "spare_type"
+    t.string "requested_part_number"
     t.index ["activity_id"], name: "index_spare_requests_on_activity_id"
     t.index ["issued_by_id"], name: "index_spare_requests_on_issued_by_id"
     t.index ["request_type"], name: "index_spare_requests_on_request_type"

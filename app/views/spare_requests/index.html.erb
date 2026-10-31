@@ -142,16 +142,20 @@
                 </td>
 
                 <!-- Spare (Name + Part No) -->
-                <td class="px-4 py-3">
-                  <div class="text-sm font-medium text-slate-900">
-                    <%= request.spare&.name || "Spare unavailable" %>
-                  </div>
-                  <% if request.spare&.part_number.present? %>
-                    <div class="mt-0.5 font-mono text-xs text-slate-500">
-                      <%= request.spare.part_number %>
-                    </div>
-                  <% end %>
-                </td>
+               <!-- Spare Type + Requested Part Number -->
+              <td class="px-4 py-3">
+                <div class="text-sm font-semibold text-slate-900">
+                  <%= spare_request_name(request) %>
+                </div>
+
+                <div class="mt-1 font-mono text-xs text-slate-500">
+                  <%= spare_request_part_number(request) %>
+                </div>
+
+                <div class="mt-1 text-xs text-indigo-600">
+                  <%= request.request_type&.humanize %>
+                </div>
+              </td>
 
                 <!-- Qty -->
                 <td class="whitespace-nowrap px-4 py-3 text-right text-sm font-semibold tabular-nums text-slate-900">
@@ -276,10 +280,14 @@
 
             <div class="min-w-0 flex-1">
               <p class="truncate text-sm font-semibold text-slate-900">
-                <%= request.spare&.part_number || "Spare unavailable" %>
+                <%= spare_request_name(request) %>
               </p>
               <p class="mt-0.5 text-xs text-slate-500">
-                <%= request.activity.customer&.name || "—" %> · Qty: <span class="font-semibold text-slate-700"><%= request.requested_quantity %></span>
+             <%= request.activity&.customer&.name || request.request_type&.humanize || "—" %>
+                · Qty:
+                <span class="font-semibold text-slate-700">
+                  <%= request.requested_quantity %>
+                </span>    
               </p>
             </div>
 
@@ -302,8 +310,13 @@
                 <dd class="mt-0.5 text-slate-800"><%= request.request_type.humanize %></dd>
               </div>
               <div>
-                <dt class="text-[11px] font-semibold uppercase tracking-wider text-slate-500"><%= request.spare&.name.presence || "—" %></dt>
-                <dd class="mt-0.5 font-mono text-slate-800"><%= request.spare&.part_number.presence || "—" %></dd>
+                  <dt class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                    <%= spare_request_name(request) %>
+                  </dt>
+
+                  <dd class="mt-0.5 font-mono text-slate-800">
+                    <%= spare_request_part_number(request) %>
+                  </dd>
               </div>
               <div class="col-span-2">
                 <dt class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Requested By</dt>
