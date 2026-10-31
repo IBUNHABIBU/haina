@@ -30,8 +30,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
 
+        
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+      <!-- Chartkick -->
+      <script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js"></script>
+      
+    <%= javascript_importmap_tags %>
+    <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
     <script>
         if ("serviceWorker" in navigator) {
           window.addEventListener("load", () => {

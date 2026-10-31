@@ -19,6 +19,53 @@ class DashboardController < ApplicationController
     .sum(:price)
     .transform_keys { |d| d.strftime("%d %b") }
     .reject { |_date, amount| amount.to_f.zero? }   # ← hapa
+
+        # 1. Top TV Brands
+    @top_brands = @activities.joins(:tv_brand)
+                             .group("tv_brands.name")
+                             .count
+                             .sort_by { |_, v| -v }
+                             .first(5)
+                             .to_h
+
+    # 2. Top TV Sizes
+    @top_sizes = @activities.joins(:tv_size)
+                            .group("tv_sizes.size")
+                            .count
+                            .sort_by { |_, v| -v }
+                            .first(5)
+                            .map { |size, count| ["#{size} in", count] }
+                            .to_h
+
+    # 3. Top COF Numbers
+    @top_cofs = @activities.where.not(cof_number: [nil, ""])
+                           .group(:cof_number)
+                           .count
+                           .sort_by { |_, v| -v }
+                           .first(5)
+                           .to_h
+
+                             # Deni (Debts)
+  @debtors = Activity.owed.includes(:customer, :tv_brand, :tv_size)
+                    .order(Arel.sql("starting_price - price DESC"))
+                    .to_a
+
+@total_debt = Activity.owed.sum(Arel.sql("starting_price - price"))
+
+    # 4. Repair Trend (Kulingana na period)
+    case @period
+    when "daily"
+      @repair_trend = @activities.group_by_day(:date_in, last: 7).count
+    when "weekly"
+      @repair_trend = @activities.group_by_week(:date_in, last: 8).count
+    when "monthly"
+      @repair_trend = @activities.group_by_month(:date_in, last: 12).count
+    when "yearly"
+      @repair_trend = @activities.group_by_year(:date_in, last: 5).count
+    end
+
+    # 5. Status Breakdown (Kwa Pie Chart)
+    @status_breakdown = @activities.group(:status).count.transform_keys { |k| k&.humanize || "Unknown" }
   end
 
   private

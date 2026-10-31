@@ -2,7 +2,7 @@
 
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
-  <!-- ============ Page header ============ -->
+  <!-- ============ 1. Page header ============ -->
   <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
       <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Repair Dashboard</h1>
@@ -19,9 +19,8 @@
     </div>
   </div>
 
-  <!-- ============ KPI cards ============ -->
+  <!-- ============ 2. KPI Cards ============ -->
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-
     <!-- Sales -->
     <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div class="flex items-center justify-between">
@@ -89,7 +88,7 @@
       <p class="mt-1 text-xs text-slate-400">Bottom line</p>
     </div>
 
-    <!-- Repairs + secondary stats -->
+    <!-- Repairs -->
     <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <div class="flex items-center justify-between">
         <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Repairs</p>
@@ -110,46 +109,191 @@
     </div>
   </div>
 
-  <!-- ============ Two-column panel ============ -->
+  <!-- ============ 3. Graphs (Grid 2x2) ============ -->
   <div class="grid gap-6 lg:grid-cols-2">
+    
+    <!-- Top TV Brands -->
+    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="text-sm font-semibold text-slate-900 mb-1">Top TV Brands</h2>
+      <p class="text-xs text-slate-500 mb-6">Brand zinazokuja sana kwa repair.</p>
+      <%= bar_chart @top_brands, 
+          colors: ["#6366f1"], 
+          library: { 
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+          } %>
+    </section>
 
+    <!-- Top TV Sizes -->
+    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="text-sm font-semibold text-slate-900 mb-1">Top TV Sizes</h2>
+      <p class="text-xs text-slate-500 mb-6">Ukubwa wa TV unaokuja sana.</p>
+      <%= pie_chart @top_sizes, 
+          colors: ["#f59e0b", "#ef4444", "#10b981", "#3b82f6", "#8b5cf6"], 
+          donut: true,
+          library: { 
+            plugins: { legend: { position: "bottom" } }
+          } %>
+    </section>
+
+    <!-- Top COF Numbers -->
+    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="text-sm font-semibold text-slate-900 mb-1">Top COF Numbers</h2>
+      <p class="text-xs text-slate-500 mb-6">COF numbers zinazokuja sana.</p>
+      <%= bar_chart @top_cofs, 
+          colors: ["#10b981"], 
+          library: { 
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+          } %>
+    </section>
+
+    <!-- Status Breakdown -->
+    <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="text-sm font-semibold text-slate-900 mb-1">Status Breakdown</h2>
+      <p class="text-xs text-slate-500 mb-6">Mgawanyo wa repair kwa status.</p>
+      <%= pie_chart @status_breakdown, 
+          colors: ["#94a3b8", "#3b82f6", "#f59e0b", "#6366f1", "#10b981", "#14b8a6", "#06b6d4", "#f43f5e", "#6b7280"],
+          library: { 
+            plugins: { legend: { position: "bottom" } }
+          } %>
+    </section>
   </div>
-   <!-- Sales by day -->
-    <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-        <div>
-          <h2 class="text-sm font-semibold text-slate-900">Sales by day</h2>
-          <p class="mt-0.5 text-xs text-slate-500">Daily revenue breakdown</p>
+
+  <!-- ============ 4. Sales by day ============ -->
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Sales by day</h2>
+        <p class="mt-0.5 text-xs text-slate-500">Daily revenue breakdown</p>
+      </div>
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+        </svg>
+      </div>
+    </header>
+
+    <% if @sales_by_day.present? %>
+      <ul class="divide-y divide-slate-100">
+        <% max = @sales_by_day.values.map(&:to_f).max.to_f %>
+        <% @sales_by_day.each do |date, amount| %>
+          <li class="flex items-center gap-4 px-6 py-3">
+            <div class="w-24 shrink-0 text-sm text-slate-500">
+              <%= date %>
+            </div>
+            <div class="relative h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+              <div class="absolute inset-y-0 left-0 rounded-full bg-indigo-500"
+                   style="width: <%= max.positive? ? (amount.to_f / max * 100).round(1) : 0 %>%"></div>
+            </div>
+            <div class="w-28 shrink-0 text-right text-sm font-semibold tabular-nums text-slate-900">
+              <%= number_to_currency(amount, unit: "TSh ", precision: 0) %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="px-6 py-10 text-center text-sm text-slate-500">No sales in this period.</div>
+    <% end %>
+  </section>
+
+  <!-- ============ 5. Wateja Wanaodaiwa ============ -->
+  <div class="grid gap-6 lg:grid-cols-3">
+    
+    <!-- Orodha ya Wateja -->
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm lg:col-span-2 overflow-hidden flex flex-col">
+      <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-sm font-semibold text-slate-900">Wateja Wanaodaiwa</h2>
+            <p class="text-xs text-slate-500">Activities zenye balance (starting_price - price).</p>
+          </div>
         </div>
-        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
-          </svg>
-        </div>
+        <span class="inline-flex items-center rounded-full bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700 ring-1 ring-inset ring-rose-200">
+          <%= @debtors.size %> records
+        </span>
       </header>
 
-      <% if @sales_by_day.present? %>
-        <ul class="divide-y divide-slate-100">
-          <% max = @sales_by_day.values.map(&:to_f).max.to_f %>
-          <% @sales_by_day.each do |date, amount| %>
-            <li class="flex items-center gap-4 px-6 py-3">
-              <div class="w-24 shrink-0 text-sm text-slate-500">
-                <%= date %>
+      <% if @debtors.any? %>
+        <div class="divide-y divide-slate-100 overflow-y-auto max-h-[500px]">
+          <% @debtors.each do |activity| %>
+            <% balance = activity.starting_price - activity.price %>
+            <div class="flex items-center justify-between px-6 py-3.5 hover:bg-slate-50/70 transition">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-100 text-xs font-semibold text-rose-700">
+                  <%= activity.customer&.name.to_s.first&.upcase || "?" %>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-sm font-medium text-slate-900 truncate">
+                    <%= activity.customer&.name || "Unknown" %>
+                  </p>
+                  <p class="text-xs text-slate-500 truncate">
+                    <%= [activity.tv_brand&.name, activity.tv_size&.size].compact.join(" ") %> · <%= activity.tatizo&.name %>
+                  </p>
+                </div>
               </div>
-
-              <div class="relative h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
-                <div class="absolute inset-y-0 left-0 rounded-full bg-indigo-500"
-                     style="width: <%= max.positive? ? (amount.to_f / max * 100).round(1) : 0 %>%"></div>
+              
+              <div class="flex items-center gap-4">
+                <div class="text-right">
+                  <p class="text-sm font-semibold tabular-nums text-rose-600">
+                    <%= number_to_currency(balance, unit: "TSh ", precision: 0) %>
+                  </p>
+                  <p class="text-[10px] text-slate-400 uppercase tracking-wide">Deni</p>
+                </div>
+                <%= link_to activity, class: "rounded-lg p-1.5 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition", title: "View Activity" do %>
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                  </svg>
+                <% end %>
               </div>
-
-              <div class="w-28 shrink-0 text-right text-sm font-semibold tabular-nums text-slate-900">
-                <%= number_to_currency(amount, unit: "TSh ", precision: 0) %>
-              </div>
-            </li>
+            </div>
           <% end %>
-        </ul>
+        </div>
       <% else %>
-        <div class="px-6 py-10 text-center text-sm text-slate-500">No sales in this period.</div>
+        <div class="px-6 py-12 text-center">
+          <p class="text-sm text-slate-500">Hakuna wateja wanaodaiwa kwa sasa. 🎉</p>
+        </div>
       <% end %>
-    </section>
+    </div>
+
+    <!-- Jumla ya Madeni (KPI) -->
+    <div class="rounded-xl border border-rose-200 bg-rose-50/40 p-6 shadow-sm flex flex-col justify-between">
+      <div class="flex items-start gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100 text-rose-600">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs font-medium uppercase tracking-wider text-rose-700">Jumla ya Madeni</p>
+          <p class="mt-1 text-xs text-rose-600">Starting price − Paid price</p>
+        </div>
+      </div>
+      
+      <div class="mt-4">
+        <p class="text-3xl font-bold tabular-nums text-rose-700">
+          <%= number_to_currency(@total_debt, unit: "TSh ", precision: 0) %>
+        </p>
+        <p class="mt-1 text-xs text-rose-600">
+          Kutoka kwa activities <%= Activity.owed.count %> zenye balance.
+        </p>
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-rose-200/60">
+        <%= link_to activities_path, class: "inline-flex items-center gap-1.5 text-sm font-medium text-rose-700 hover:text-rose-900" do %>
+          Angalia activities zote
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+
 </div>

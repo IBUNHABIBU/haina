@@ -39,6 +39,10 @@ class Activity < ApplicationRecord
 
   scope :sales, -> { where(status: %i[completed delivered returned]) }
 
+    # app/models/activity.rb
+  scope :with_balance, -> { where("starting_price > price AND price >= 0") }
+ # app/models/activity.rb
+   scope :owed, -> { where("starting_price > price AND price >= 0 AND status NOT IN (?)", [statuses[:cancelled], statuses[:irreparable]]) }
   # ============================================================
   # SEARCH — inatafuta kwenye customer, TV, problem, status,
   # na technical numbers (model, board, tcon, cof, panel)
