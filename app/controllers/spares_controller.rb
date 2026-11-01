@@ -6,10 +6,18 @@ class SparesController < ApplicationController
   scope = Spare.includes(:spare_category).search(params[:q]).order(:name)
   @pagy, @spares = pagy(scope, items: 50)
 
-  @low_stock_count   = Spare.low_stock.count
-  @total_stock_value = Spare.sum("quantity * unit_cost")
-  @category_count    = Spare.distinct.count(:spare_category_id)
+    # Kwenye controller
+  stats = Spare.pick(
+    Arel.sql("COUNT(*) FILTER (WHERE quantity <= reorder_level)"),
+    Arel.sql("COALESCE(SUM(quantity * unit_cost), 0)"),
+    Arel.sql("COUNT(DISTINCT spare_category_id)")
+  )
 
+  @low_stock_count   = stats[0]
+  @total_stock_value = stats[1]
+  @category_count    = stats[2]
+  @total_count = Spare.count
+  
   respond_to do |format|
     format.html
     format.turbo_stream do

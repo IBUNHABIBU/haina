@@ -9,6 +9,12 @@ class ActivitiesController < ApplicationController
       .search(params[:q])
       .order(date_in: :desc, created_at: :desc)
 
+      # Preload edit counts kwa query MOJA badala ya kila activity
+   @edit_counts = PaperTrail::Version
+    .where(item_type: "Activity", item_id: @activities.map(&:id), event: "update")
+    .group(:item_id)
+    .count
+
     @total_count     = Activity.count
     @in_progress     = Activity.where(status: %w[received in_progress]).count
     @completed_today = Activity.where(status: "completed", updated_at: Time.current.all_day).count
@@ -64,9 +70,18 @@ class ActivitiesController < ApplicationController
 
   private
 
-  def set_activity
-    @activity = Activity.includes(:activity_spares, :repair_returns).find(params[:id])
-  end
+  # Kwenye set_activity
+  @activity = Activity
+    .includes(
+      :customer, :tv_brand, :tv_size, :tatizo,
+      :activity_spares,
+      :repair_returns,
+      :pattern_image_attachment, :model_image_attachment,
+      :board_image_attachment, :tcon_image_attachment,
+      :cof_image_attachment, :panel_image_attachment,
+      :image_before_attachment, :image_after_attachment
+    )
+    .find(params[:id])
 
   def load_form_options
     @customers = Customer.order(:name)

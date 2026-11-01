@@ -85,7 +85,11 @@ class Activity < ApplicationRecord
     }
 
   def spare_cost
-    activity_spares.sum(:total_cost).to_d
+    if activity_spares.loaded?
+    activity_spares.sum { |item| item.total_cost.to_d }
+    else
+      activity_spares.sum(:total_cost).to_d
+    end
   end
 
   def gross_profit_value
@@ -109,4 +113,5 @@ class Activity < ApplicationRecord
 
     "#{brand}#{size}-#{created_at.strftime('%H%M')}-#{created_at.strftime('%d%b%y')}E#{id}"
   end
+
 end

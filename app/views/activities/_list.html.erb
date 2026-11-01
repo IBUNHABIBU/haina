@@ -60,7 +60,7 @@
                 </td>
               <% end %>
               <td class="whitespace-nowrap px-4 py-3">
-                <% edit_count = activity.versions.where(event: "update").count %>
+                <% edit_count = @edit_counts[activity.id] || 0 %>
                 <% if edit_count.positive? %>
                   <%= link_to activity_versions_path(item_type: "Activity", item_id: activity.id), data: { turbo_frame: "_top" },
                       class: "inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 transition hover:bg-amber-100" do %>
@@ -173,7 +173,7 @@
           </dl>
 
           <div class="flex items-center justify-between border-t border-slate-100 pt-3">
-            <% edit_count = activity.versions.where(event: "update").count %>
+            <% edit_count = @edit_counts[activity.id] || 0 %>
             <% if edit_count.positive? %>
               <%= link_to activity_versions_path(item_type: "Activity", item_id: activity.id), data: { turbo_frame: "_top" },
                   class: "inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 transition hover:bg-amber-100" do %>
