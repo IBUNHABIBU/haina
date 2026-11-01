@@ -71,17 +71,18 @@ class ActivitiesController < ApplicationController
   private
 
   # Kwenye set_activity
-  @activity = Activity
-    .includes(
-      :customer, :tv_brand, :tv_size, :tatizo,
-      :activity_spares,
-      :repair_returns,
-      :pattern_image_attachment, :model_image_attachment,
-      :board_image_attachment, :tcon_image_attachment,
-      :cof_image_attachment, :panel_image_attachment,
-      :image_before_attachment, :image_after_attachment
-    )
-    .find(params[:id])
+  def set_activity
+    @activity = Activity
+      .includes(
+        :customer, :tv_brand, :tv_size, :tatizo,
+        :activity_spares,
+        :repair_returns,
+        :pattern_image_attachment, :model_image_attachment,
+        :board_image_attachment, :tcon_image_attachment,
+        :cof_image_attachment, :panel_image_attachment,
+        :image_before_attachment, :image_after_attachment
+      ).find(params[:id])
+  end
 
   def load_form_options
     @customers = Customer.order(:name)
