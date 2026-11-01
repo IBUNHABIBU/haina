@@ -3,31 +3,38 @@ class ActivitiesController < ApplicationController
   before_action :set_activity, only: %i[show edit update destroy]
   before_action :load_form_options, only: %i[new edit create update]
 
-  def index
-    scope = Activity
-      .includes(:customer, :tv_brand, :tv_size, :tatizo)
-      .search(params[:q])
-      .order(date_in: :desc, created_at: :desc)
+def index
+  scope = Activity
+    .includes(:customer, :tv_brand, :tv_size, :tatizo)
+    .search(params[:q])
+    .order(date_in: :desc, created_at: :desc)
 
-    @activities = scope
+  @activities = scope
 
-    # KPI — overall stats (sio filtered)
-    @total_count     = Activity.count
-    @in_progress     = Activity.where(status: %w[received in_progress]).count
-    @completed_today = Activity.where(status: "completed", updated_at: Time.current.all_day).count
-    @total_revenue   = Activity.sum(:price)
+  @total_count     = Activity.count
+  @in_progress     = Activity.where(status: %w[received in_progress]).count
+  @completed_today = Activity.where(status: "completed", updated_at: Time.current.all_day).count
+  @total_revenue   = Activity.sum(:price)
 
-    respond_to do |format|
-      format.html
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "activities",
-          partial: "activities/list",
-          locals: { activities: @activities, query: params[:q] }
-        )
-      end
+  respond_to do |format|
+  format.html
+
+  format.turbo_stream do
+    if params[:q].present?
+      render turbo_stream: turbo_stream.replace(
+        "activities",
+        partial: "activities/list",
+        locals: {
+          activities: @activities,
+          query: params[:q]
+        }
+      )
+    else
+      render :index, formats: [:html]
     end
   end
+end
+end
 
   def show
   end
@@ -69,10 +76,10 @@ class ActivitiesController < ApplicationController
       render :edit, status: :unprocessable_entity
   end
 
-  def destroy
-    @activity.destroy!
-    redirect_to activities_path, notice: "Repair activity was successfully deleted.", status: :see_other
-  end
+def destroy
+  @activity.destroy!
+  redirect_to activities_path, notice: "Repair activity was successfully deleted.", status: :see_other
+end
 
   private
 

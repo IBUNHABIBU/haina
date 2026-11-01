@@ -8,6 +8,7 @@ class Activity < ApplicationRecord
   has_many :activity_spares, dependent: :destroy
   has_many :spares, through: :activity_spares
   has_many :repair_returns, dependent: :destroy
+  has_many :spare_requests, dependent: :destroy
 
   has_one_attached :pattern_image
   has_one_attached :model_image
