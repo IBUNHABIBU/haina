@@ -5,7 +5,7 @@ class ActivitiesController < ApplicationController
 
   def index
     @activities = Activity
-      .includes(:customer, :tv_brand, :tv_size, :tatizo)
+      .includes(:customer, :tv_brand, :tv_size, :tatizo, :activity_spares)
       .search(params[:q])
       .order(date_in: :desc, created_at: :desc)
 
