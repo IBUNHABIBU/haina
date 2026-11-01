@@ -85,7 +85,7 @@ class SpareRequestsController < ApplicationController
     @spare_request.destroy!
 
     respond_to do |format|
-      format.html { redirect_to spare_requests_path, notice: "Spare request was successfully destroyed.", status: :see_other }
+      format.html { redirect_to spare_requests_path, alert: "Spare request was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end
