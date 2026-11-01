@@ -56,8 +56,11 @@
   <body class="min-h-screen bg-neutral-light">
 
     <%= render "shared/navigation" %>
-    <%= render "shared/flash_messages" %>
-
+    
+    <%= turbo_frame_tag "flash" do %>
+      <%= render "shared/flash_messages" %>
+    <% end %>
+    
     <main class="container mx-auto px-4 py-8">
       <%= yield %>
     </main>

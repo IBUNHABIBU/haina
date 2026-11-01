@@ -66,9 +66,22 @@ end
   end
 
   def destroy
-    @expense.destroy!
-    redirect_to expenses_path, notice: "Expense was deleted.", status: :see_other
+  @expense.destroy!
+
+  respond_to do |format|
+    format.html do
+      redirect_to expenses_path, alert: "Expense was deleted.", status: :see_other
+    end
+
+    format.turbo_stream do
+      flash.now[:alert] = "Expense was deleted."
+      render turbo_stream: [
+        turbo_stream.prepend("flash", partial: "shared/flash_messages"),
+        turbo_stream.update("expenses_list", partial: "expenses/list", locals: { expenses: Expense.order(spent_on: :desc) })
+      ]
+    end
   end
+end
 
   private
 

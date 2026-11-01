@@ -1,5 +1,6 @@
 class TvBrandsController < ApplicationController
   before_action :set_tv_brand, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /tv_brands or /tv_brands.json
   def index
@@ -52,7 +53,7 @@ class TvBrandsController < ApplicationController
     @tv_brand.destroy!
 
     respond_to do |format|
-      format.html { redirect_to tv_brands_path, notice: "Tv brand was successfully destroyed.", status: :see_other }
+      format.html { redirect_to tv_brands_path, alert: "Tv brand was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end

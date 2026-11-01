@@ -59,7 +59,7 @@ class ActivitiesController < ApplicationController
 
   def destroy
     @activity.destroy!
-    redirect_to activities_path, notice: "Repair activity was successfully deleted.", status: :see_other
+    redirect_to activities_path, alert: "Repair activity was successfully deleted.", status: :see_other
   end
 
   private

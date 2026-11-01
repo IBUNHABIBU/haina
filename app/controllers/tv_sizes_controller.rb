@@ -1,5 +1,6 @@
 class TvSizesController < ApplicationController
   before_action :set_tv_size, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /tv_sizes or /tv_sizes.json
   def index
@@ -52,7 +53,7 @@ class TvSizesController < ApplicationController
     @tv_size.destroy!
 
     respond_to do |format|
-      format.html { redirect_to tv_sizes_path, notice: "Tv size was successfully destroyed.", status: :see_other }
+      format.html { redirect_to tv_sizes_path, alert: "Tv size was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end
