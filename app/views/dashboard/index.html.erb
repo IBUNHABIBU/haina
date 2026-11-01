@@ -280,7 +280,7 @@
           <%= number_to_currency(@total_debt, unit: "TSh ", precision: 0) %>
         </p>
         <p class="mt-1 text-xs text-rose-600">
-          Kutoka kwa activities <%= Activity.owed.count %> zenye balance.
+          Kutoka kwa activities <%= @debtors_count %> zenye balance.
         </p>
       </div>
 

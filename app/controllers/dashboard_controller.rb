@@ -49,8 +49,10 @@ class DashboardController < ApplicationController
   @debtors = Activity.owed.includes(:customer, :tv_brand, :tv_size)
                     .order(Arel.sql("starting_price - price DESC"))
                     .to_a
+  
+  @debtors_count = Activity.owed.count
 
-@total_debt = Activity.owed.sum(Arel.sql("starting_price - price"))
+  @total_debt = Activity.owed.sum(Arel.sql("starting_price - price"))
 
     # 4. Repair Trend (Kulingana na period)
     case @period
