@@ -76,8 +76,10 @@ class SpareRequest < ApplicationRecord
       activity.board_number.presence
     when "tcon"
       activity.tcon_number.presence
-    when "cof"
+    when "main cof"
       activity.cof_number.presence
+    when "side cof"
+    activity.side_cof_number.presence
     when "power_supply", "backlight"
       nil
     end
