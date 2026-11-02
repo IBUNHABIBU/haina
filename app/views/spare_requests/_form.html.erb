@@ -123,7 +123,8 @@
 
     <% spare_options = [
       ["Board — #{@activity.board_number.presence || 'Not entered'}", "motherboard"],
-      ["COF — #{@activity.cof_number.presence || 'Not entered'}", "cof"],
+      ["Main COF — #{@activity.cof_number.presence || 'Not entered'}", "main cof"],
+      ["Side COF — #{@activity.side_cof_number.presence || 'Not entered'}", "side cof"],
       ["TCON — #{@activity.tcon_number.presence || 'Not entered'}", "tcon"],
       ["Backlight —", "backlight"],
       ["Power Supply —", "power_supply"]
@@ -192,7 +193,6 @@
     <div class="p-6">
       <%= form.text_area :reason,
         rows: 4,
-        required: true,
         placeholder: "Explain why this spare is required...",
         class: "field" %>
     </div>

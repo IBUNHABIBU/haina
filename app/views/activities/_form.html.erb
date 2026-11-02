@@ -81,14 +81,28 @@
       </div>
 
       <div>
-        <%= form.label :cof_number, "COF Number", class: "label" %>
+        <%= form.label :cof_number, "Main COF Number", class: "label" %>
         <%= form.text_field :cof_number, autocomplete: "off",
       placeholder: "source COF , side COF ", class: "field" %>
       </div>
+      <div>
+
+        <%= form.label :side_cof_number, "Side COF Number", class: "label" %>
+        <%= form.text_field :side_cof_number, autocomplete: "off",
+      placeholder: "side COF ", class: "field" %>
+      </div>
 
       <div>
-        <%= form.label :number_of_cof, "Number of COF", class: "label" %>
+        <%= form.label :number_of_cof, "Number of Main COF", class: "label" %>
         <%= form.number_field :number_of_cof,
+            min: 0,
+            placeholder: "e.g. 1, 2, 3...",
+            class: "field" %>
+      </div>
+
+       <div>
+        <%= form.label :number_of_side_cof, "Number of side COF", class: "label" %>
+        <%= form.number_field :number_of_side_cof,
             min: 0,
             placeholder: "e.g. 1, 2, 3...",
             class: "field" %>
@@ -98,6 +112,8 @@
         <%= form.label :panel_number, "Panel Number", class: "label" %>
         <%= form.text_field :panel_number, autocomplete: "off", class: "field" %>
       </div>
+
+      
 
       <div>
         <%= form.label :date_in, "Date In", class: "label" %>

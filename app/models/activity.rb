@@ -19,6 +19,10 @@ class Activity < ApplicationRecord
   has_one_attached :image_before
   has_one_attached :image_after
 
+  validates :customer, presence: { message: "Tafadhali chagua jina mteja" }
+  validates :tv_brand, presence: { message: "Tafadhali chagua aina ya TV" }
+  validates :tv_size, presence: { message: "Tafadhali chagua ukubwa wa TV" }
+
   has_paper_trail
 
   enum :status, {

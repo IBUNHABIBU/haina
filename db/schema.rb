@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_31_101144) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_02_134951) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -85,6 +85,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_31_101144) do
     t.string "cof_number"
     t.string "panel_number"
     t.integer "number_of_cof"
+    t.integer "number_of_side_cof"
+    t.string "side_cof_number"
     t.index ["customer_id"], name: "index_activities_on_customer_id"
     t.index ["date_in"], name: "index_activities_on_date_in"
     t.index ["status"], name: "index_activities_on_status"

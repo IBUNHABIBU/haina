@@ -178,10 +178,7 @@
             <%= @activity.tv_size&.size ? "#{@activity.tv_size.size} in" : "—" %>
           </dd>
         </div>
-        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
-          <dt class="text-slate-500">Number of COF</dt>
-          <dd class="font-medium text-slate-900"><%= @activity.number_of_cof.presence || "—" %></dd>
-        </div>
+      
         <div class="flex items-center justify-between px-6 py-3.5 text-sm">
           <dt class="text-slate-500">Problem</dt>
           <dd class="font-medium text-slate-900"><%= @activity.tatizo&.name || "—" %></dd>
@@ -237,10 +234,49 @@
           <dt class="text-slate-500">T-Con Number</dt>
           <dd class="font-medium font-mono text-slate-900"><%= @activity.tcon_number.presence || "—" %></dd>
         </div>
-        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
-          <dt class="text-slate-500">COF Number</dt>
-          <dd class="font-medium font-mono text-slate-900"><%= @activity.cof_number.presence || "—" %></dd>
+          <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Number of Main COF</dt>
+          <dd class="font-medium text-slate-900"><%= @activity.number_of_cof.presence || "—" %></dd>
         </div>
+        <div class="flex items-center justify-between px-6 py-3.5 text-sm">
+          <dt class="text-slate-500">Number of Side COF</dt>
+          <dd class="font-medium text-slate-900"><%= @activity.number_of_side_cof.presence || "—" %></dd>
+        </div>
+
+       <div class="px-6 py-3.5">
+  <div class="rounded-lg border border-indigo-100 bg-indigo-50/50 p-4 space-y-3">
+    
+    <!-- Main COF Number -->
+    <div class="flex items-center justify-between text-sm">
+      <dt class="flex items-center gap-2 font-medium text-indigo-900">
+        <svg class="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" />
+        </svg>
+        Main COF number
+      </dt>
+      <dd class="font-mono text-base font-semibold text-indigo-950">
+        <%= @activity.cof_number.presence || "—" %>
+      </dd>
+    </div>
+
+    <div class="h-px w-full bg-indigo-100"></div>
+
+    <!-- Side COF Number -->
+    <div class="flex items-center justify-between text-sm">
+      <dt class="flex items-center gap-2 font-medium text-indigo-900">
+        <svg class="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+        </svg>
+        Side COF number
+      </dt>
+      <dd class="font-mono text-base font-semibold text-indigo-950">
+        <%= @activity.side_cof_number.presence || "—" %>
+      </dd>
+    </div>
+
+  </div>
+</div>
+
         <div class="flex items-center justify-between px-6 py-3.5 text-sm">
           <dt class="text-slate-500">Panel Number</dt>
           <dd class="font-medium font-mono text-slate-900"><%= @activity.panel_number.presence || "—" %></dd>

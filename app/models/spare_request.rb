@@ -31,8 +31,6 @@ class SpareRequest < ApplicationRecord
             numericality: { greater_than_or_equal_to: 0 },
             allow_nil: true
 
-  validates :reason, presence: true
-
   validate :activity_required_for_activity_request
   validate :issued_quantity_cannot_exceed_requested
 
@@ -40,7 +38,8 @@ class SpareRequest < ApplicationRecord
   "motherboard" => "Motherboard",
   "tcon" => "T-Con",
   "power_supply" => "Power Supply",
-  "cof" => "COF",
+  "side cof" => "Side COF",
+  "main cof" => "Main COF",
   "backlight" => "Backlight"
   }.freeze
 
