@@ -118,4 +118,14 @@ class Activity < ApplicationRecord
     "#{brand}#{size}-#{created_at.strftime('%H%M')}-#{created_at.strftime('%d%b%y')}E#{id}"
   end
 
+  validate :must_have_at_least_one_cof_image
+
+private
+
+def must_have_at_least_one_cof_image
+  unless side_cof_image.attached? || main_cof_image.attached?
+    errors.add(:base, "Tafadhali upload angalau picha moja ya Side COF au Main COF")
+  end
+end
+
 end
