@@ -123,7 +123,7 @@ class Activity < ApplicationRecord
 private
 
 def must_have_at_least_one_cof_image
-  unless side_cof_image.attached? || main_cof_image.attached?
+  unless pattern_image.attached? || cof_image.attached?
     errors.add(:base, "Tafadhali upload angalau picha moja ya Side COF au Main COF")
   end
 end
