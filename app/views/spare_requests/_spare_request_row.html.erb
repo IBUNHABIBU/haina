@@ -1,0 +1,82 @@
+<tr id="<%= dom_id request %>" 
+    data-turbo-frame="<%= dom_id request %>"
+    class="group transition hover:bg-slate-50/70">
+
+  <td class="whitespace-nowrap px-4 py-3">
+    <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
+      #<%= request.id %>
+    </span>
+  </td>
+
+  <td class="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-700">
+    <%= request.created_at.in_time_zone("Africa/Dar_es_Salaam").strftime('%d%b%y, %H:%M') %>
+  </td>
+
+  <td class="px-4 py-3">
+    <div class="text-sm font-semibold text-slate-900"><%= spare_request_name(request) %></div>
+    <div class="mt-1 font-mono text-xs text-slate-500"><%= spare_request_part_number(request) %></div>
+    <div class="mt-1 text-xs text-indigo-600"><%= request.request_type&.humanize %></div>
+  </td>
+
+  <td class="whitespace-nowrap px-4 py-3 text-right text-sm font-semibold tabular-nums text-slate-900">
+    <%= request.requested_quantity %>
+  </td>
+
+  <td class="px-4 py-3">
+    <% if request.activity %>
+      <div class="text-sm">
+        <%= link_to "Activity ##{request.activity.id}", activity_path(request.activity), class: "font-medium text-indigo-600 hover:underline" %>
+      </div>
+      <div class="mt-0.5 text-xs text-slate-500">
+        <%= request.activity.customer&.name || "—" %> · <%= [request.activity.tv_brand&.name, request.activity.tv_size&.size].compact.join(" ") %>
+      </div>
+    <% else %>
+      <span class="text-sm text-slate-400 italic">No activity linked</span>
+    <% end %>
+  </td>
+
+  <td class="whitespace-nowrap px-4 py-3">
+    <div class="flex items-center gap-2">
+      <% req_name = [request.requested_by&.first_name, request.requested_by&.last_name].compact.join(" ") %>
+      <% if req_name.present? %>
+        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-[10px] font-semibold text-slate-600">
+          <%= req_name.first.upcase %>
+        </div>
+        <span class="text-sm text-slate-700"><%= req_name %></span>
+      <% else %>
+        <span class="text-sm text-slate-400">—</span>
+      <% end %>
+    </div>
+  </td>
+
+  <!-- INLINE STATUS -->
+ <td class="whitespace-nowrap px-4 py-3">
+  <%= form_with model: request,
+      url: spare_request_path(request),
+      method: :patch,
+      data: { turbo_frame: dom_id(request) },
+      class: "inline-block" do |f| %>
+    <%= f.select :status,
+        SpareRequest.statuses.keys.map { |s| [s.humanize, s] },
+        {},
+        onchange: "this.form.requestSubmit()",
+        data: { 
+          controller: "status-color",
+          action: "change->status-color#updateColor",
+          status_color_target: "select"
+        },
+        class: "rounded-md border px-2 py-1 text-xs font-medium shadow-sm focus:ring-indigo-500/20 cursor-pointer #{status_select_classes(request.status)}" %>
+  <% end %>
+</td>
+
+  <td class="whitespace-nowrap px-4 py-3 text-right">
+    <div class="inline-flex items-center justify-end gap-1 opacity-70 transition group-hover:opacity-100">
+      <%= link_to spare_request_path(request), class: "rounded-lg p-1.5 text-indigo-600 transition hover:bg-indigo-50", title: "View" do %>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+      <% end %>
+    </div>
+  </td>
+</tr>
