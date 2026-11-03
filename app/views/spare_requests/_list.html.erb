@@ -1,0 +1,49 @@
+<%# app/views/spare_requests/_list.html.erb %>
+
+<%# DESKTOP TABLE %>
+<div class="hidden md:block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-slate-200">
+      <thead class="bg-slate-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Request</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Date</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Spare</th>
+          <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Qty</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Linked Activity</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Requested By</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
+          <th class="relative px-4 py-3"><span class="sr-only">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <% if spare_requests.any? %>
+          <% spare_requests.each do |request| %>
+            <%= render "spare_requests/spare_request_row", request: request %>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="8" class="px-6 py-16 text-center">
+              <p class="text-sm text-slate-500">No spare requests found for this filter.</p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%# MOBILE CARDS %>
+<div class="md:hidden space-y-3">
+  <% if spare_requests.any? %>
+    <% spare_requests.each do |request| %>
+      <%# ... mobile cards zako zote (kama zilivyo) ... %>
+    <% end %>
+  <% else %>
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div class="px-6 py-16 text-center">
+        <p class="text-sm text-slate-500">No spare requests found for this filter.</p>
+      </div>
+    </div>
+  <% end %>
+</div>
