@@ -18,9 +18,9 @@ module SpareRequestsHelper
     case status.to_s.downcase
     when "requested", "pending"
       "bg-amber-50 border-amber-200 text-amber-700"
-    when "approved"
+    when "shipped"
       "bg-blue-50 border-blue-200 text-blue-700"
-    when "fulfilled", "completed"
+    when "received", "completed"
       "bg-emerald-50 border-emerald-200 text-emerald-700"
     when "rejected", "cancelled"
       "bg-rose-50 border-rose-200 text-rose-700"

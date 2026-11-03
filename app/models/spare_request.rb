@@ -13,10 +13,10 @@ class SpareRequest < ApplicationRecord
 
   enum :status, {
     requested: "requested",
-    approved: "approved",
+    approved: "shipped",
     ordered: "ordered",
-    partially_fulfilled: "partially_fulfilled",
-    fulfilled: "fulfilled",
+    on_way: "onway",
+    received: "received",
     rejected: "rejected",
     cancelled: "cancelled"
   }, validate: true
