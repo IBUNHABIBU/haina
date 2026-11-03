@@ -1,18 +1,34 @@
 class SpareRequestsController < ApplicationController
   before_action :set_spare_request, only: %i[show edit update destroy]
 
-  def index
-    @spare_requests = SpareRequest
-      .includes(:activity, :spare, :requested_by)
-      .order(created_at: :desc)
+ # app/controllers/spare_requests_controller.rb
+def index
+  scope = SpareRequest.includes(:activity, :spare, :requested_by).order(created_at: :desc)
 
-    respond_to do |format|
-      format.html
-      format.xlsx do
-        response.headers['Content-Disposition'] = "attachment; filename=spare_requests_#{Time.current.strftime('%Y-%m-%d')}.xlsx"
-      end
+  # Filter by status
+  if params[:status].present?
+    scope = scope.where(status: params[:status])
+  end
+
+  @spare_requests = scope
+
+  # KPI (zinahesabiwa kutoka kwenye scope ili zibadilike pamoja na filter)
+  @total_requests = scope.count
+  @activity_count = scope.where(request_type: :activity).count
+  @workshop_count = scope.where(request_type: :workshop).count
+  @stock_count    = scope.where(request_type: :stock_replenishment).count
+
+  respond_to do |format|
+    format.html
+    format.turbo_stream do
+      render turbo_stream: turbo_stream.replace(
+        "spare_requests_list",
+        partial: "spare_requests/list",
+        locals: { spare_requests: @spare_requests }
+      )
     end
   end
+end
 
   def show
   end
