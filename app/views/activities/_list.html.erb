@@ -46,6 +46,8 @@
                   <span class="h-1.5 w-1.5 rounded-full <%= s[:dot] %>"></span>
                   <%= activity.status&.humanize || "Not set" %>
                 </span>
+                    <div class="text-xs text-slate-500"><%= highlight_search(activity.info, query) %></div>
+                </div>
               </td>
               <td class="whitespace-nowrap px-4 py-3 text-right text-sm font-medium tabular-nums text-slate-900">
                 <%= number_to_currency(activity.starting_price, unit: "TSh ", precision: 0) %>
@@ -185,6 +187,8 @@
             <% else %>
               <span class="text-xs text-slate-400">No edits</span>
             <% end %>
+            
+                    <div class="text-xs text-slate-500"><%= highlight_search(activity.info, query) %></div>
           </div>
 
           <div class="flex items-center gap-2 border-t border-slate-100 pt-3">

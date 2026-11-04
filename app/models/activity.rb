@@ -118,6 +118,10 @@ class Activity < ApplicationRecord
     "#{brand}#{size}-#{created_at.strftime('%H%M')}-#{created_at.strftime('%d%b%y')}E#{id}"
   end
 
+  def info
+    "TN##{tcon_number}-P##{panel_number}-C##{cof_number}"
+  end
+
   validate :must_have_at_least_one_cof_image
 
 private
