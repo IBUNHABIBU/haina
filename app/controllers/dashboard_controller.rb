@@ -40,6 +40,7 @@ class DashboardController < ApplicationController
         .where(date_in: Date.new(current_year, 1, 1)..Date.new(current_year, 12, 31))
         .group("EXTRACT(MONTH FROM date_in)")
         .sum(:gross_profit)
+        .transform_keys(&:to_i) 
 
       @monthly_profit = (1..12).map do |month|
         month_name = Date::MONTHNAMES[month]
@@ -51,6 +52,7 @@ class DashboardController < ApplicationController
         .where(date_in: Date.new(current_year, 1, 1)..Date.new(current_year, 12, 31))
         .group("EXTRACT(MONTH FROM date_in)")
         .count
+         .transform_keys(&:to_i)   # ← Ongeza hii
 
       @monthly_repairs = (1..12).map do |month|
         month_name = Date::MONTHNAMES[month]

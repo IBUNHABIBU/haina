@@ -1,4 +1,37 @@
 # Idempotent seed data for the repair-management module.
+# ============================================================
+# 0. User (admin)
+# ============================================================
+puts "👤 Creating admin user..."
+admin = User.find_or_create_by!(email: "admin@tour.com") do |u|
+  u.password = "123"
+  u.password_confirmation = "123"
+  u.first_name = "Admin"
+  u.last_name = "Tour"
+  u.confirmed_at = Time.current
+end
+
+puts "  ✅ Admin user: #{admin.email}"
+
+# ============================================================
+# 2. Customers
+# ============================================================
+puts "👥 Creating customers..."
+customers = [
+  { name: "John Mwangi", phone: "0712 345 678", mahali: "Kariakoo" },
+  { name: "Amina Hassan", phone: "0765 432 109", mahali: "Kinondoni" },
+  { name: "Peter Kimaro", phone: "0789 123 456", mahali: "Mikocheni" },
+  { name: "Grace Mushi", phone: "0754 987 654", mahali: "Sinza" },
+  { name: "David Mwakalinga", phone: "0713 456 789", mahali: "Tabata" },
+  { name: "Fatuma Salum", phone: "0768 234 567", mahali: "Magomeni" },
+  { name: "Joseph Mwakyusa", phone: "0745 678 901", mahali: "Ubungo" },
+  { name: "Rehema Msuya", phone: "0719 012 345", mahali: "Ilala" },
+  { name: "Michael Mbwana", phone: "0782 345 678", mahali: "Mbezi" },
+  { name: "Zainabu Juma", phone: "0756 789 012", mahali: "Mwananyamala" },
+].map { |attrs| Customer.create!(attrs.merge(user: admin)) }
+
+puts "  ✅ #{customers.size} customers created"
+
 puts "************   Start seeding  *****************"
 [
   [ "COF", "COF" ],
