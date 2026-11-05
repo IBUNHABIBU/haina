@@ -108,22 +108,32 @@ end.to_h
       .first(5)
       .to_h
 
-    @customer_trend = Activity
-  .group_by_month(:date_in, last: 12)
-  .distinct
-  .count(:customer_id)
-  .transform_keys { |date| date.strftime("%b %Y") }
-
-    case @period
-    when "daily"
-      @customer_trend = @activities.group_by_day(:date_in, last: 7).distinct.count(:customer_id)
-    when "weekly"
-      @customer_trend = @activities.group_by_week(:date_in, last: 8).distinct.count(:customer_id)
-    when "monthly"
-      @customer_trend = @activities.group_by_month(:date_in, last: 12).distinct.count(:customer_id)
-    when "yearly"
-      @customer_trend = @activities.group_by_year(:date_in, last: 5).distinct.count(:customer_id)
-    end
+   case @period
+      when "daily"
+        @customer_trend = Activity
+          .group_by_day(:date_in, last: 7)
+          .distinct
+          .count(:customer_id)
+          .transform_keys { |date| date.strftime("%d %b") }
+      when "weekly"
+        @customer_trend = Activity
+          .group_by_week(:date_in, last: 8)
+          .distinct
+          .count(:customer_id)
+          .transform_keys { |date| date.strftime("%d %b") }
+      when "monthly"
+        @customer_trend = Activity
+          .group_by_month(:date_in, last: 12)
+          .distinct
+          .count(:customer_id)
+          .transform_keys { |date| date.strftime("%b %Y") }
+      when "yearly"
+        @customer_trend = Activity
+          .group_by_year(:date_in, last: 5)
+          .distinct
+          .count(:customer_id)
+          .transform_keys { |date| date.strftime("%Y") }
+      end
 
     @debtors = Activity.owed.includes(:customer, :tv_brand, :tv_size)
                       .order(Arel.sql("starting_price - price DESC"))
