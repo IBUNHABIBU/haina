@@ -100,13 +100,19 @@ end.to_h
                            .first(5)
                            .to_h
 
-    @top_customers = @activities
+    @top_customers = Activity
       .joins(:customer)
       .group("customers.name")
       .count
       .sort_by { |_, v| -v }
       .first(5)
       .to_h
+
+    @customer_trend = Activity
+  .group_by_month(:date_in, last: 12)
+  .distinct
+  .count(:customer_id)
+  .transform_keys { |date| date.strftime("%b %Y") }
 
     case @period
     when "daily"
