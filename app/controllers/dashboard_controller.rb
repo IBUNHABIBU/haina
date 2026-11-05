@@ -30,6 +30,33 @@ class DashboardController < ApplicationController
     @return_count = RepairReturn.where(returned_at: @range).count
     @low_stock_count = Spare.low_stock.count
 
+          # ============================================================
+      # MONTHLY GRAPHS (mwaka mzima)
+      # ============================================================
+      current_year = params[:year].presence&.to_i || Date.current.year
+
+      # 1. Faida kwa kila mwezi (Gross Profit)
+      monthly_profit = Activity
+        .where(date_in: Date.new(current_year, 1, 1)..Date.new(current_year, 12, 31))
+        .group("EXTRACT(MONTH FROM date_in)")
+        .sum(:gross_profit)
+
+      @monthly_profit = (1..12).map do |month|
+        month_name = Date::MONTHNAMES[month]
+        [month_name, monthly_profit[month] || 0]
+      end.to_h
+
+      # 2. Idadi ya TV zilizokuja kwa kila mwezi (Repairs)
+      monthly_repairs = Activity
+        .where(date_in: Date.new(current_year, 1, 1)..Date.new(current_year, 12, 31))
+        .group("EXTRACT(MONTH FROM date_in)")
+        .count
+
+      @monthly_repairs = (1..12).map do |month|
+        month_name = Date::MONTHNAMES[month]
+        [month_name, monthly_repairs[month] || 0]
+      end.to_h
+
     @sales_by_day = Activity
       .where(date_in: @activities.select(:date_in))
       .where.not(price: [nil, 0])
