@@ -35,6 +35,17 @@ class DashboardController < ApplicationController
       # ============================================================
       current_year = params[:year].presence&.to_i || Date.current.year
 
+      # 3. Total Sales kwa kila mwezi
+monthly_sales = Activity
+  .where(date_in: Date.new(current_year, 1, 1)..Date.new(current_year, 12, 31))
+  .group("EXTRACT(MONTH FROM date_in)")
+  .sum(:price)
+  .transform_keys(&:to_i)
+
+@monthly_sales = (1..12).map do |month|
+  [Date::MONTHNAMES[month], monthly_sales[month] || 0]
+end.to_h
+
       # 1. Faida kwa kila mwezi (Gross Profit)
       monthly_profit = Activity
         .where(date_in: Date.new(current_year, 1, 1)..Date.new(current_year, 12, 31))
