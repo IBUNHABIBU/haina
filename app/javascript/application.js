@@ -14,15 +14,21 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-// Zuia Chartkick iharibu chati zote kiotomatiki wakati Turbo inapo-refresh
+
+// Zima auto-destroy
 Chartkick.config.autoDestroy = false;
 
-// Rudisha mikono ya kuchora upya baada ya Turbo ku-refresh
+// Chora upya kila Turbo inapomaliza
 document.addEventListener("turbo:load", () => {
   if (window.Chartkick) {
-    Chartkick.eachChart((chart) => {
-      chart.redraw();
-    });
+    Chartkick.eachChart((chart) => chart.redraw());
+  }
+});
+
+// Muhimu: Chora upya pia baada ya Turbo cache preview
+document.addEventListener("turbo:before-cache", () => {
+  if (window.Chartkick) {
+    Chartkick.eachChart((chart) => chart.destroy());
   }
 });
 
