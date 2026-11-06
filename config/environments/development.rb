@@ -104,4 +104,6 @@ config.action_mailer.smtp_settings = {
   # config.generators.apply_rubocop_autocorrect_after_generate!
   # config.hosts << "192.168.1.6" # Replace with your computer's IP
   # config.hosts.clear
+
+  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 end
