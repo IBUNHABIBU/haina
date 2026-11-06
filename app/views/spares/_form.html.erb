@@ -1,1 +1,169 @@
-<%= form_with model: spare, class: "space-y-5" do |form| %><% if spare.errors.any? %><div class="rounded-lg bg-red-50 p-4 text-red-700"><%= spare.errors.full_messages.to_sentence %></div><% end %><div><%= form.label :spare_category_id, "Category", class: "label" %><%= form.collection_select :spare_category_id, @categories, :id, :name, { prompt: "Select category" }, class: "field" %></div><div><%= form.label :name, class: "label" %><%= form.text_field :name, class: "field" %></div><div class="grid gap-5 md:grid-cols-2"><div><%= form.label :part_number, class: "label" %><%= form.text_field :part_number, class: "field" %></div><div><%= form.label :brand, class: "label" %><%= form.text_field :brand, class: "field" %></div><div><%= form.label :unit_cost, "Unit cost (TSh)", class: "label" %><%= form.number_field :unit_cost, step: 0.01, min: 0, class: "field" %></div><div><%= form.label :selling_price, "Selling price (TSh)", class: "label" %><%= form.number_field :selling_price, step: 0.01, min: 0, class: "field" %></div><div><%= form.label :quantity, "Opening stock", class: "label" %><%= form.number_field :quantity, min: 0, class: "field" %></div><div><%= form.label :reorder_level, class: "label" %><%= form.number_field :reorder_level, min: 0, class: "field" %></div><div><%= form.label :location, class: "label" %><%= form.text_field :location, class: "field" %></div></div><div><%= form.label :notes, class: "label" %><%= form.text_area :notes, rows: 3, class: "field" %></div><%= form.submit class: "rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white" %><% end %>
+<%= form_with(model: spare, class: "space-y-6", data: { turbo_frame: "_top" }) do |form| %>
+
+  <%# ============================================================
+      ERROR SUMMARY
+      ============================================================ %>
+  <% if spare.errors.any? %>
+    <div class="rounded-xl border border-rose-200 bg-rose-50 p-4">
+      <div class="flex items-start gap-3">
+        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+          </svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h2 class="text-sm font-semibold text-rose-800">
+            <%= pluralize(spare.errors.count, "error") %> prevented this spare from being saved.
+          </h2>
+          <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-rose-700">
+            <% spare.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# ============================================================
+      SECTION 1 — Basic Info
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Basic Information</h2>
+        <p class="text-xs text-slate-500">Identify the spare part.</p>
+      </div>
+    </header>
+
+    <div class="grid gap-5 p-6 md:grid-cols-2">
+      <div>
+        <%= form.label :spare_category_id, "Category", class: "label" %>
+        <%= form.collection_select :spare_category_id, @categories, :id, :name,
+              { prompt: "Select category" }, class: "field" %>
+      </div>
+
+      <div>
+        <%= form.label :name, "Spare name", class: "label" %>
+        <%= form.text_field :name, class: "field", placeholder: "e.g. T-Con Board" %>
+      </div>
+
+      <div>
+        <%= form.label :part_number, "Part number", class: "label" %>
+        <%= form.text_field :part_number, class: "field", placeholder: "e.g. TAPE9305S-08-1A" %>
+      </div>
+
+      <div>
+        <%= form.label :brand, "Brand (optional)", class: "label" %>
+        <%= form.text_field :brand, class: "field", placeholder: "e.g. Samsung" %>
+      </div>
+    </div>
+  </section>
+
+  <%# ============================================================
+      SECTION 2 — Pricing
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Pricing</h2>
+        <p class="text-xs text-slate-500">Cost and selling price.</p>
+      </div>
+    </header>
+
+    <div class="grid gap-5 p-6 md:grid-cols-2">
+      <div>
+        <%= form.label :unit_cost, "Unit cost (TSh)", class: "label" %>
+        <div class="relative">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm font-medium text-slate-400">TSh</span>
+          <%= form.number_field :unit_cost, step: 0.01, min: 0, class: "field pl-12", placeholder: "0" %>
+        </div>
+      </div>
+
+      <div>
+        <%= form.label :selling_price, "Selling price (TSh)", class: "label" %>
+        <div class="relative">
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm font-medium text-slate-400">TSh</span>
+          <%= form.number_field :selling_price, step: 0.01, min: 0, class: "field pl-12", placeholder: "0" %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# ============================================================
+      SECTION 3 — Stock
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Stock & Location</h2>
+        <p class="text-xs text-slate-500">Quantity, reorder level, and storage.</p>
+      </div>
+    </header>
+
+    <div class="grid gap-5 p-6 md:grid-cols-3">
+      <div>
+        <%= form.label :quantity, "Opening stock", class: "label" %>
+        <%= form.number_field :quantity, min: 0, class: "field", placeholder: "0" %>
+      </div>
+
+      <div>
+        <%= form.label :reorder_level, "Reorder level", class: "label" %>
+        <%= form.number_field :reorder_level, min: 0, class: "field", placeholder: "0" %>
+      </div>
+
+      <div>
+        <%= form.label :location, "Location (optional)", class: "label" %>
+        <%= form.text_field :location, class: "field", placeholder: "e.g. Shelf A-3" %>
+      </div>
+    </div>
+  </section>
+
+  <%# ============================================================
+      SECTION 4 — Notes
+      ============================================================ %>
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <header class="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">Notes</h2>
+        <p class="text-xs text-slate-500">Any extra information about this spare.</p>
+      </div>
+    </header>
+
+    <div class="p-6">
+      <%= form.text_area :notes, rows: 3, class: "field", placeholder: "Add any observations or notes..." %>
+    </div>
+  </section>
+
+  <%# ============================================================
+      ACTIONS
+      ============================================================ %>
+  <div class="flex flex-wrap items-center justify-end gap-3 border-t border-slate-200 pt-6">
+    <%= link_to "Cancel", spares_path,
+        class: "inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50" %>
+
+    <%= form.submit spare.persisted? ? "Update Spare" : "Create Spare",
+        class: "inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer" %>
+  </div>
+
+<% end %>

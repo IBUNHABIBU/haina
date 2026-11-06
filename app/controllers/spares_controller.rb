@@ -3,36 +3,22 @@ class SparesController < ApplicationController
   before_action :set_spare, only: %i[show edit update destroy]
 
   def index
-  scope = Spare.includes(:spare_category).search(params[:q]).order(:name)
-  @pagy, @spares = pagy(scope, items: 50)
+    scope = Spare.includes(:spare_category).search(params[:q]).order(:name)
+    @pagy, @spares = pagy(scope, items: 50)
 
-    # Kwenye controller
-  stats = Spare.pick(
-    Arel.sql("COUNT(*) FILTER (WHERE quantity <= reorder_level)"),
-    Arel.sql("COALESCE(SUM(quantity * unit_cost), 0)"),
-    Arel.sql("COUNT(DISTINCT spare_category_id)")
-  )
+    stats = Spare.pick(
+      Arel.sql("COUNT(*) FILTER (WHERE quantity <= reorder_level)"),
+      Arel.sql("COALESCE(SUM(quantity * unit_cost), 0)"),
+      Arel.sql("COUNT(DISTINCT spare_category_id)")
+    )
 
-  @low_stock_count   = stats[0]
-  @total_stock_value = stats[1]
-  @category_count    = stats[2]
-  @total_count = Spare.count
-  
-  respond_to do |format|
-    format.html
-    format.turbo_stream do
-      render turbo_stream: turbo_stream.replace(
-        "spares",
-        partial: "spares/list",
-        locals: {
-          spares: @spares,
-          query:  params[:q],
-          pagy:   @pagy
-        }
-      )
-    end
+    @low_stock_count   = stats[0]
+    @total_stock_value = stats[1]
+    @category_count    = stats[2]
+    @total_count       = Spare.count
+
+    # HAKUNA respond_to — Rails itarudisha HTML kila wakati
   end
-end
 
   def show
   end
@@ -49,7 +35,7 @@ end
   def create
     @spare = Spare.new(spare_params)
     if @spare.save
-      redirect_to spares_path, notice: "Spare was successfully created."
+      redirect_to spares_path, notice: "Spare was successfully created.", status: :see_other
     else
       @categories = SpareCategory.order(:name)
       render :new, status: :unprocessable_entity
@@ -58,7 +44,7 @@ end
 
   def update
     if @spare.update(spare_params)
-      redirect_to @spare, notice: "Spare was successfully updated.", status: :see_other
+      redirect_to spares_path, notice: "Spare was successfully updated.", status: :see_other
     else
       @categories = SpareCategory.order(:name)
       render :edit, status: :unprocessable_entity
