@@ -43,7 +43,13 @@
       <div>
         <%= form.label :customer_id, "Customer", class: "label" %>
         <%= form.collection_select :customer_id, @customers, :id, :name,
-              { prompt: "Select customer" }, class: "field" %>
+              { prompt: "Select customer" } ,{
+          class: "field",
+          data: {
+            controller: "tom-select",
+            placeholder: "Search customer by name..."
+          }
+        } %>
       </div>
 
       <div>
@@ -207,7 +213,7 @@
   <%# ============================================================
       SECTION 3 — Spares Used
       ============================================================ %>
-  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+  <section class="overflow-visible rounded-xl border border-slate-200 bg-white shadow-sm">
     <header class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-6 py-4">
       <div class="flex items-center gap-3">
         <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
@@ -236,15 +242,19 @@
         <% activity.activity_spares.each do |item| %>
           <div data-spare-row class="grid gap-3 rounded-lg border border-slate-200 bg-slate-50/50 p-3 md:grid-cols-[1fr_140px_auto]">
             <div>
-              <%= select_tag "spare_ids[]",
-                    options_from_collection_for_select(
-                      @spares,
-                      :id,
-                      ->(s) { "#{s.name} (#{s.part_number}) —Tsh #{s.unit_cost}- stock #{s.quantity}" },
-                      item.spare_id
-                    ),
-                    include_blank: "Select spare",
-                    class: "field" %>
+      <%= select_tag "spare_ids[]",
+      options_from_collection_for_select(
+        @spares,
+        :id,
+        ->(s) { "#{s.name} (#{s.part_number}) — TSh #{s.unit_cost} — stock #{s.quantity}" },
+        item.spare_id
+      ),
+      include_blank: "Search spare...",
+      class: "field",
+      data: {
+        sparte_select: true,
+        placeholder: "Search spare..."
+      } %>
             </div>
 
             <div>
@@ -280,7 +290,9 @@
                 ->(s) { "#{s.name} (#{s.part_number}) — TSh #{s.unit_cost}- stock #{s.quantity}" }
               ),
               include_blank: "Select spare",
-              class: "field" %>
+              class: "field",
+              data: { spare_select: true, placeholder: "Search spare..." }
+               %>
 
         <%= number_field_tag "spare_quantities[]", 1,
               autocomplete: "off", min: 1, class: "field" %>
