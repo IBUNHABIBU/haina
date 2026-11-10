@@ -21,6 +21,8 @@
             <%= @activity.status&.humanize || "Not set" %>
           </span>
         </div>
+
+
         <p class="mt-1 text-sm text-slate-500">
           <%= @activity.customer&.name || "No customer" %>
           <% if (tv = [@activity.tv_brand&.name, @activity.tv_size&.size].compact.join(" ")).present? %>
@@ -192,6 +194,12 @@
             </span>
           </dd>
         </div>
+        <% if @activity.irreparable? %>
+  <div class="flex items-center justify-between px-6 py-3.5 text-sm bg-rose-50/50">
+    <dt class="text-rose-700 font-medium">Sababu ya kutoweza kurekebishwa</dt>
+    <dd class="font-medium text-rose-900"><%= @activity.irreparable_reason || "—" %></dd>
+  </div>
+<% end %>
         <div class="flex items-center justify-between px-6 py-3.5 text-sm">
           <dt class="text-slate-500">Returns</dt>
           <dd>
