@@ -99,7 +99,7 @@ class ActivitiesController < ApplicationController
       :pattern_image, :model_image, :board_number, :tcon_number, :cof_number,
       :panel_number, :image_before, :image_after, :model_image, :board_image,
       :tcon_image, :cof_image, :panel_image, :starting_price, :number_of_cof, 
-      :number_of_side_cof, :side_cof_number, :kabla, :baada
+      :number_of_side_cof, :side_cof_number, :kabla, :baada, :irreparable_reason 
     )
   end
 
