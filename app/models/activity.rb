@@ -1,3 +1,4 @@
+# app/models/activity.rb
 class Activity < ApplicationRecord
   belongs_to :user
   belongs_to :customer, optional: true
@@ -18,8 +19,6 @@ class Activity < ApplicationRecord
   has_one_attached :panel_image
   has_one_attached :image_before
   has_one_attached :image_after
-
-  
   has_one_attached :kabla
   has_one_attached :baada
 
@@ -47,54 +46,50 @@ class Activity < ApplicationRecord
   validates :price, :labour_charge, numericality: { greater_than_or_equal_to: 0 }
 
   scope :sales, -> { where(status: %i[completed delivered returned]) }
-
-    # app/models/activity.rb
   scope :with_balance, -> { where("starting_price > price AND price >= 0") }
- # app/models/activity.rb
-   scope :owed, -> { where("starting_price > price AND price >= 0 AND status NOT IN (?)", [statuses[:cancelled], statuses[:irreparable]]) }
-  # ============================================================
-  # SEARCH — inatafuta kwenye customer, TV, problem, status,
-  # na technical numbers (model, board, tcon, cof, panel)
-  # ============================================================
-    scope :search, ->(q) {
-      next all if q.blank?
+  scope :owed, -> {
+    where("starting_price > price AND price >= 0 AND status NOT IN (?)",
+          [statuses[:cancelled], statuses[:irreparable]])
+  }
 
-      q_str = q.to_s.strip
-      pattern = "%#{sanitize_sql_like(q_str)}%"
+  scope :search, ->(q) {
+    next all if q.blank?
 
-      # Match enum statuses kwa jina
-      status_values = statuses.keys
-        .select { |s| s.include?(q_str.downcase) }
-        .map    { |s| statuses[s] }
+    q_str = q.to_s.strip
+    pattern = "%#{sanitize_sql_like(q_str)}%"
 
-      conditions = [
-        "customers.name ILIKE :q",
-        "customers.phone ILIKE :q",
-        "tv_brands.name ILIKE :q",
-        "CAST(tv_sizes.size AS TEXT) LIKE :q",   # ← cast hapa
-        "tatizos.name ILIKE :q",
-        "activities.model_no ILIKE :q",
-        "activities.board_number ILIKE :q",
-        "activities.tcon_number ILIKE :q",
-        "activities.cof_number ILIKE :q",
-        "activities.panel_number ILIKE :q"
-      ]
+    status_values = statuses.keys
+      .select { |s| s.include?(q_str.downcase) }
+      .map    { |s| statuses[s] }
 
-      bindings = { q: pattern }
+    conditions = [
+      "customers.name ILIKE :q",
+      "customers.phone ILIKE :q",
+      "tv_brands.name ILIKE :q",
+      "CAST(tv_sizes.size AS TEXT) LIKE :q",
+      "tatizos.name ILIKE :q",
+      "activities.model_no ILIKE :q",
+      "activities.board_number ILIKE :q",
+      "activities.tcon_number ILIKE :q",
+      "activities.cof_number ILIKE :q",
+      "activities.panel_number ILIKE :q"
+    ]
 
-      if status_values.any?
-        conditions << "activities.status IN (:status_values)"
-        bindings[:status_values] = status_values
-      end
+    bindings = { q: pattern }
 
-      left_joins(:customer, :tv_brand, :tv_size, :tatizo)
-        .where(conditions.join(" OR "), bindings)
-        .distinct
-    }
+    if status_values.any?
+      conditions << "activities.status IN (:status_values)"
+      bindings[:status_values] = status_values
+    end
+
+    left_joins(:customer, :tv_brand, :tv_size, :tatizo)
+      .where(conditions.join(" OR "), bindings)
+      .distinct
+  }
 
   def spare_cost
     if activity_spares.loaded?
-    activity_spares.sum { |item| item.total_cost.to_d }
+      activity_spares.sum { |item| item.total_cost.to_d }
     else
       activity_spares.sum(:total_cost).to_d
     end
@@ -126,24 +121,54 @@ class Activity < ApplicationRecord
     "TN##{tcon_number}-P##{panel_number}-C##{cof_number}"
   end
 
-  validate :must_have_at_least_one_cof_image
-before_save :set_completed_at, if: :status_changed?
+  # ============================================================
+  # MTTR (Mean Time To Repair)
+  # ============================================================
 
-
- # MTTR kwa siku (inarudisha Float au nil)
-  def mttr_days
-    return nil unless completed_or_delivered?
-    return nil unless date_in.present? && completed_at.present?
-
-    (completed_at - date_in) / 1.day
-   end
-
-  # MTTR kwa masaa
-  def mttr_hours
+  # MTTR kwa sekunde (Float)
+  def mttr_seconds
     return nil unless completed_or_delivered?
     return nil unless date_in.present?
+    return nil unless completed_at.present?
 
-    (updated_at - date_in) / 1.hour
+    (completed_at - date_in)
+  end
+
+  # MTTR kwa masaa (Float) — kwa graph
+  def mttr_hours
+    return nil unless mttr_seconds
+    mttr_seconds / 1.hour
+  end
+
+  # MTTR kwa siku (Float) — kwa reference
+  def mttr_days
+    return nil unless mttr_seconds
+    mttr_seconds / 1.day
+  end
+
+  # MTTR formatted (English, kwa view):
+  # - "45 mins"
+  # - "2 hrs 30 mins"
+  # - "10 days 10 hrs 5 mins"
+  def mttr_display
+    seconds = mttr_seconds
+    return "—" if seconds.nil? || seconds <= 0
+
+    total_minutes = (seconds / 60).round
+    total_hours = total_minutes / 60
+    total_days  = total_hours / 24
+
+    days    = total_days
+    hours   = total_hours % 24
+    mins    = total_minutes % 60
+
+    parts = []
+    parts << "#{days} #{days == 1 ? 'day' : 'days'}" if days.positive?
+    parts << "#{hours} #{hours == 1 ? 'hr' : 'hrs'}" if hours.positive?
+    parts << "#{mins} #{mins == 1 ? 'min' : 'mins'}" if mins.positive?
+
+    return "< 1 min" if parts.empty?
+    parts.join(" ")
   end
 
   # Helper ya kuangalia kama activity imekamilika
@@ -151,44 +176,33 @@ before_save :set_completed_at, if: :status_changed?
     completed? || delivered?
   end
 
-  # MTTR formatted (mfano "2.5 siku" au "3 siku")
-  def mttr_display
-    days = mttr_days
-    return "—" if days.nil?
+  # ============================================================
+  # IRREPARABLE REASONS
+  # ============================================================
+  IRREPARABLE_REASONS = [
+    "Repair error",
+    "Requires laser",
+    "Part unavailable",
+    "Glass cracked",
+    "Panel damaged",
+    "Other"
+  ].freeze
 
-    if days < 1
-      "#{(days * 24).round(1)} masaa"
+  validates :irreparable_reason, presence: true, if: :irreparable?
+
+  private
+
+  def set_completed_at
+    if completed? || delivered?
+      self.completed_at ||= Time.current
     else
-      "#{days.round(1)} siku"
+      self.completed_at = nil
     end
   end
 
-  IRREPARABLE_REASONS = [
-  "Repair error ",
-  "Requires laser",
-  "part unavailable",
-  "glass cracked",
-  "panel damaged",
-  "Other"
-].freeze
-  validates :irreparable_reason, presence: true, if: :irreparable?
-
-private
-
-def set_completed_at
-  if completed? || delivered?
-    self.completed_at ||= Time.current
-  else
-    self.completed_at = nil
+  def must_have_at_least_one_cof_image
+    unless pattern_image.attached? || cof_image.attached?
+      errors.add(:base, "Tafadhali upload angalau picha moja ya Side COF au Main COF")
+    end
   end
-end
-
-
-
-def must_have_at_least_one_cof_image
-  unless pattern_image.attached? || cof_image.attached?
-    errors.add(:base, "Tafadhali upload angalau picha moja ya Side COF au Main COF")
-  end
-end
-
 end

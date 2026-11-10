@@ -26,22 +26,22 @@ def index
   @return_count = RepairReturn.where(returned_at: @range).count
   @low_stock_count = Rails.cache.fetch("low_stock_count", expires_in: 5.minutes) { Spare.low_stock.count }
 
-   # 3. MTTR (baada ya @activities kuassigned)
+  # MTTR wastani (masaa)
   completed = @activities.where(status: %w[completed delivered]).where.not(date_in: nil)
-  @mttr_avg = if completed.any?
+  @mttr_avg_hours = if completed.any?
     completed.average(
-      Arel.sql("EXTRACT(EPOCH FROM (updated_at - date_in)) / 86400.0")
+      Arel.sql("EXTRACT(EPOCH FROM (updated_at - date_in)) / 3600.0")
     ).to_f.round(1)
   else
     0
   end
 
-  # 4. MTTR trend
+  # MTTR trend kwa mwezi (masaa)
   mttr_by_month = completed
     .group(Arel.sql("EXTRACT(MONTH FROM date_in)::integer"))
     .pluck(
       Arel.sql("EXTRACT(MONTH FROM date_in)::integer"),
-      Arel.sql("AVG(EXTRACT(EPOCH FROM (updated_at - date_in)) / 86400.0)")
+      Arel.sql("AVG(EXTRACT(EPOCH FROM (updated_at - date_in)) / 3600.0)")
     )
     .to_h
 
