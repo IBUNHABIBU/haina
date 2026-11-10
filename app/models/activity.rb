@@ -129,15 +129,6 @@ class Activity < ApplicationRecord
   validate :must_have_at_least_one_cof_image
 before_save :set_completed_at, if: :status_changed?
 
-private
-
-def set_completed_at
-  if completed? || delivered?
-    self.completed_at ||= Time.current
-  else
-    self.completed_at = nil
-  end
-end
 
  # MTTR kwa siku (inarudisha Float au nil)
   def mttr_days
@@ -171,6 +162,17 @@ end
       "#{days.round(1)} siku"
     end
   end
+
+private
+
+def set_completed_at
+  if completed? || delivered?
+    self.completed_at ||= Time.current
+  else
+    self.completed_at = nil
+  end
+end
+
 
 
 def must_have_at_least_one_cof_image
