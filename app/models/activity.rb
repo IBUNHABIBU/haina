@@ -127,8 +127,51 @@ class Activity < ApplicationRecord
   end
 
   validate :must_have_at_least_one_cof_image
+before_save :set_completed_at, if: :status_changed?
 
 private
+
+def set_completed_at
+  if completed? || delivered?
+    self.completed_at ||= Time.current
+  else
+    self.completed_at = nil
+  end
+end
+
+ # MTTR kwa siku (inarudisha Float au nil)
+  def mttr_days
+    return nil unless completed_or_delivered?
+    return nil unless date_in.present?
+
+    (updated_at - date_in) / 1.day
+  end
+
+  # MTTR kwa masaa
+  def mttr_hours
+    return nil unless completed_or_delivered?
+    return nil unless date_in.present?
+
+    (updated_at - date_in) / 1.hour
+  end
+
+  # Helper ya kuangalia kama activity imekamilika
+  def completed_or_delivered?
+    completed? || delivered?
+  end
+
+  # MTTR formatted (mfano "2.5 siku" au "3 siku")
+  def mttr_display
+    days = mttr_days
+    return "—" if days.nil?
+
+    if days < 1
+      "#{(days * 24).round(1)} masaa"
+    else
+      "#{days.round(1)} siku"
+    end
+  end
+
 
 def must_have_at_least_one_cof_image
   unless pattern_image.attached? || cof_image.attached?

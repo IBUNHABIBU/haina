@@ -159,7 +159,21 @@
               </dd>
             </div>
 
-
+<div>
+  <dt class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">MTTR</dt>
+  <dd class="mt-0.5">
+    <% if activity.mttr_days %>
+      <span class="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-200">
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        <%= activity.mttr_display %>
+      </span>
+    <% else %>
+      <span class="text-xs text-slate-400">In progress</span>
+    <% end %>
+  </dd>
+</div>
 
 
 
