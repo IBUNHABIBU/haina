@@ -2,19 +2,32 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = { status: String }
-  static targets = ["field"]
+  static targets = ["container", "template"]
 
   connect() {
     this.toggle()
+    // Sikiliza mabadiliko ya status
+    this.statusSelect = this.element.closest("form")?.querySelector("#activity_status")
+    if (this.statusSelect) {
+      this.statusSelect.addEventListener("change", () => this.toggle())
+    }
   }
 
   toggle() {
-    const statusSelect = this.element.querySelector("#activity_status")
-    if (!statusSelect) return
+    if (!this.statusSelect) return
 
-    const currentStatus = statusSelect.value
+    const currentStatus = this.statusSelect.value
     const isMatch = currentStatus === this.statusValue
 
-    this.fieldTarget.style.display = isMatch ? "block" : "none"
+    // Kama ni irreparable, onyesha (kama bado haijaonyeshwa)
+    if (isMatch) {
+      if (this.containerTarget.innerHTML.trim() === "") {
+        this.containerTarget.innerHTML = this.templateTarget.innerHTML
+      }
+      this.containerTarget.style.display = "block"
+    } else {
+      // Kama si irreparable, ficha (bila kufuta data)
+      this.containerTarget.style.display = "none"
+    }
   }
 }

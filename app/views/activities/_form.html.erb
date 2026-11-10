@@ -139,23 +139,33 @@
         <%= form.label :status, "Status", class: "label" %>
         <%= form.select :status,
               Activity.statuses.keys.map { |s| [s.humanize, s] },
-              {}, class: "field" %>
+              {}, class: "field",
+               id: "activity_status" %>
       </div>
     </div>
  
- <div data-controller="status-toggle" 
+    <div data-controller="status-toggle"
      data-status-toggle-status-value="irreparable"
-     data-status-toggle-target="field"
      class="col-span-full">
-  <%= form.label :irreparable_reason, "Sababu ya kutoweza kurekebishwa", class: "label" %>
-  <%= form.select :irreparable_reason,
-        Activity::IRREPARABLE_REASONS.map { |r| [r, r] },
-        { prompt: "Chagua sababu..." },
-        class: "field" %>
-  <p class="mt-1 text-xs text-slate-400">
-    Inahitajika pale status ni "Irreparable".
-  </p>
-</div>
+  
+  <!-- Container ambayo itapokea field -->
+  <div data-status-toggle-target="container"></div>
+
+  <!-- Template (ndani ya controller) -->
+  <template data-status-toggle-target="template">
+    <div class="rounded-lg border border-rose-200 bg-rose-50/50 p-4">
+      <%= form.label :irreparable_reason, "Sababu ya kutoweza kurekebishwa", class: "label text-rose-700" %>
+      <%= form.select :irreparable_reason,
+            Activity::IRREPARABLE_REASONS.map { |r| [r, r] },
+            { prompt: "Chagua sababu..." },
+            class: "field border-rose-200 focus:border-rose-500 focus:ring-rose-500/20" %>
+      <p class="mt-1 text-xs text-rose-500">
+        Inahitajika pale status ni "Irreparable".
+      </p>
+    </div>
+  </template>
+  
+  </div>
 
   </section>
 
