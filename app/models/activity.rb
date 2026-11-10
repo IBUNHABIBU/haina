@@ -163,6 +163,16 @@ before_save :set_completed_at, if: :status_changed?
     end
   end
 
+  IRREPARABLE_REASONS = [
+  "Repair error ",
+  "Requires laser",
+  "part unavailable",
+  "glass cracked",
+  "panel damaged",
+  "Other"
+].freeze
+  validates :irreparable_reason, presence: true, if: :irreparable?
+
 private
 
 def set_completed_at
