@@ -142,10 +142,10 @@ end
  # MTTR kwa siku (inarudisha Float au nil)
   def mttr_days
     return nil unless completed_or_delivered?
-    return nil unless date_in.present?
+    return nil unless date_in.present? && completed_at.present?
 
-    (updated_at - date_in) / 1.day
-  end
+    (completed_at - date_in) / 1.day
+   end
 
   # MTTR kwa masaa
   def mttr_hours
