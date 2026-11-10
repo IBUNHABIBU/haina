@@ -26,6 +26,68 @@ def index
   @return_count = RepairReturn.where(returned_at: @range).count
   @low_stock_count = Rails.cache.fetch("low_stock_count", expires_in: 5.minutes) { Spare.low_stock.count }
 
+   # 3. MTTR (baada ya @activities kuassigned)
+  completed = @activities.where(status: %w[completed delivered]).where.not(date_in: nil)
+  @mttr_avg = if completed.any?
+    completed.average(
+      Arel.sql("EXTRACT(EPOCH FROM (updated_at - date_in)) / 86400.0")
+    ).to_f.round(1)
+  else
+    0
+  end
+
+  # 4. MTTR trend
+  mttr_by_month = completed
+    .group(Arel.sql("EXTRACT(MONTH FROM date_in)::integer"))
+    .pluck(
+      Arel.sql("EXTRACT(MONTH FROM date_in)::integer"),
+      Arel.sql("AVG(EXTRACT(EPOCH FROM (updated_at - date_in)) / 86400.0)")
+    )
+    .to_h
+
+  @mttr_trend = (1..12).map do |month|
+    [Date::MONTHNAMES[month], (mttr_by_month[month] || 0).round(1)]
+  end.to_h
+
+  # ============================================================
+# IRREPARABLE REASONS
+# ============================================================
+irreparable = @activities
+  .where(status: :irreparable)
+  .where.not(irreparable_reason: [nil, ""])
+
+# 1. Irreparable by month & reason (stacked bar chart)
+irreparable_by_month = irreparable
+  .group(
+    Arel.sql("EXTRACT(MONTH FROM date_in)::integer"),
+    :irreparable_reason
+  )
+  .count
+
+# Jenga hash: { reason => { month => count } }
+@irreparable_by_month = irreparable_by_month.each_with_object({}) do |((month, reason), count), hash|
+  hash[reason] ||= {}
+  hash[reason][month] = count
+end
+
+# Jenga data kwa Chartkick (kila reason ni series tofauti)
+@irreparable_by_month_chart = @irreparable_by_month.map do |reason, months|
+  {
+    name: reason,
+    data: (1..12).map { |m| [Date::MONTHNAMES[m], months[m] || 0] }.to_h
+  }
+end
+
+# 2. Irreparable by reason (mwaka mzima)
+@irreparable_by_reason = irreparable
+  .group(:irreparable_reason)
+  .count
+  .sort_by { |_, v| -v }
+  .to_h
+
+# 3. Top reason
+@top_irreparable_reason = @irreparable_by_reason.first
+
   # Monthly graphs — query MOJA
   current_year = params[:year].presence&.to_i || Date.current.year
   year_range = Date.new(current_year, 1, 1)..Date.new(current_year, 12, 31)
