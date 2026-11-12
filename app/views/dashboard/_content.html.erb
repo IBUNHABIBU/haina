@@ -323,6 +323,50 @@
 
 </div>
 
+<!-- Top 10 Duration (This Month) -->
+<section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+  <h2 class="text-sm font-semibold text-slate-900 mb-1">Top 10 Duration (This Month)</h2>
+  <p class="text-xs text-slate-500 mb-6">TV 10 zenye muda mrefu zaidi wa kukaa workshop mwezi huu (masaa).</p>
+  
+  <% if @top_month_durations.any? %>
+    <%= bar_chart @top_month_durations,
+        colors: ["#f59e0b"],
+        library: {
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, ticks: { precision: 1 } }
+          },
+          indexAxis: "y"  # ← Horizontal bar chart
+        } %>
+  <% else %>
+    <div class="flex flex-col items-center justify-center py-12 text-center">
+      <p class="text-sm text-slate-500">Hakuna TV mwezi huu.</p>
+    </div>
+  <% end %>
+</section>
+
+<!-- Top 10 Duration (This Year) -->
+<section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+  <h2 class="text-sm font-semibold text-slate-900 mb-1">Top 10 Duration (This Year)</h2>
+  <p class="text-xs text-slate-500 mb-6">TV 10 zenye muda mrefu zaidi wa kukaa workshop mwaka huu (masaa).</p>
+  
+  <% if @top_year_durations.any? %>
+    <%= bar_chart @top_year_durations,
+        colors: ["#ef4444"],
+        library: {
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, ticks: { precision: 1 } }
+          },
+          indexAxis: "y"  # ← Horizontal bar chart
+        } %>
+  <% else %>
+    <div class="flex flex-col items-center justify-center py-12 text-center">
+      <p class="text-sm text-slate-500">Hakuna TV mwaka huu.</p>
+    </div>
+  <% end %>
+</section>
+
 <%# ============ 4. Sales by day ============ %>
 <section class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
   <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">

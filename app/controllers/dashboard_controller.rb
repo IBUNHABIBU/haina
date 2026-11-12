@@ -5,6 +5,49 @@ def index
   @period = params[:period].presence_in(%w[daily weekly monthly yearly]) || "monthly"
   @range = period_range(@period)
 
+  # ============================================================
+# DURATION — TV zenye duration kubwa zaidi
+# ============================================================
+current_year = params[:year].presence&.to_i || Date.current.year
+
+# 1. Top 10 Duration (This Month)
+# TV zilizoingia mwezi huu, zenye duration kubwa zaidi
+month_start = Date.current.beginning_of_month
+month_end   = Date.current.end_of_month
+
+top_month_durations = Activity
+  .where(date_in: month_start..month_end)
+  .where.not(date_in: nil)
+  .order(Arel.sql("(COALESCE(completed_at, NOW()) - date_in) DESC"))
+  .limit(10)
+  .map do |activity|
+    {
+      name: "#{activity.customer&.name || 'Unknown'} - #{activity.tv_brand&.name || 'TV'} #{activity.tv_size&.size}",
+      duration: activity.mttr_seconds ? (activity.mttr_seconds / 3600.0).round(1) : ((Time.current - activity.date_in) / 3600.0).round(1)
+    }
+  end
+
+@top_month_durations = top_month_durations.to_h { |item| [item[:name], item[:duration]] }
+
+# 2. Top 10 Duration (This Year)
+# TV zilizoingia mwaka huu, zenye duration kubwa zaidi
+year_start = Date.new(current_year, 1, 1)
+year_end   = Date.new(current_year, 12, 31)
+
+top_year_durations = Activity
+  .where(date_in: year_start..year_end)
+  .where.not(date_in: nil)
+  .order(Arel.sql("(COALESCE(completed_at, NOW()) - date_in) DESC"))
+  .limit(10)
+  .map do |activity|
+    {
+      name: "#{activity.customer&.name || 'Unknown'} - #{activity.tv_brand&.name || 'TV'} #{activity.tv_size&.size}",
+      duration: activity.mttr_seconds ? (activity.mttr_seconds / 3600.0).round(1) : ((Time.current - activity.date_in) / 3600.0).round(1)
+    }
+  end
+
+@top_year_durations = top_year_durations.to_h { |item| [item[:name], item[:duration]] }
+
   if params[:month].present? && params[:month].to_i.positive?
     month = params[:month].to_i
     year  = params[:year].presence&.to_i || Date.current.year

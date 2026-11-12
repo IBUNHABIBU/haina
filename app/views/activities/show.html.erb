@@ -349,6 +349,28 @@
 <!-- MTTR -->
 <li class="relative">
 
+<!-- Duration (muda wa TV kukaa workshop) -->
+<li class="relative">
+  <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white 
+    <%= @activity.completed_or_delivered? ? 'bg-blue-500 ring-1 ring-blue-200' : 'bg-amber-500 ring-1 ring-amber-200' %>">
+    <svg class="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>
+  </span>
+  <div>
+    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+      <%= @activity.completed_or_delivered? ? "MTTR (Time to Repair)" : "Duration (In Workshop)" %>
+    </p>
+    <p class="mt-1 text-sm font-medium text-slate-900">
+      <% if @activity.completed_or_delivered? %>
+        <%= @activity.mttr_display %>
+      <% else %>
+        <%= @activity.duration_display %>
+      <% end %>
+    </p>
+  </div>
+</li>
+
   <% if @activity.mttr_seconds %>
   mttr
     <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-blue-500 ring-1 ring-blue-200">

@@ -171,6 +171,46 @@ class Activity < ApplicationRecord
     parts.join(" ")
   end
 
+   # DURATION — muda wa TV kukaa workshop (kutoka date_in hadi sasa)
+  # Inatumika kwa TV ZOTE (hata zisizokamilika)
+  # ============================================================
+  def duration_seconds
+    return nil unless date_in.present?
+    Time.current - date_in
+  end
+
+  def duration_hours
+    return nil unless duration_seconds
+    duration_seconds / 1.hour
+  end
+
+  def duration_days
+    return nil unless duration_seconds
+    duration_seconds / 1.day
+  end
+
+  # Formatted: "3 days 4 hrs 30 mins"
+  def duration_display
+    seconds = duration_seconds
+    return "—" if seconds.nil? || seconds <= 0
+
+    total_minutes = (seconds / 60).round
+    total_hours   = total_minutes / 60
+    total_days    = total_hours / 24
+
+    days  = total_days
+    hours = total_hours % 24
+    mins  = total_minutes % 60
+
+    parts = []
+    parts << "#{days} #{days == 1 ? 'day' : 'days'}" if days.positive?
+    parts << "#{hours} #{hours == 1 ? 'hr' : 'hrs'}" if hours.positive?
+    parts << "#{mins} #{mins == 1 ? 'min' : 'mins'}" if mins.positive?
+
+    return "< 1 min" if parts.empty?
+    parts.join(" ")
+  end
+
   # Helper ya kuangalia kama activity imekamilika
   def completed_or_delivered?
     completed? || delivered?
