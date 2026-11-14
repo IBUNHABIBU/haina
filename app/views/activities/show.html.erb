@@ -346,51 +346,72 @@
             </p>
           </div>
         </li>
-<!-- MTTR -->
-<li class="relative">
 
-<!-- Duration (muda wa TV kukaa workshop) -->
+<!-- ============================================================
+     DURATION (inaendelea kuhesabiwa hadi delivered/irreparable)
+     ============================================================ -->
 <li class="relative">
   <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white 
-    <%= @activity.completed_or_delivered? ? 'bg-blue-500 ring-1 ring-blue-200' : 'bg-amber-500 ring-1 ring-amber-200' %>">
+    <%= @activity.delivered? ? 'bg-blue-500 ring-1 ring-blue-200' : @activity.irreparable? ? 'bg-rose-500 ring-1 ring-rose-200' : 'bg-amber-500 ring-1 ring-amber-200' %>">
     <svg class="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
     </svg>
   </span>
   <div>
     <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
-      <%= @activity.completed_or_delivered? ? "MTTR (Time to Repair)" : "Duration (In Workshop)" %>
-    </p>
-    <p class="mt-1 text-sm font-medium text-slate-900">
-      <% if @activity.completed_or_delivered? %>
-        <%= @activity.mttr_display %>
+      <% if @activity.delivered? %>
+        Duration (Delivered)
+      <% elsif @activity.irreparable? %>
+        Duration (Irreparable)
       <% else %>
-        <%= @activity.duration_display %>
+        Duration (In Workshop)
       <% end %>
     </p>
+    <p class="mt-1 text-sm font-medium text-slate-900">
+      <%= @activity.duration_display %>
+    </p>
+    <% unless @activity.delivered? || @activity.irreparable? %>
+      <p class="mt-0.5 text-xs text-slate-400">Bado iko workshop</p>
+    <% end %>
   </div>
 </li>
 
-  <% if @activity.mttr_seconds %>
-  mttr
-    <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-blue-500 ring-1 ring-blue-200">
-      <svg class="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+<!-- ============================================================
+     MTTR (inahesabiwa tu kwa completed/delivered)
+     ============================================================ -->
+<li class="relative">
+  <% if @activity.irreparable? %>
+    <!-- Irreparable: MTTR = N/A -->
+    <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-slate-300 ring-1 ring-slate-200">
+      <svg class="h-2.5 w-2.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
       </svg>
     </span>
-  <% else %>
-    <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-slate-300 ring-1 ring-slate-200"></span>
-  <% end %>
-  <div>
-    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">MTTR (Mean Time To Repair)</p>
-    <p class="mt-1 text-sm font-medium text-slate-900">
-      <% if @activity.mttr_seconds %>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">MTTR (Time to Repair)</p>
+      <p class="mt-1 text-sm font-medium text-slate-400">N/A (Irreparable)</p>
+    </div>
+  <% elsif @activity.mttr_seconds %>
+    <!-- Delivered au Completed: MTTR = muda halisi -->
+    <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-emerald-500 ring-1 ring-emerald-200">
+      <svg class="h-2.5 w-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+      </svg>
+    </span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">MTTR (Time to Repair)</p>
+      <p class="mt-1 text-sm font-medium text-slate-900">
         <%= @activity.mttr_display %>
-      <% else %>
-        <span class="text-slate-400">In progress</span>
-      <% end %>
-    </p>
-  </div>
+      </p>
+    </div>
+  <% else %>
+    <!-- Bado haijakamilika: MTTR = — (au "In progress") -->
+    <span class="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-slate-300 ring-1 ring-slate-200"></span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">MTTR (Time to Repair)</p>
+      <p class="mt-1 text-sm font-medium text-slate-400">In progress</p>
+    </div>
+  <% end %>
 </li>
 
       </ol>

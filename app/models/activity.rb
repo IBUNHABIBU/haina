@@ -42,8 +42,10 @@ class Activity < ApplicationRecord
   }
 
   before_validation :calculate_gross_profit
+  before_save :set_timestamps, if: :status_changed?
 
   validates :price, :labour_charge, numericality: { greater_than_or_equal_to: 0 }
+  validates :irreparable_reason, presence: true, if: :irreparable?
 
   scope :sales, -> { where(status: %i[completed delivered returned]) }
   scope :with_balance, -> { where("starting_price > price AND price >= 0") }
@@ -87,6 +89,18 @@ class Activity < ApplicationRecord
       .distinct
   }
 
+  IRREPARABLE_REASONS = [
+    "Repair error",
+    "Requires laser",
+    "Part unavailable",
+    "Glass cracked",
+    "Panel damaged",
+    "Other"
+  ].freeze
+
+  # ============================================================
+  # SPARE COST & GROSS PROFIT
+  # ============================================================
   def spare_cost
     if activity_spares.loaded?
       activity_spares.sum { |item| item.total_cost.to_d }
@@ -110,6 +124,9 @@ class Activity < ApplicationRecord
     self.gross_profit = gross_profit_value
   end
 
+  # ============================================================
+  # JOB NUMBER & INFO
+  # ============================================================
   def job_number
     brand = tv_brand&.name.presence || "TV"
     size = tv_size&.size&.to_i
@@ -121,70 +138,64 @@ class Activity < ApplicationRecord
     helpers = ApplicationController.helpers
 
     helpers.safe_join([
-    helpers.content_tag(:span, "TN##{tcon_number}", class: "text-blue-600 font-semibold"),
-    " - ",
-    helpers.content_tag(:span, "P##{panel_number}", class: "text-green-600 font-semibold"),
-    " - ",
-    helpers.content_tag(:span, "C##{cof_number}", class: "text-orange-600 font-semibold")
+      helpers.content_tag(:span, "TN##{tcon_number}", class: "text-blue-600 font-semibold"),
+      " - ",
+      helpers.content_tag(:span, "P##{panel_number}", class: "text-green-600 font-semibold"),
+      " - ",
+      helpers.content_tag(:span, "C##{cof_number}", class: "text-orange-600 font-semibold")
     ])
   end
 
   # ============================================================
-  # MTTR (Mean Time To Repair)
+  # STATUS HELPERS
   # ============================================================
+  def completed_or_delivered?
+    completed? || delivered?
+  end
 
-  # MTTR kwa sekunde (Float)
+  def delivered_or_irreparable?
+    delivered? || irreparable?
+  end
+
+  # ============================================================
+  # MTTR — muda wa TV kukaa workshop hadi completed/delivered
+  # ============================================================
   def mttr_seconds
     return nil unless completed_or_delivered?
-    return nil unless date_in.present?
-    return nil unless completed_at.present?
+    return nil unless date_in.present? && completed_at.present?
 
     (completed_at - date_in)
   end
 
-  # MTTR kwa masaa (Float) — kwa graph
   def mttr_hours
     return nil unless mttr_seconds
     mttr_seconds / 1.hour
   end
 
-  # MTTR kwa siku (Float) — kwa reference
   def mttr_days
     return nil unless mttr_seconds
     mttr_seconds / 1.day
   end
 
-  # MTTR formatted (English, kwa view):
-  # - "45 mins"
-  # - "2 hrs 30 mins"
-  # - "10 days 10 hrs 5 mins"
   def mttr_display
     seconds = mttr_seconds
     return "—" if seconds.nil? || seconds <= 0
 
-    total_minutes = (seconds / 60).round
-    total_hours = total_minutes / 60
-    total_days  = total_hours / 24
-
-    days    = total_days
-    hours   = total_hours % 24
-    mins    = total_minutes % 60
-
-    parts = []
-    parts << "#{days} #{days == 1 ? 'day' : 'days'}" if days.positive?
-    parts << "#{hours} #{hours == 1 ? 'hr' : 'hrs'}" if hours.positive?
-    parts << "#{mins} #{mins == 1 ? 'min' : 'mins'}" if mins.positive?
-
-    return "< 1 min" if parts.empty?
-    parts.join(" ")
+    format_duration(seconds)
   end
 
-   # DURATION — muda wa TV kukaa workshop (kutoka date_in hadi sasa)
-  # Inatumika kwa TV ZOTE (hata zisizokamilika)
+  # ============================================================
+  # DURATION — muda wa TV kukaa workshop (hadi delivered/irreparable)
+  # Inaendelea kuhesabiwa kama haijafika delivered/irreparable
   # ============================================================
   def duration_seconds
     return nil unless date_in.present?
-    Time.current - date_in
+
+    # Kama imefika delivered/irreparable, tumia delivered_at
+    # Kama haijafika, tumia Time.current
+    end_time = delivered_at.presence || Time.current
+
+    (end_time - date_in)
   end
 
   def duration_hours
@@ -197,11 +208,17 @@ class Activity < ApplicationRecord
     duration_seconds / 1.day
   end
 
-  # Formatted: "3 days 4 hrs 30 mins"
   def duration_display
     seconds = duration_seconds
     return "—" if seconds.nil? || seconds <= 0
 
+    format_duration(seconds)
+  end
+
+  private
+
+  # Helper moja ya format duration (inatumika kwa MTTR na Duration)
+  def format_duration(seconds)
     total_minutes = (seconds / 60).round
     total_hours   = total_minutes / 60
     total_days    = total_hours / 24
@@ -219,32 +236,19 @@ class Activity < ApplicationRecord
     parts.join(" ")
   end
 
-  # Helper ya kuangalia kama activity imekamilika
-  def completed_or_delivered?
-    completed? || delivered?
-  end
-
-  # ============================================================
-  # IRREPARABLE REASONS
-  # ============================================================
-  IRREPARABLE_REASONS = [
-    "Repair error",
-    "Requires laser",
-    "Part unavailable",
-    "Glass cracked",
-    "Panel damaged",
-    "Other"
-  ].freeze
-
-  validates :irreparable_reason, presence: true, if: :irreparable?
-
-  private
-
-  def set_completed_at
+  def set_timestamps
+    # completed_at: kwa completed au delivered
     if completed? || delivered?
       self.completed_at ||= Time.current
     else
       self.completed_at = nil
+    end
+
+    # delivered_at: kwa delivered au irreparable
+    if delivered? || irreparable?
+      self.delivered_at ||= Time.current
+    else
+      self.delivered_at = nil
     end
   end
 
