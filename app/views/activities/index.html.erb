@@ -33,12 +33,14 @@
       <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500">Completed today</p>
       <p class="mt-1 text-xl font-semibold tabular-nums text-emerald-600"><%= @completed_today %></p>
     </div>
-    <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
-      <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500">Total revenue</p>
-      <p class="mt-1 text-xl font-semibold tabular-nums text-slate-900">
-        <%= number_to_currency(@total_revenue, unit: "TSh ", precision: 0) %>
-      </p>
-    </div>
+    <% if current_user.super_admin? %>
+      <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500">Total revenue</p>
+        <p class="mt-1 text-xl font-semibold tabular-nums text-slate-900">
+          <%= number_to_currency(@total_revenue, unit: "TSh ", precision: 0) %>
+        </p>
+      </div>
+    <% end %>
   </div>
 
   <%# ============ SEARCH BAR ============ %>
