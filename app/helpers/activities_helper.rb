@@ -42,4 +42,18 @@ dot:  "bg-rose-700" }
     q = ERB::Util.html_escape(query.to_s)
     escaped.gsub(/(#{Regexp.escape(q)})/i, '<mark class="bg-amber-200 text-slate-900 rounded px-0.5">\1</mark>').html_safe
   end
+
+  def info_badge_classes(color)
+    case color
+    when "indigo"
+      "bg-indigo-50 text-indigo-700 ring-indigo-200"
+    when "emerald"
+      "bg-emerald-50 text-emerald-700 ring-emerald-200"
+    when "amber"
+      "bg-amber-50 text-amber-700 ring-amber-200"
+    else
+      "bg-slate-50 text-slate-700 ring-slate-200"
+    end
+  end
+  
 end

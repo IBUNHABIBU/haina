@@ -118,7 +118,15 @@ class Activity < ApplicationRecord
   end
 
   def info
-    "TN##{tcon_number}-P##{panel_number}-C##{cof_number}"
+    helpers = ApplicationController.helpers
+
+    helpers.safe_join([
+    helpers.content_tag(:span, "TN##{tcon_number}", class: "text-blue-600 font-semibold"),
+    " - ",
+    helpers.content_tag(:span, "P##{panel_number}", class: "text-green-600 font-semibold"),
+    " - ",
+    helpers.content_tag(:span, "C##{cof_number}", class: "text-orange-600 font-semibold")
+    ])
   end
 
   # ============================================================

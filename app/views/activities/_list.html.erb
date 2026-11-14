@@ -40,27 +40,29 @@
                <div class="">
                 <%= activity.job_number %>
                 </div>
- <div class="text-xs text-slate-500">
-  <% if activity.completed_or_delivered? %>
-    <!-- Kwa TV zilizokamilika, onyesha MTTR -->
-    <span class="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-200">
-      <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-      </svg>
-      MTTR: <%= activity.mttr_display %>
-    </span>
-  <% else %>
-    <!-- Kwa TV zinazoendelea, onyesha duration -->
-    <span class="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-200">
-      <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-      </svg>
-      DUR: <%= activity.duration_display %>
-    </span>
-  <% end %>
+                <div class="text-xs text-slate-500">
+                  <% if activity.completed_or_delivered? %>
+                    <!-- Kwa TV zilizokamilika, onyesha MTTR -->
+                    <span class="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-200">
+                      <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                      </svg>
+                      MTTR: <%= activity.mttr_display %>
+                    </span>
+                  <% else %>
+                    <!-- Kwa TV zinazoendelea, onyesha duration -->
+                    <span class="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-200">
+                      <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                      </svg>
+                      DUR: <%= activity.duration_display %>
+                    </span>
+                  <% end %>
               </td>
               <td class="whitespace-nowrap px-4 py-3 text-sm text-slate-600">
               <%= activity.tatizo&.name || "—" %>
+              
+              <div class="text-xs text-slate-500"><%= highlight_search(activity.info, query) %></div>
               </td>
               <td class="whitespace-nowrap px-4 py-3">
                 <% s = status_badge_color(activity.status) %>
@@ -68,11 +70,6 @@
                   <span class="h-1.5 w-1.5 rounded-full <%= s[:dot] %>"></span>
                   <%= activity.status&.humanize || "Not set" %>
                 </span>
-                    <div class="text-xs text-slate-500"><%= highlight_search(activity.info, query) %></div>
-                </div>
-
-        
-
 
               </td>
               <td class="whitespace-nowrap px-4 py-3 text-right text-sm font-medium tabular-nums text-slate-900">
