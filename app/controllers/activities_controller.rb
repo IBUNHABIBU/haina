@@ -4,10 +4,17 @@ class ActivitiesController < ApplicationController
   before_action :load_form_options, only: %i[new edit create update]
 
   def index
-    @activities = Activity
-      .includes(:customer, :tv_brand, :tv_size, :tatizo, :activity_spares)
-      .search(params[:q])
-      .order(date_in: :desc, created_at: :desc)
+     scope = Activity
+    .includes(:customer, :tv_brand, :tv_size, :tatizo, :activity_spares)
+    .search(params[:q])
+    .order(date_in: :desc, created_at: :desc)
+
+  # Filter by status (mpya)
+  if params[:status].present?
+    scope = scope.where(status: params[:status])
+  end
+
+  @activities = scope
 
       # Preload edit counts kwa query MOJA badala ya kila activity
    @edit_counts = PaperTrail::Version
