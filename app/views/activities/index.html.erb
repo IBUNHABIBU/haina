@@ -135,22 +135,42 @@
           Filter by status:
         </span>
 
-        <%= link_to "All", activities_path(q: params[:q]),
+        <!-- All -->
+        <%= link_to activities_path(q: params[:q]),
             data: {
               turbo_frame: "activities_content",
               turbo_action: "advance"
             },
-            class: "rounded-full border px-3.5 py-1.5 text-sm font-medium transition #{active_status.blank? ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}" %>
+            class: "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-medium transition #{active_status.blank? ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}" do %>
 
+          All
+
+          <span class="rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums #{active_status.blank? ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'}">
+            <%= @total_count %>
+          </span>
+        <% end %>
+
+
+        <!-- Individual Statuses -->
         <% Activity.statuses.keys.each do |status| %>
 
-          <%= link_to status.humanize,
-              activities_path(status: status, q: params[:q]),
+          <% selected = active_status == status %>
+          <% count = @status_counts.to_h.fetch(status, 0) %>
+
+          <%= link_to activities_path(status: status, q: params[:q]),
               data: {
                 turbo_frame: "activities_content",
                 turbo_action: "advance"
               },
-              class: "rounded-full border px-3.5 py-1.5 text-sm font-medium transition #{active_status == status ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}" %>
+              class: "inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-medium transition #{selected ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}" do %>
+
+            <%= status.humanize %>
+
+            <span class="rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums #{selected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'}">
+              <%= count %>
+            </span>
+
+          <% end %>
 
         <% end %>
 
@@ -171,8 +191,10 @@
 
           <%= f.select :status,
               options_for_select(
-                [["All statuses", ""]] +
-                Activity.statuses.keys.map { |s| [s.humanize, s] },
+                [["All statuses (#{@total_count})", ""]] +
+                Activity.statuses.keys.map do |s|
+                  ["#{s.humanize} (#{@status_counts.to_h.fetch(s, 0)})", s]
+                end,
                 active_status
               ),
               {},
