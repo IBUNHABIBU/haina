@@ -9,6 +9,9 @@ class ActivitiesController < ApplicationController
     .search(params[:q])
     .order(date_in: :desc, created_at: :desc)
 
+    @status_counts = Activity.group(:status).count
+    @total_count = Activity.count
+
   # Filter by status (mpya)
   if params[:status].present?
     scope = scope.where(status: params[:status])
