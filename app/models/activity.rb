@@ -31,7 +31,6 @@ class Activity < ApplicationRecord
   enum :status, {
     received: 0,
     diagnosing: 1,
-    waiting_for_parts: 2,
     in_repair: 3,
     completed: 4,
     delivered: 5,

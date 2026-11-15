@@ -1,23 +1,35 @@
+```erb
 <% content_for :title, "Repair Dashboard" %>
 
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
-  <!-- Page Header: Static -->
-  <div>
-    <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Repair Dashboard</h1>
-    <p class="mt-1 text-sm text-slate-500">Sales and profit performance for the selected period.</p>
+  <!-- ============ 1. PAGE HEADER (STATIC) ============ -->
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight text-slate-900">
+        Repair Dashboard
+      </h1>
+      <p class="mt-1 text-sm text-slate-500">
+        Sales and profit performance for the selected period.
+      </p>
+    </div>
   </div>
 
-  <!-- Dynamic Content -->
+
+  <!-- ============ 2. DYNAMIC DASHBOARD CONTENT ============ -->
   <%= turbo_frame_tag "dashboard_content" do %>
 
+    <% selected_month = params[:month].to_i %>
+
+    <!-- Filters -->
     <div class="flex flex-wrap items-center justify-end gap-2">
 
       <!-- Month Filter -->
-      <% selected_month = params[:month].to_i %>
-
       <%= form_with url: dashboard_path, method: :get,
-          data: { turbo_frame: "dashboard_content", turbo_action: "advance" },
+          data: {
+            turbo_frame: "dashboard_content",
+            turbo_action: "advance"
+          },
           class: "inline-block" do |f| %>
 
         <%= hidden_field_tag :period, @period %>
@@ -25,30 +37,53 @@
         <%= f.select :month,
             options_for_select([
               ["All Months", 0],
-              ["January", 1], ["February", 2], ["March", 3],
-              ["April", 4], ["May", 5], ["June", 6],
-              ["July", 7], ["August", 8], ["September", 9],
-              ["October", 10], ["November", 11], ["December", 12]
+              ["January", 1],
+              ["February", 2],
+              ["March", 3],
+              ["April", 4],
+              ["May", 5],
+              ["June", 6],
+              ["July", 7],
+              ["August", 8],
+              ["September", 9],
+              ["October", 10],
+              ["November", 11],
+              ["December", 12]
             ], selected_month),
             {},
             onchange: "this.form.requestSubmit()",
-            class: "rounded-md border px-3 py-1.5 text-sm font-semibold shadow-sm cursor-pointer focus:ring-2 focus:ring-indigo-500/20 #{selected_month.zero? ? 'border-slate-200 bg-white text-slate-700' : 'border-indigo-600 bg-indigo-600 text-white'}" %>
+            class: "rounded-md border px-3 py-1.5 text-sm font-semibold shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/20 #{selected_month.zero? ? 'border-slate-200 bg-white text-slate-700' : 'border-indigo-600 bg-indigo-600 text-white'}" %>
+
       <% end %>
+
 
       <!-- Period Switcher -->
       <div class="inline-flex items-center rounded-lg border border-slate-200 bg-white p-0.5 shadow-sm">
+
         <% %w[daily weekly monthly yearly].each do |period| %>
+
           <%= link_to period.humanize,
-              dashboard_path(period: period, month: params[:month]),
-              data: { turbo_frame: "dashboard_content", turbo_action: "advance" },
+              dashboard_path(
+                period: period,
+                month: params[:month]
+              ),
+              data: {
+                turbo_frame: "dashboard_content",
+                turbo_action: "advance"
+              },
               class: "rounded-md px-3 py-1.5 text-sm font-medium transition #{@period == period ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}" %>
+
         <% end %>
+
       </div>
 
     </div>
 
+
+    <!-- Dashboard Statistics, Charts and Tables -->
     <%= render "dashboard/content" %>
 
   <% end %>
 
 </div>
+```
