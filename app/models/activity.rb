@@ -31,14 +31,13 @@ class Activity < ApplicationRecord
 
   enum :status, {
     received: 0,
-    diagnosing: 1,
-    in_repair: 3,
-    completed: 4,
-    delivered: 5,
-    returned: 6,
-    irreparable: 7,
-    cancelled: 8,
-    spare_requested: 9
+    in_repair: 1,
+    completed: 2,
+    delivered: 3,
+    returned: 4,
+    irreparable: 5,
+    cancelled: 6,
+    spare_requested: 7
   }
 
   before_validation :calculate_gross_profit
