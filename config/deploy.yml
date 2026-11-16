@@ -75,7 +75,7 @@ asset_path: /rails/public/assets
 # Configure the image builder.
 builder:
   arch: amd64
-  multiarch: false
+  
   remote: ssh://deployer@45.92.9.7
   cache:
       type: registry
