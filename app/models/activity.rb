@@ -25,6 +25,7 @@ class Activity < ApplicationRecord
   validates :customer, presence: { message: "Tafadhali chagua jina mteja" }
   validates :tv_brand, presence: { message: "Tafadhali chagua aina ya TV" }
   validates :tv_size, presence: { message: "Tafadhali chagua ukubwa wa TV" }
+  validates :tatizo, presence: { message: "Tafadhali jaza tatizo la tv" }
 
   has_paper_trail
 

@@ -35,3 +35,12 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+
+.git
+.gitignore
+coverage
+spec
+test
+node_modules
+vendor/bundle
