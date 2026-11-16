@@ -40,6 +40,7 @@ class Activity < ApplicationRecord
     spare_requested: 7
   }
 
+  
   before_validation :calculate_gross_profit
   before_save :set_timestamps, if: :status_changed?
 
