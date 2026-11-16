@@ -9,6 +9,56 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
+@media print {
+  @page {
+    size: 6cm 3cm landscape; /* Upana 6cm, Urefu 3cm */
+    margin: 0;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 6cm;
+    height: 3cm;
+    box-sizing: border-box;
+  }
+
+  body.printing-ticket * {
+    visibility: hidden !important;
+  }
+
+  body.printing-ticket #ticket-print,
+  body.printing-ticket #ticket-print * {
+    visibility: visible !important;
+  }
+
+  body.printing-ticket #ticket-print {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6cm;
+    height: 3cm;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Hii ndio inafanya muonekano uwe kama picha */
+  body.printing-ticket #ticket-print .ticket-content {
+    box-sizing: border-box;
+    width: 6cm;
+    height: 3cm;
+    padding: 2mm;
+    border: 1.5px solid #000; /* Border nyeusi */
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+  }
+}
+
  
   @keyframes fadeInUp {
     from {
