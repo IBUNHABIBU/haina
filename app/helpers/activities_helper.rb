@@ -56,4 +56,19 @@ dot:  "bg-rose-700" }
     end
   end
   
+  def activity_photos(activity)
+    {
+      "Pattern Image"     => activity.pattern_image,
+      "Model Image"       => activity.model_image,
+      "Board Image"       => activity.board_image,
+      "T-Con Image"       => activity.tcon_image,
+      "COF Image"         => activity.cof_image,
+      "Panel Image"       => activity.panel_image,
+      "Before Repair"     => activity.image_before,
+      "After Repair"      => activity.image_after,
+      "Kabla ya Kubondi"  => activity.kabla,
+      "Baada ya Kubondi"  => activity.baada
+    }.select { |_, att| att.attached? }
+     .transform_values { |att| att.variant(resize_to_limit: [800, 800]) }
+  end
 end
