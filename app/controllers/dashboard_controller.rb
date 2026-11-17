@@ -312,7 +312,40 @@ class DashboardController < ApplicationController
     # 18. DEBTORS
     # ============================================================
 
+
     # Madeni yanaonyesha jumla ya madeni yote, si filter ya kipindi.
+
+    
+  # 1. Pesa Unazodai (Outstanding Debts) - Zile ambazo starting_price > price
+  @total_owed = Activity.owed.sum(Arel.sql("starting_price - price")).to_d
+
+  # 2. Pesa Ulizokosa kwa Irreparable (Lost Revenue)
+  # Tunachukua starting_price kama "bei ambayo ingelipwa" kama isingekuwa irreparable
+  @total_irreparable_lost = Activity
+    .where(status: :irreparable)
+    .where.not(starting_price: nil)
+    .sum(:starting_price).to_d
+
+  # 3. Jumla ya Pesa Iliyokosa (Total Lost Revenue)
+  @total_lost_revenue = @total_owed + @total_irreparable_lost
+
+
+  # Kwenye DashboardController
+# Madeni kwa mwezi
+monthly_owed = Activity.owed
+  .group(Arel.sql("EXTRACT(MONTH FROM date_in)::integer"))
+  .sum(Arel.sql("starting_price - price"))
+
+# Irreparable kwa mwezi
+monthly_irreparable = Activity.where(status: :irreparable)
+  .where.not(starting_price: nil)
+  .group(Arel.sql("EXTRACT(MONTH FROM date_in)::integer"))
+  .sum(:starting_price)
+
+@lost_revenue_trend = (1..12).map do |month|
+  total = (monthly_owed[month] || 0) + (monthly_irreparable[month] || 0)
+  [Date::MONTHNAMES[month], total]
+end.to_h
 
     @debtors = Activity.owed
       .includes(:customer, :tv_brand, :tv_size, :tatizo)
