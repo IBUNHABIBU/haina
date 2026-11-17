@@ -60,10 +60,13 @@ class DashboardController < ApplicationController
 
     @gross_profit = @activities.sum(:gross_profit).to_d
 
-    @expenses = Expense
-      .where(spent_on: @range.begin.to_date..@range.end.to_date)
-      .sum(:amount)
-      .to_d
+    @regular_expenses = Expense.where(spent_on: @range.begin.to_date..@range.end.to_date).sum(:amount).to_d
+  
+  # 2. Gharama za Mabango yaliyouzwa (Buy Price)
+    @panel_costs = TvPanel.sold_between(@range).sum(:buy_price).to_d
+
+    # 3. Jumla ya Gharama (Expenses + Panel Costs)
+    @expenses = @regular_expenses + @panel_costs
 
     @net_profit = @gross_profit - @expenses
 
