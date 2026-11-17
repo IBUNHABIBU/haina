@@ -1,0 +1,2 @@
+module TvPanelsHelper
+end

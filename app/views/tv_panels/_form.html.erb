@@ -1,0 +1,52 @@
+<%= form_with(model: tv_panel, class: "contents") do |form| %>
+  <% if tv_panel.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(tv_panel.errors.count, "error") %> prohibited this tv_panel from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% tv_panel.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :tv_brand_id %>
+    <%= form.text_field :tv_brand_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:tv_brand_id].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:tv_brand_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :tv_size_id %>
+    <%= form.text_field :tv_size_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:tv_size_id].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:tv_size_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :customer_id %>
+    <%= form.text_field :customer_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:customer_id].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:customer_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :buy_price %>
+    <%= form.text_field :buy_price, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:buy_price].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:buy_price].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :sell_price %>
+    <%= form.text_field :sell_price, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:sell_price].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:sell_price].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :status %>
+    <%= form.text_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:status].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:status].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :sold_at %>
+    <%= form.datetime_field :sold_at, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:sold_at].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:sold_at].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>
