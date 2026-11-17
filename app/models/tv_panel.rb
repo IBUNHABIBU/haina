@@ -8,6 +8,9 @@ class TvPanel < ApplicationRecord
     sold: 1,
   }
 
+  # Picha za Bango
+  has_one_attached :front_image
+  has_one_attached :back_image
   
   def profit
     sell_price.to_d - buy_price.to_d

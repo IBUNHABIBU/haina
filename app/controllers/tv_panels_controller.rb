@@ -1,70 +1,68 @@
+# app/controllers/tv_panels_controller.rb
 class TvPanelsController < ApplicationController
-  before_action :set_tv_panel, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_tv_panel, only: %i[show edit update destroy]
 
-  # GET /tv_panels or /tv_panels.json
   def index
-    @tv_panels = TvPanel.all
+    @tv_panels = TvPanel.includes(:tv_brand, :tv_size, :customer).order(created_at: :desc)
+    @in_stock_count = @tv_panels.count { |p| p.in_stock? }
+    @sold_count = @tv_panels.count { |p| p.sold? }
+    @total_profit = @tv_panels.select(&:sold?).sum(&:profit)
   end
 
-  # GET /tv_panels/1 or /tv_panels/1.json
-  def show
-  end
-
-  # GET /tv_panels/new
+  def show; end
   def new
     @tv_panel = TvPanel.new
+    load_form_options
   end
-
-  # GET /tv_panels/1/edit
   def edit
+    load_form_options
   end
 
-  # POST /tv_panels or /tv_panels.json
   def create
     @tv_panel = TvPanel.new(tv_panel_params)
-
-    respond_to do |format|
-      if @tv_panel.save
-        format.html { redirect_to @tv_panel, notice: "Tv panel was successfully created." }
-        format.json { render :show, status: :created, location: @tv_panel }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @tv_panel.errors, status: :unprocessable_entity }
-      end
+    if @tv_panel.save
+      redirect_to tv_panels_path, notice: "Bango limesajiliwa."
+    else
+      load_form_options
+      render :new, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /tv_panels/1 or /tv_panels/1.json
   def update
-    respond_to do |format|
-      if @tv_panel.update(tv_panel_params)
-        format.html { redirect_to @tv_panel, notice: "Tv panel was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @tv_panel }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @tv_panel.errors, status: :unprocessable_entity }
+    if @tv_panel.update(tv_panel_params)
+      # Kama ameuza, weka tarehe ya kuuza automatically
+      if @tv_panel.saved_change_to_status? && @tv_panel.sold?
+        @tv_panel.update_column(:sold_at, Time.current)
       end
+      redirect_to tv_panels_path, notice: "Bango limeupdate."
+    else
+      load_form_options
+      render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /tv_panels/1 or /tv_panels/1.json
   def destroy
     @tv_panel.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to tv_panels_path, notice: "Tv panel was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to tv_panels_path, notice: "Bango limefutwa."
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_tv_panel
-      @tv_panel = TvPanel.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def tv_panel_params
-      params.expect(tv_panel: [ :tv_brand_id, :tv_size_id, :customer_id, :buy_price, :sell_price, :status, :sold_at ])
-    end
+  def set_tv_panel
+    @tv_panel = TvPanel.find(params[:id])
+  end
+
+  def load_form_options
+    @tv_brands = TvBrand.order(:name)
+    @tv_sizes = TvSize.order(:size)
+    @customers = Customer.order(:name)
+  end
+
+  def tv_panel_params
+    params.require(:tv_panel).permit(:tv_brand_id, :tv_size_id,
+     :customer_id, :buy_price, :sell_price, :status,
+      :remarks, :front_image, :back_image # <-- Ongeza hizi
+     )
+  end
 end

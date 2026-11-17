@@ -1,52 +1,72 @@
-<%= form_with(model: tv_panel, class: "contents") do |form| %>
-  <% if tv_panel.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
-      <h2><%= pluralize(tv_panel.errors.count, "error") %> prohibited this tv_panel from being saved:</h2>
-
-      <ul class="list-disc ml-6">
-        <% tv_panel.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<%= form_with(model: tv_panel, class: "space-y-5") do |form| %>
+  <div class="grid gap-5 md:grid-cols-2">
+    <div>
+      <%= form.label :tv_brand_id, "Brand", class: "label" %>
+      <%= form.collection_select :tv_brand_id, @tv_brands, :id, :name, { prompt: "Chagua Brand" }, class: "field" %>
     </div>
-  <% end %>
-
-  <div class="my-5">
-    <%= form.label :tv_brand_id %>
-    <%= form.text_field :tv_brand_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:tv_brand_id].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:tv_brand_id].any?}] %>
+    <div>
+      <%= form.label :tv_size_id, "Size", class: "label" %>
+      <%= form.collection_select :tv_size_id, @tv_sizes, :id, :size, { prompt: "Chagua Size" }, class: "field" %>
+    </div>
+    <div>
+      <%= form.label :seller_id, "Muuzaji (Supplier)", class: "label" %>
+      <%= form.collection_select :seller_id, @sellers, :id, :name, { prompt: "Chagua Muuzaji" }, class: "field" %>
+    </div>
+    <div>
+      <%= form.label :status, "Hali", class: "label" %>
+      <%= form.select :status, TvPanel.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "field" %>
+    </div>
+    <div>
+      <%= form.label :buy_price, "Bei ya Kununua (TSh)", class: "label" %>
+      <%= form.number_field :buy_price, step: 0.01, min: 0, class: "field" %>
+    </div>
+    <div>
+      <%= form.label :sell_price, "Bei ya Kuuza (TSh)", class: "label" %>
+      <%= form.number_field :sell_price, step: 0.01, min: 0, class: "field" %>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :tv_size_id %>
-    <%= form.text_field :tv_size_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:tv_size_id].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:tv_size_id].any?}] %>
+    <!-- Remarks -->
+  <div>
+    <%= form.label :remarks, "Maelezo (Remarks)", class: "label" %>
+    <%= form.text_area :remarks, rows: 3, class: "field", placeholder: "Andika maelezo yoyote kuhusu bango hili..." %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :customer_id %>
-    <%= form.text_field :customer_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:customer_id].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:customer_id].any?}] %>
+  <!-- Picha -->
+  <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+    <h3 class="text-sm font-semibold text-slate-900 border-b border-slate-100 pb-2">Picha za Bango</h3>
+    
+    <div class="grid gap-5 md:grid-cols-2">
+      <!-- Picha ya Mbele -->
+      <div>
+        <%= form.label :front_image, "Picha ya Mbele (Front)", class: "label" %>
+        <%= form.file_field :front_image, accept: "image/*", class: "field" %>
+        
+        <!-- Onyesha picha kama ipo (kwa Edit) -->
+        <% if tv_panel.front_image.attached? %>
+          <div class="mt-2">
+            <%= image_tag tv_panel.front_image.variant(resize_to_limit: [150, 150]), class: "rounded-lg border object-cover h-24 w-24" %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Picha ya Nyuma -->
+      <div>
+        <%= form.label :back_image, "Picha ya Nyuma (Back)", class: "label" %>
+        <%= form.file_field :back_image, accept: "image/*", class: "field" %>
+        
+        <!-- Onyesha picha kama ipo (kwa Edit) -->
+        <% if tv_panel.back_image.attached? %>
+          <div class="mt-2">
+            <%= image_tag tv_panel.back_image.variant(resize_to_limit: [150, 150]), class: "rounded-lg border object-cover h-24 w-24" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :buy_price %>
-    <%= form.text_field :buy_price, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:buy_price].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:buy_price].any?}] %>
-  </div>
 
-  <div class="my-5">
-    <%= form.label :sell_price %>
-    <%= form.text_field :sell_price, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:sell_price].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:sell_price].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :status %>
-    <%= form.text_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:status].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:status].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :sold_at %>
-    <%= form.datetime_field :sold_at, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": tv_panel.errors[:sold_at].none?, "border-red-400 focus:outline-red-600": tv_panel.errors[:sold_at].any?}] %>
-  </div>
-
-  <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  <div class="flex justify-end pt-4">
+    <%= form.submit "Hifadhi Bango", class: "rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white cursor-pointer" %>
   </div>
 <% end %>
