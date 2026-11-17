@@ -3,10 +3,7 @@ class TvPanel < ApplicationRecord
   belongs_to :tv_size
   belongs_to :customer
 
-  enum :status, {
-    instock: 0,
-    sold: 1,
-  }
+  enum :status, { in_stock: "in_stock", sold: "sold" }
 
   # Picha za Bango
   has_one_attached :front_image

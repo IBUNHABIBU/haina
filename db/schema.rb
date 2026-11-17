@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_11_14_094320) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_17_160600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -250,6 +250,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_14_094320) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tv_panels", force: :cascade do |t|
+    t.bigint "tv_brand_id", null: false
+    t.bigint "tv_size_id", null: false
+    t.bigint "customer_id", null: false
+    t.decimal "buy_price", precision: 12, scale: 2, default: "0.0"
+    t.decimal "sell_price", precision: 12, scale: 2, default: "0.0"
+    t.string "status", default: "in_stock"
+    t.datetime "sold_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "remarks"
+    t.index ["customer_id"], name: "index_tv_panels_on_customer_id"
+    t.index ["tv_brand_id"], name: "index_tv_panels_on_tv_brand_id"
+    t.index ["tv_size_id"], name: "index_tv_panels_on_tv_size_id"
+  end
+
   create_table "tv_sizes", force: :cascade do |t|
     t.decimal "size"
     t.datetime "created_at", null: false
@@ -308,4 +324,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_11_14_094320) do
   add_foreign_key "spare_requests", "users", column: "issued_by_id"
   add_foreign_key "spare_requests", "users", column: "requested_by_id"
   add_foreign_key "spares", "spare_categories"
+  add_foreign_key "tv_panels", "customers"
+  add_foreign_key "tv_panels", "tv_brands"
+  add_foreign_key "tv_panels", "tv_sizes"
 end

@@ -7,7 +7,7 @@
     <h1 class="mt-2 text-2xl font-semibold text-slate-900">
       <%= @tv_panel.tv_brand.name %> <%= @tv_panel.tv_size.size %>"
     </h1>
-    <p class="text-sm text-slate-500">Muuzaji: <%= @tv_panel.seller.name %></p>
+    <p class="text-sm text-slate-500">Muuzaji: <%= @tv_panel.customer.name %></p>
   </div>
 
   <div class="grid gap-6 md:grid-cols-2">
@@ -28,7 +28,7 @@
           <dt class="text-slate-500">Hali</dt>
           <dd>
             <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium <%= @tv_panel.sold? ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' %>">
-              <%= @tv_panel.status.humanize %>
+              <%= @tv_panel.status&.humanize %>
             </span>
           </dd>
         </div>

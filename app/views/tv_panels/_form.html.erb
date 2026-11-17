@@ -9,8 +9,8 @@
       <%= form.collection_select :tv_size_id, @tv_sizes, :id, :size, { prompt: "Chagua Size" }, class: "field" %>
     </div>
     <div>
-      <%= form.label :seller_id, "Muuzaji (Supplier)", class: "label" %>
-      <%= form.collection_select :seller_id, @sellers, :id, :name, { prompt: "Chagua Muuzaji" }, class: "field" %>
+      <%= form.label :customer_id, "Muuzaji (Supplier)", class: "label" %>
+      <%= form.collection_select :customer_id, @customers, :id, :name, { prompt: "Chagua Muuzaji" }, class: "field" %>
     </div>
     <div>
       <%= form.label :status, "Hali", class: "label" %>
