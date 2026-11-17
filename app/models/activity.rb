@@ -26,6 +26,10 @@ class Activity < ApplicationRecord
   validates :tv_brand, presence: { message: "Tafadhali chagua aina ya TV" }
   validates :tv_size, presence: { message: "Tafadhali chagua ukubwa wa TV" }
   validates :tatizo, presence: { message: "Tafadhali jaza tatizo la tv" }
+  validates :number_of_cof, presence: { message: "Tafadhali jaza idadi ya cof" }
+  validates :number_of_side_cof, presence: { message: "Tafadhali jaza idadi ya side cof" }
+
+ 
 
   has_paper_trail
 
@@ -215,7 +219,128 @@ class Activity < ApplicationRecord
     format_duration(seconds)
   end
 
-  private
+  
+# COF usage and wastage calculations
+
+def main_cof_used
+   activity_spares
+    .joins(spare: :spare_category)
+    .where(spare_categories: { code: "MAINCOF" })
+    .sum(:quantity)
+end
+
+def side_cof_used
+   activity_spares
+    .joins(spare: :spare_category)
+    .where(spare_categories: { code: "SIDECOF" })
+    .sum(:quantity)
+end
+
+def main_cof_wastage_quantity
+  [main_cof_used - number_of_cof.to_i, 0].max
+end
+
+def side_cof_wastage_quantity
+  [side_cof_used - number_of_side_cof.to_i, 0].max
+end
+
+
+def cof_wastage_cost(category_code, required_quantity)
+  records = activity_spares
+    .joins(spare: :spare_category)
+    .where(spare_categories: { code: category_code })
+    .order(:id)
+
+  remaining_required = required_quantity.to_i
+
+  records.sum do |item|
+    used_quantity = item.quantity.to_i
+    normal_quantity = [used_quantity, remaining_required].min
+
+    remaining_required -= normal_quantity
+
+    damaged_quantity = used_quantity - normal_quantity
+
+    damaged_quantity * item.unit_cost.to_d
+  end
+end
+
+def main_cof_wastage_cost
+  cof_wastage_cost("MAINCOF", number_of_cof)
+end
+
+def side_cof_wastage_cost
+  cof_wastage_cost("SIDECOF", number_of_side_cof)
+end
+
+def total_cof_wastage_cost
+  main_cof_wastage_cost + side_cof_wastage_cost
+end
+
+ # ...
+
+  def expected_cof_count
+    (number_of_cof.to_i + number_of_side_cof.to_i)
+  end
+
+ 
+  def actual_cof_used_count
+    main_cof_used + side_cof_used
+  end
+
+  def cof_wastage_count
+    # [actual_cof_used_count - expected_cof_count, 0].max
+     main_cof_wastage_quantity + side_cof_wastage_quantity
+  end
+
+  def cof_wastage_value
+    # wasted_cofs = activity_spares
+    #   .joins(:spare)
+    #   .where("spares.name ILIKE ?", "%COF%")
+
+    # total_cost = wasted_cofs.sum("activity_spares.quantity * spares.unit_cost")
+    # total_qty  = wasted_cofs.sum(:quantity)
+
+    # return 0 if total_qty.zero?
+
+    # avg_unit_cost = total_cost / total_qty
+    # (cof_wastage_count * avg_unit_cost).to_d
+
+    total_cof_wastage_cost
+
+  end
+
+private
+
+def cof_usage_records(category_code, part_number)
+  return ActivitySpare.none if part_number.blank?
+
+  activity_spares
+    .joins(spare: :spare_category)
+    .where(
+      spares: { part_number: part_number },
+      spare_categories: { code: category_code }
+    )
+    .order(:id)
+end
+
+# def cof_wastage_cost(category_code, part_number, required_quantity)
+#   records = cof_usage_records(category_code, part_number)
+
+#   remaining_required = required_quantity.to_i
+
+#   records.sum do |item|
+#     used_quantity = item.quantity.to_i
+#     normal_quantity = [used_quantity, remaining_required].min
+
+#     remaining_required -= normal_quantity
+
+#     damaged_quantity = used_quantity - normal_quantity
+
+#     damaged_quantity * item.unit_cost.to_d
+#   end
+# end
+
 
   # Helper moja ya format duration (inatumika kwa MTTR na Duration)
   def format_duration(seconds)

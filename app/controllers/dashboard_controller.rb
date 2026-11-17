@@ -16,6 +16,8 @@ class DashboardController < ApplicationController
     @selected_month = selected_month
     @selected_year = current_year
 
+    
+
     # Selected month inakuwa na priority kuliko period
     if @selected_month
       month_start = Date.new(current_year, selected_month, 1)
@@ -284,10 +286,32 @@ class DashboardController < ApplicationController
 
     @debtors_count = debt_stats[0] || 0
     @total_debt = debt_stats[1] || 0
+    
+# ============================================================
+  # 19. COF WASTAGE (Inafuata filter ya @activities)
+  # ============================================================
+  
+  # 1. KPI: Jumla ya Wastage kwa kipindi
+  cof_wastage_activities = @activities.select { |a| a.cof_wastage_count.positive? }
+  @total_cof_wastage_count = cof_wastage_activities.sum(&:cof_wastage_count)
+  @total_cof_wastage_value = cof_wastage_activities.sum(&:cof_wastage_value).to_d
 
-    # ============================================================
-    # 19. RESPONSE
-    # ============================================================
+  # 2. Graph: COF Wastage Count Trend (Inafuata chart_bucket)
+  # Tunachukua activities zenye wastage pekee, kisha tunagroup kwa chart_bucket
+  wastage_activities = @activities.select { |a| a.cof_wastage_count.positive? }
+  
+  # Kwa kuwa mapigo ya group_by yanahitaji ActiveRecord, tunatumia map kwa Ruby
+  # (Kwa activities chache, hii ni fast. Kwa nyingi, tunaweza kuandika SQL query ngumu)
+  @cof_wastage_count_trend = wastage_activities
+    .group_by { |a| a.date_in.strftime(@chart_label_format) }
+    .transform_values { |activities| activities.sum(&:cof_wastage_count) }
+
+  # 3. Graph: COF Wastage Value Trend
+  @cof_wastage_value_trend = wastage_activities
+    .group_by { |a| a.date_in.strftime(@chart_label_format) }
+    .transform_values { |activities| activities.sum(&:cof_wastage_value).to_d }
+
+  
     respond_to do |format|
       format.html
       format.turbo_stream do

@@ -513,6 +513,8 @@
             <tr>
               <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Spare</th>
               <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Category</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Part number</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Unit cost</th>
               <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Qty</th>
               <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Total Cost</th>
             </tr>
@@ -531,6 +533,12 @@
                   <% else %>
                     <span class="text-sm text-slate-400">—</span>
                   <% end %>
+                </td>
+                 <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
+                  <%= item.spare.part_number.presence || "—" %>
+                </td>
+                 <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
+                  <%= number_to_currency(item.unit_cost, unit: "TSh ", precision: 0) %>
                 </td>
                 <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
                   <%= item.quantity %>
@@ -634,6 +642,38 @@
       </div>
     <% end %>
   </section>
+<!-- COF Wastage Section -->
+<div class="px-6 py-3.5">
+  <div class="rounded-lg border border-amber-100 bg-amber-50/50 p-4 space-y-3">
+    
+    <div class="flex items-center justify-between text-sm">
+      <dt class="flex items-center gap-2 font-medium text-amber-900">
+        <svg class="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+        </svg>
+        COF Wastage
+      </dt>
+      <dd class="font-semibold text-amber-950">
+        <%= @activity.cof_wastage_count %> <span class="text-xs font-normal text-amber-700">zilizoharibika</span>
+      </dd>
+    </div>
+
+    <div class="h-px w-full bg-amber-100"></div>
+
+    <div class="flex items-center justify-between text-sm">
+      <dt class="text-amber-800">Thamani Iliyopotea</dt>
+      <dd class="font-bold tabular-nums text-amber-900">
+        <%= number_to_currency(@activity.cof_wastage_value, unit: "TSh ", precision: 0) %>
+      </dd>
+    </div>
+
+    <div class="flex items-center justify-between text-xs text-amber-700">
+      <span>Expected: <%= @activity.expected_cof_count %></span>
+      <span>Actual Used: <%= @activity.actual_cof_used_count %></span>
+    </div>
+
+  </div>
+</div>
 
   <%# ============================================================
       ACTIONS: PRINT TICKET + DANGER ZONE

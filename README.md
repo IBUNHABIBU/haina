@@ -1,7 +1,23 @@
-50.times do |i|
-  customer = Customer.create!(
-    name:  "Customer #{i + 1}",
-    phone: "07#{rand(10**8).to_s.rjust(8, '0')}",
-    email: "customer#{i + 1}@example.com"
-  )
+def sidecof_wastage
+ number_of_side_cof_used - number_of_side_cof
+end
+
+def maincof_wastage
+ number_of_main_cof_used - number_of_main_cof
+end
+
+def sidecof_wastage_value
+ 
+end
+
+def maincof_wastage_value
+ 
+end
+
+def total_cof_wasted
+  sidecof_wastage + main_cof_wastege
+end
+
+def total_value_wasted
+  sidecof_wastage_value + maincof_wastage_value
 end
