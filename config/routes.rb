@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :tv_panels
   resources :blogs
   resources :spare_requests
    resources :activity_versions,

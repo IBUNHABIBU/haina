@@ -58,14 +58,14 @@ dot:  "bg-rose-700" }
   
   def activity_photos(activity)
     {
-      "Pattern Image"     => activity.pattern_image,
+      "Side cof Image"     => activity.pattern_image,
       "Model Image"       => activity.model_image,
       "Board Image"       => activity.board_image,
       "T-Con Image"       => activity.tcon_image,
-      "COF Image"         => activity.cof_image,
+      "Source COF Image"         => activity.cof_image,
       "Panel Image"       => activity.panel_image,
-      "Before Repair"     => activity.image_before,
-      "After Repair"      => activity.image_after,
+      "Source cof pattern"     => activity.image_before,
+      "Side cof pattern"      => activity.image_after,
       "Kabla ya Kubondi"  => activity.kabla,
       "Baada ya Kubondi"  => activity.baada
     }.select { |_, att| att.attached? }
