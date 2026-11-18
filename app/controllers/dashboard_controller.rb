@@ -76,7 +76,7 @@ class DashboardController < ApplicationController
       "EXTRACT(EPOCH FROM (COALESCE(completed_at, updated_at) - date_in)) / 3600.0"
     )
 
-    @mttr_avg_hours = completed.exists? ? completed.average(mttr_sql).to_f.round(1) : 0
+    @mttr_avg_hours = completed.average(mttr_sql).to_f.round(1)
 
     # ============================================================
     # 4. COMMON GRAPH GROUPING
@@ -131,74 +131,70 @@ class DashboardController < ApplicationController
     # 10. IRREPARABLE REASONS
     # ============================================================
     irreparable = @activities
-      .where(status: :irreparable)
-      .where.not(irreparable_reason: [nil, ""])
+  .where(status: :irreparable)
+  .where.not(irreparable_reason: [nil, ""])
 
-    @irreparable_by_period_chart = irreparable
-      .distinct
-      .pluck(:irreparable_reason)
-      .map do |reason|
-        data = irreparable
-          .where(irreparable_reason: reason)
-          .public_send("group_by_#{@chart_bucket}", :date_in, range: @range)
-          .count
-          .transform_keys { |date| date.strftime(@chart_label_format) }
+# Count by reason
+@irreparable_by_reason = irreparable
+  .group(:irreparable_reason)
+  .order(Arel.sql("COUNT(*) DESC"))
+  .count
 
-        { name: reason, data: data }
-      end
+@top_irreparable_reason = @irreparable_by_reason.first
 
-    @irreparable_by_reason = irreparable
-      .group(:irreparable_reason)
-      .count
-      .sort_by { |_, count| -count }
-      .to_h
+# Group by reason and selected chart period
+irreparable_grouped = irreparable
+  .group(:irreparable_reason)
+  .public_send(
+    "group_by_#{@chart_bucket}",
+    :date_in,
+    range: @range
+  )
+  .count
 
-    @top_irreparable_reason = @irreparable_by_reason.first
-
+@irreparable_by_period_chart = irreparable_grouped.each_with_object({}) do |((reason, date), count), result|
+  result[reason] ||= { name: reason, data: {} }
+  result[reason][:data][date.strftime(@chart_label_format)] = count
+end.values
     # ============================================================
     # 11. TOP TV BRANDS
     # ============================================================
-    @top_brands = @activities
-      .joins(:tv_brand)
-      .group("tv_brands.name")
-      .count
-      .sort_by { |_, count| -count }
-      .first(5)
-      .to_h
+   @top_brands = @activities
+                  .joins(:tv_brand)
+                  .group("tv_brands.name")
+                  .order(Arel.sql("COUNT(*) DESC"))
+                  .limit(5)
+                  .count
 
     # ============================================================
     # 12. TOP TV SIZES
     # ============================================================
     @top_sizes = @activities
-      .joins(:tv_size)
-      .group("tv_sizes.size")
-      .count
-      .sort_by { |_, count| -count }
-      .first(5)
-      .map { |size, count| ["#{size} in", count] }
-      .to_h
+  .joins(:tv_size)
+  .group("tv_sizes.size")
+  .order(Arel.sql("COUNT(*) DESC"))
+  .limit(5)
+  .count
+  .transform_keys { |size| "#{size} in" }
 
     # ============================================================
     # 13. TOP COF NUMBERS
     # ============================================================
     @top_cofs = @activities
-      .where.not(cof_number: [nil, ""])
-      .group(:cof_number)
-      .count
-      .sort_by { |_, count| -count }
-      .first(5)
-      .to_h
+                .where.not(cof_number: [nil, ""])
+                .group(:cof_number)
+                .order(Arel.sql("COUNT(*) DESC"))
+                .limit(5)
+                .count
 
     # ============================================================
     # 14. TOP CUSTOMERS
-    # ============================================================
-    @top_customers = @activities
-      .joins(:customer)
-      .group("customers.name")
-      .count
-      .sort_by { |_, count| -count }
-      .first(5)
-      .to_h
+   @top_customers = @activities
+                .joins(:customer)
+                .group("customers.name")
+                .order(Arel.sql("COUNT(*) DESC"))
+                .limit(5)
+                .count
 
     # ============================================================
     # 15. STATUS BREAKDOWN
@@ -290,28 +286,36 @@ class DashboardController < ApplicationController
 # ============================================================
   # 19. COF WASTAGE (Inafuata filter ya @activities)
   # ============================================================
-  
-  # 1. KPI: Jumla ya Wastage kwa kipindi
-  cof_wastage_activities = @activities.select { |a| a.cof_wastage_count.positive? }
-  @total_cof_wastage_count = cof_wastage_activities.sum(&:cof_wastage_count)
-  @total_cof_wastage_value = cof_wastage_activities.sum(&:cof_wastage_value).to_d
+  # ============================================================
+# 19. COF WASTAGE
+# ============================================================
+# ============================================================
+# 19. COF WASTAGE
+# ============================================================
 
-  # 2. Graph: COF Wastage Count Trend (Inafuata chart_bucket)
-  # Tunachukua activities zenye wastage pekee, kisha tunagroup kwa chart_bucket
-  wastage_activities = @activities.select { |a| a.cof_wastage_count.positive? }
-  
-  # Kwa kuwa mapigo ya group_by yanahitaji ActiveRecord, tunatumia map kwa Ruby
-  # (Kwa activities chache, hii ni fast. Kwa nyingi, tunaweza kuandika SQL query ngumu)
-  @cof_wastage_count_trend = wastage_activities
-    .group_by { |a| a.date_in.strftime(@chart_label_format) }
-    .transform_values { |activities| activities.sum(&:cof_wastage_count) }
+wastage_activities = @activities
+  .includes(:customer)
+  .select { |activity| activity.cof_wastage_count.to_i.positive? }
 
-  # 3. Graph: COF Wastage Value Trend
-  @cof_wastage_value_trend = wastage_activities
-    .group_by { |a| a.date_in.strftime(@chart_label_format) }
-    .transform_values { |activities| activities.sum(&:cof_wastage_value).to_d }
+@total_cof_wastage_count = wastage_activities.sum do |activity|
+  activity.cof_wastage_count.to_i
+end
 
-  
+@total_cof_wastage_value = wastage_activities.sum do |activity|
+  activity.cof_wastage_value.to_d
+end
+
+@cof_wastage_count_trend = wastage_activities
+  .group_by { |activity| activity.date_in.strftime(@chart_label_format) }
+  .transform_values do |activities|
+    activities.sum { |activity| activity.cof_wastage_count.to_i }
+  end
+
+@cof_wastage_value_trend = wastage_activities
+  .group_by { |activity| activity.date_in.strftime(@chart_label_format) }
+  .transform_values do |activities|
+    activities.sum { |activity| activity.cof_wastage_value.to_d }
+  end
     respond_to do |format|
       format.html
       format.turbo_stream do
