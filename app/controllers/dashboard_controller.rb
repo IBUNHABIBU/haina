@@ -249,21 +249,30 @@ end.values
     @total_lost_revenue = @total_owed + @total_irreparable_lost
 
     # 4. Lost Revenue Trend (Inafuata chart_bucket)
-    monthly_owed = @activities
-      .where("starting_price > price AND price >= 0")
-      .group(Arel.sql("EXTRACT(MONTH FROM date_in)::integer"))
-      .sum(Arel.sql("starting_price - price"))
+    owed_activities = @activities
+  .where("starting_price > price AND price >= 0")
 
-    monthly_irreparable = @activities
-      .where(status: :irreparable)
-      .where.not(starting_price: nil)
-      .group(Arel.sql("EXTRACT(MONTH FROM date_in)::integer"))
-      .sum(:starting_price)
+irreparable_lost_activities = @activities
+  .where(status: :irreparable)
+  .where.not(starting_price: nil)
 
-    @lost_revenue_trend = (1..12).map do |month|
-      total = (monthly_owed[month] || 0) + (monthly_irreparable[month] || 0)
-      [Date::MONTHNAMES[month], total]
-    end.to_h
+monthly_owed = owed_activities
+  .public_send("group_by_#{@chart_bucket}", :date_in, range: @range)
+  .sum(Arel.sql("starting_price - price"))
+
+monthly_irreparable = irreparable_lost_activities
+  .public_send("group_by_#{@chart_bucket}", :date_in, range: @range)
+  .sum(:starting_price)
+
+@lost_revenue_trend = (monthly_owed.keys | monthly_irreparable.keys)
+  .sort
+  .each_with_object({}) do |date, result|
+    label = date.strftime(@chart_label_format)
+
+    result[label] =
+      (monthly_owed[date] || 0).to_d +
+      (monthly_irreparable[date] || 0).to_d
+  end
 
     # 5. Debtors List (Inafuata filter sasa)
     @debtors = @activities
