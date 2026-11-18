@@ -534,10 +534,10 @@
                     <span class="text-sm text-slate-400">—</span>
                   <% end %>
                 </td>
-                 <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
+                 <td class="whitespace-nowrap px-6 py-3.5">
                   <%= item.spare.part_number.presence || "—" %>
                 </td>
-                 <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
+                 <td class="whitespace-nowrap px-6 py-3.5 ">
                   <%= number_to_currency(item.unit_cost, unit: "TSh ", precision: 0) %>
                 </td>
                 <td class="whitespace-nowrap px-6 py-3.5 text-right text-sm tabular-nums text-slate-600">
