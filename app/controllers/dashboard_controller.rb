@@ -187,6 +187,15 @@ end.values
                 .limit(5)
                 .count
 
+                 # 13. TOP COF NUMBERS
+    # ============================================================
+    @top_pcbs = @activities
+                .where.not(panel_number: [nil, ""])
+                .group(:panel_number)
+                .order(Arel.sql("COUNT(*) DESC"))
+                .limit(5)
+                .count
+
     # ============================================================
     # 14. TOP CUSTOMERS
    @top_customers = @activities
